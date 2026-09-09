@@ -1,0 +1,63 @@
+---
+import '@fontsource-variable/archivo';
+import '@fontsource/archivo-black';
+import '../styles/global.css';
+import { address, brand, company, contact, seo } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = seo.title, description = seo.description } = Astro.props;
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'ClothingStore',
+  name: brand.name,
+  slogan: brand.slogan,
+  description: seo.description,
+  telephone: `+${contact.whatsappDigits}`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: address.street,
+    addressLocality: `${address.district}, ${address.city}`,
+    addressRegion: address.state,
+    postalCode: address.zip,
+    addressCountry: 'BR',
+  },
+  sameAs: [brand.instagramUrl],
+  ...(company.openingHours ? { openingHours: company.openingHours } : {}),
+  ...(contact.email ? { email: contact.email } : {}),
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a2c85" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="pt_BR" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
+    <script is:inline>
+      // Marca que o JS está ativo antes da primeira pintura, para evitar que os
+      // elementos animados apareçam e sumam. Se o script falhar, nada fica escondido.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('js-anim');
+      }
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/animations';
+    </script>
+  </body>
+</html>

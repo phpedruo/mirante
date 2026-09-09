@@ -1,0 +1,381 @@
+---
+import { brand, contact, formAccessKey } from '../data/site';
+
+if (!formAccessKey) {
+  console.warn(
+    '[mirante] formAccessKey está vazio em src/data/site.ts — o formulário vai orientar o visitante a usar o WhatsApp em vez de enviar o e-mail.',
+  );
+}
+
+const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURIComponent(
+  'Olá! Vim pelo site e gostaria de um orçamento.',
+)}`;
+
+const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças', 'Mais de 500 peças'];
+---
+
+<section class="contact" id="contato">
+  <div class="container">
+    <div class="contact__card" data-anim="scale">
+      <div class="contact__pitch">
+        <h2 class="contact__title">Opa! Vi que você precisa de fardamento...</h2>
+        <p class="contact__slogan">{brand.slogan}</p>
+
+        <div class="contact__mascot-row">
+          <div class="contact__mascot" aria-hidden="true">[Mascote águia]</div>
+          <div class="contact__channels">
+            <a href={whatsappUrl} class="btn btn--accent" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+              </svg>
+              {contact.whatsappDisplay}
+            </a>
+            <a class="contact__instagram" href={brand.instagramUrl} target="_blank" rel="noopener">
+              {brand.instagram}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact__form" data-form data-access-key={formAccessKey} novalidate>
+        <div class="contact__grid">
+          <label class="field">
+            <span class="field__label">Seu nome</span>
+            <input class="field__control" type="text" name="nome" autocomplete="name" placeholder="Nome completo" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Empresa ou escola</span>
+            <input class="field__control" type="text" name="empresa" autocomplete="organization" placeholder="Nome da instituição" />
+          </label>
+        </div>
+
+        <div class="contact__grid">
+          <label class="field">
+            <span class="field__label">WhatsApp</span>
+            <input class="field__control" type="tel" name="whatsapp" autocomplete="tel" placeholder="(00) 00000-0000" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Quantidade</span>
+            <select class="field__control" name="quantidade">
+              {quantities.map((option) => <option value={option}>{option}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field__label">O que você precisa</span>
+          <textarea
+            class="field__control field__control--area"
+            name="mensagem"
+            rows="3"
+            placeholder="Ex.: 80 camisas polo bordadas com o logo da empresa, para entregar até o fim do mês"
+            required></textarea>
+        </label>
+
+        <!-- Campo isca: preenchido só por robô, o envio é descartado. -->
+        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+        <button type="submit" class="btn btn--primary contact__submit" data-form-submit>
+          Faça seu orçamento
+        </button>
+
+        <p class="contact__status" data-form-status role="status" aria-live="polite"></p>
+        <p class="contact__note">Seus dados vão direto para nossa equipe comercial.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-bottom: var(--section-y);
+    background: var(--surface);
+  }
+
+  .contact__card {
+    display: grid;
+    gap: 32px;
+    padding: 26px 18px;
+    background: var(--blue-900);
+    border-radius: var(--radius-lg);
+  }
+
+  .contact__pitch {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contact__title {
+    font-size: clamp(24px, 1.3rem + 2vw, 40px);
+    font-weight: 700;
+    line-height: 1.12;
+    color: #fff;
+  }
+
+  .contact__slogan {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 1.3rem + 2vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--orange-500);
+  }
+
+  /* Abaixo de 480px o mascote e o botão do telefone não cabem lado a lado:
+     o rótulo do botão é largo e não pode encolher além do texto. */
+  .contact__mascot-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .contact__mascot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 104px;
+    height: 132px;
+    padding: 10px;
+    background: rgb(255 255 255 / 8%);
+    border: 1px dashed rgb(255 255 255 / 35%);
+    border-radius: var(--radius-md);
+    color: rgb(255 255 255 / 75%);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .contact__channels {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .contact__channels .btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact__instagram {
+    font-size: 15px;
+    color: rgb(255 255 255 / 72%);
+  }
+
+  .contact__instagram:hover {
+    color: #fff;
+  }
+
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+  }
+
+  .contact__grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .field__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-2);
+  }
+
+  .field__control {
+    width: 100%;
+    padding: 15px 16px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+  }
+
+  .field__control::placeholder {
+    color: var(--faint-2);
+  }
+
+  .field__control:focus {
+    background: var(--surface);
+    border-color: var(--blue-600);
+  }
+
+  .field__control--area {
+    min-height: 96px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .contact__submit {
+    margin-top: 4px;
+  }
+
+  .contact__submit[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .contact__status {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .contact__status:empty {
+    display: none;
+  }
+
+  .contact__status[data-state='erro'] {
+    color: #b3261e;
+  }
+
+  .contact__status[data-state='ok'] {
+    color: #1b6b3a;
+  }
+
+  .contact__note {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--faint);
+    text-align: center;
+  }
+
+  @media (min-width: 480px) {
+    .contact__card {
+      padding: 36px 24px;
+    }
+
+    .contact__form {
+      padding: 24px;
+    }
+
+    .contact__mascot-row {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 20px;
+    }
+
+    .contact__mascot {
+      width: 116px;
+      height: 150px;
+    }
+
+    .contact__channels {
+      padding-bottom: 8px;
+    }
+  }
+
+  @media (min-width: 560px) {
+    .contact__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .contact__card {
+      padding: 48px 40px;
+    }
+
+    .contact__form {
+      padding: 32px;
+    }
+
+    .contact__mascot {
+      width: 148px;
+      height: 190px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .contact__card {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 72px;
+      padding: 72px;
+      border-radius: var(--radius-xl);
+    }
+
+    .contact__pitch {
+      gap: 26px;
+    }
+
+    .contact__form {
+      padding: 36px;
+      border-radius: var(--radius-lg);
+    }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  const status = document.querySelector<HTMLElement>('[data-form-status]');
+  const submit = document.querySelector<HTMLButtonElement>('[data-form-submit]');
+
+  const say = (message: string, state: 'ok' | 'erro') => {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!form.reportValidity()) return;
+
+    const accessKey = form.dataset.accessKey;
+    if (!accessKey) {
+      say(
+        'O envio pelo site ainda não está ativo. Fale com a gente pelo WhatsApp que respondemos na hora.',
+        'erro',
+      );
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (data.botcheck) return;
+
+    submit?.setAttribute('disabled', 'true');
+    say('Enviando...', 'ok');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          access_key: accessKey,
+          subject: 'Novo pedido de orçamento pelo site',
+          from_name: 'Site Mirante',
+        }),
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      form.reset();
+      say('Recebemos o seu pedido. Nossa equipe entra em contato pelo WhatsApp.', 'ok');
+    } catch {
+      say(
+        'Não conseguimos enviar agora. Tente de novo ou chame a gente pelo WhatsApp.',
+        'erro',
+      );
+    } finally {
+      submit?.removeAttribute('disabled');
+    }
+  });
+</script>

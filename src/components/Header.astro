@@ -1,0 +1,210 @@
+---
+import Logo from './Logo.astro';
+
+const links = [
+  { href: '#produtos', label: 'Produtos' },
+  { href: '#clientes', label: 'Quem veste Mirante' },
+  { href: '#fabrica', label: 'A fábrica' },
+  { href: '#duvidas', label: 'Dúvidas' },
+  { href: '#localizacao', label: 'Onde estamos' },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a href="#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
+      <Logo tone="light" />
+    </a>
+
+    <nav class="site-header__nav" id="nav-principal" aria-label="Navegação principal">
+      <ul>
+        {links.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+      <a href="#contato" class="btn btn--primary site-header__cta-mobile">Faça seu orçamento</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <a href="#contato" class="btn btn--primary site-header__cta">Faça seu orçamento</a>
+      <button
+        type="button"
+        class="site-header__toggle"
+        aria-expanded="false"
+        aria-controls="nav-principal"
+        data-nav-toggle
+      >
+        <span class="visually-hidden">Abrir menu</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .site-header[data-scrolled] {
+    box-shadow: 0 1px 16px rgb(16 26 53 / 8%);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 68px;
+  }
+
+  .site-header__brand:hover {
+    color: inherit;
+  }
+
+  .site-header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+  }
+
+  .site-header__nav a {
+    font-size: 15px;
+    font-weight: 500;
+    color: #3f4a63;
+  }
+
+  .site-header__nav a:hover {
+    color: var(--blue-900);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .site-header__cta {
+    min-height: 46px;
+    padding-inline: 26px;
+    font-size: 15px;
+  }
+
+  .site-header__cta-mobile {
+    display: none;
+  }
+
+  .site-header__toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--blue-900);
+    cursor: pointer;
+  }
+
+  .site-header__toggle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1079px) {
+    .site-header__nav {
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 20px var(--gutter) 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 16px 32px rgb(16 26 53 / 10%);
+    }
+
+    .site-header__nav[data-open] {
+      display: flex;
+    }
+
+    .site-header__nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .site-header__nav li + li {
+      border-top: 1px solid var(--border);
+    }
+
+    .site-header__nav a {
+      display: block;
+      padding: 15px 0;
+      font-size: 17px;
+    }
+
+    .site-header__cta-mobile {
+      display: inline-flex;
+      margin-top: 12px;
+    }
+
+    .site-header__cta {
+      display: none;
+    }
+
+    .site-header__toggle {
+      display: inline-flex;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .site-header__inner {
+      min-height: 76px;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.getElementById('nav-principal');
+
+  if (toggle && nav) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      nav.toggleAttribute('data-open', open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    nav.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    // Se a janela crescer até o layout de desktop, o painel não pode ficar preso aberto.
+    window.matchMedia('(min-width: 1080px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+
+  if (header) {
+    const onScroll = () => {
+      header.toggleAttribute('data-scrolled', window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

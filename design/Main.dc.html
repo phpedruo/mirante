@@ -1,0 +1,718 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Black&display=swap">
+  <style>
+    body { margin: 0; background: #07205e; font-family: 'Archivo', system-ui, -apple-system, sans-serif; }
+    a { color: #dc6800; text-decoration: none; }
+    a:hover { color: #f07a1a; }
+    p { margin: 0; }
+    h1, h2, h3, h4 { margin: 0; text-wrap: pretty; }
+    ul { margin: 0; padding: 0; list-style: none; }
+
+    @keyframes vitrine-para-direita {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes logos-para-esquerda {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .trilho-vitrine {
+      display: flex;
+      gap: 22px;
+      width: max-content;
+      animation: vitrine-para-direita 72s linear infinite;
+    }
+    .trilho-logos {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      animation: logos-para-esquerda 34s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trilho-vitrine, .trilho-logos { animation: none; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 1440px; color: #101a35; background: #faf7f2;">
+
+  <!-- HEADER -->
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 48px; padding: 18px 100px; background: #0a2c85; border-bottom: 1px solid rgba(255,255,255,0.14);">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <svg width="48" height="34" viewBox="0 0 52 34" fill="none">
+        <path d="M2 20 C10 17 16 16 22 16 L20 12 C26 13 30 15 33 18 C37 14 43 11 50 10 C44 14 40 19 38 25 C32 22 26 21 20 22 C14 23 7 23 2 20 Z" fill="#ffffff"></path>
+        <path d="M33 18 C33 12 38 7 45 6 C41 9 39 12 39 16" fill="#f07a1a"></path>
+        <circle cx="41" cy="12" r="1.5" fill="#0a2c85"></circle>
+      </svg>
+      <div style="display: flex; flex-direction: column; gap: 1px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 21px; letter-spacing: 0.02em; color: #ffffff;">MIRANTE</span>
+        <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #f07a1a;">Camisas e Fardamentos</span>
+      </div>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 30px;">
+      <a href="#produtos" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.82);">Produtos</a>
+      <a href="#clientes" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.82);">Quem veste Mirante</a>
+      <a href="#fabrica" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.82);">A fábrica</a>
+      <a href="#localizacao" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.82);">Onde estamos</a>
+    </nav>
+    <a href="#contato" style="display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; background: #f07a1a; color: #0a2c85; font-size: 14px; font-weight: 700; border-radius: 2px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+      </svg>
+      Faça seu orçamento
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section style="background: #0a2c85; padding: 84px 100px 92px; color: #ffffff;">
+    <div style="display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 64px; align-items: center;">
+
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #f07a1a;">Fábrica em Paulista – PE</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="font-size: 30px; font-weight: 700; line-height: 1.15; letter-spacing: 0.01em; color: rgba(255,255,255,0.9);">
+            Identidade e qualidade para o seu fardamento?
+          </h2>
+          <h1 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 68px; line-height: 0.96; letter-spacing: -0.03em; color: #ffffff;">
+            Chama que a<br>
+            <span style="color: #f07a1a;">Mirante faz!</span>
+          </h1>
+        </div>
+
+        <p style="font-size: 19px; line-height: 1.6; color: rgba(255,255,255,0.82); max-width: 570px;">
+          Fardamento escolar e industrial, polo, camisa promocional, bata, avental, camisa UV, short-saia e brinde — feitos na nossa fábrica, com acabamento conferido peça por peça.
+        </p>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <a href="#contato" style="display: inline-flex; align-items: center; gap: 10px; padding: 18px 28px; background: #f07a1a; color: #0a2c85; font-size: 16px; font-weight: 700; border-radius: 2px;">
+            Faça seu orçamento no WhatsApp
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+            </svg>
+          </a>
+          <a href="#produtos" style="display: inline-flex; align-items: center; padding: 18px 28px; border: 1px solid rgba(255,255,255,0.42); color: #ffffff; font-size: 16px; font-weight: 600; border-radius: 2px;">
+            Ver os produtos
+          </a>
+        </div>
+      </div>
+
+      <div style="height: 470px; background: #0c37a8; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0 12px, rgba(255,255,255,0) 12px 24px); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: flex-end; padding: 22px;">
+        <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.72);">[Foto — pessoa fardada, no estilo das artes do Instagram, sem o texto embutido]</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAIXA DE FATOS -->
+  <section style="background: #fde9d4; padding: 36px 100px;">
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 32px; line-height: 1; color: #0a2c85;">[X] anos</span>
+        <span style="font-size: 14px; font-weight: 500; color: #1440bd;">fabricando em Pernambuco</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 32px; line-height: 1; color: #0a2c85;">Preço baixo</span>
+        <span style="font-size: 14px; font-weight: 500; color: #1440bd;">o melhor da região [confirmar]</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 32px; line-height: 1; color: #0a2c85;">Entrega própria</span>
+        <span style="font-size: 14px; font-weight: 500; color: #1440bd;">veículo da Mirante leva o pedido</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 32px; line-height: 1; color: #0a2c85;">Produção própria</span>
+        <span style="font-size: 14px; font-weight: 500; color: #1440bd;">corte, costura e estampa no galpão</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- O QUE PRODUZIMOS — VITRINE -->
+  <section id="produtos" style="background: #faf7f2; padding: 100px 0;">
+    <div style="display: flex; flex-direction: column; gap: 44px;">
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: end; padding: 0 100px;">
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #dc6800;">O que produzimos</span>
+          </div>
+          <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 46px; line-height: 1.02; letter-spacing: -0.02em; color: #0a2c85;">
+            É avental? É bata? É camisa de corrida?
+          </h2>
+        </div>
+        <p style="font-size: 17px; line-height: 1.65; color: #4b5578; padding-bottom: 6px;">
+          Cada peça pede um tecido, uma modelagem e um tipo de personalização diferentes — e a gente indica a melhor combinação junto com o orçamento. [Confirmar a lista completa e os tecidos de cada linha]
+        </p>
+      </div>
+
+      <div style="position: relative; overflow: hidden; padding: 4px 0;">
+        <div class="trilho-vitrine">
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Fardamento escolar</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Vestido, camisa, short e short-saia, do infantil ao adulto.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas polo</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Gola trabalhada e logo bordado, para durar lavagem após lavagem.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Fardamento pesado</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Macacão e conjunto industrial com faixa refletiva e costura reforçada.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Batas e jalecos</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Para clínica, consultório e laboratório, com bordado no bolso.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Aventais</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Para restaurante, bar e food service, com a marca bem aplicada.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas promocionais</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Campanha, evento e ação de rua, com a arte que você aprovou.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Jogos internos e eventos</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Camisa de time sublimada, com escudo, número e nome.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas UV</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Manga longa com proteção solar, para equipe que trabalha no sol.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas para corrida</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Tecido leve e respirável, com acabamento reforçado. [mínimo 50 peças]</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Roupas de ballet</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Collant e saia personalizados para a escola de dança.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Brindes</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Sacola, boné, viseira, almofada e mochila saco personalizados.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Bandeiras</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Fachada, evento e institucional, com cor que aguenta sol e chuva.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Fardamento escolar</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Vestido, camisa, short e short-saia, do infantil ao adulto.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas polo</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Gola trabalhada e logo bordado, para durar lavagem após lavagem.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Fardamento pesado</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Macacão e conjunto industrial com faixa refletiva e costura reforçada.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Batas e jalecos</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Para clínica, consultório e laboratório, com bordado no bolso.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Aventais</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Para restaurante, bar e food service, com a marca bem aplicada.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas promocionais</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Campanha, evento e ação de rua, com a arte que você aprovou.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Jogos internos e eventos</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Camisa de time sublimada, com escudo, número e nome.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas UV</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Manga longa com proteção solar, para equipe que trabalha no sol.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Camisas para corrida</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Tecido leve e respirável, com acabamento reforçado. [mínimo 50 peças]</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Roupas de ballet</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Collant e saia personalizados para a escola de dança.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Brindes</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Sacola, boné, viseira, almofada e mochila saco personalizados.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; width: 268px; background: #ffffff; border: 1px solid #e6ded2;">
+            <div style="height: 208px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); display: flex; align-items: flex-end; padding: 14px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto]</span></div>
+            <div style="display: flex; flex-direction: column; gap: 7px; padding: 20px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0a2c85;">Bandeiras</h3>
+              <p style="font-size: 14px; line-height: 1.55; color: #4b5578;">Fachada, evento e institucional, com cor que aguenta sol e chuva.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 0 100px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc6800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path>
+        </svg>
+        <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #dc6800;">A vitrine corre sozinha, da esquerda para a direita</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUEM VESTE MIRANTE -->
+  <section id="clientes" style="background: #0a2c85; padding: 84px 0; color: #ffffff;">
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 0 100px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #f07a1a;">Quem veste Mirante</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: end;">
+          <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 44px; line-height: 1.02; letter-spacing: -0.02em; color: #ffffff;">
+            Marcas que já saíram fardadas daqui.
+          </h2>
+          <p style="font-size: 17px; line-height: 1.65; color: rgba(255,255,255,0.78); padding-bottom: 4px;">
+            Escolas, indústrias, restaurantes e comércios que confiaram a peça da equipe à nossa produção. [Confirmar quais marcas podem ser exibidas e enviar os logos em vetor]
+          </p>
+        </div>
+      </div>
+
+      <div style="position: relative; overflow: hidden; padding: 4px 0;">
+        <div class="trilho-logos">
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 208px; height: 116px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo cliente]</span></div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 0 100px;">
+        <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #f07a1a;">Os logos correm da direita para a esquerda</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+        </svg>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VOCÊ SABIA -->
+  <section style="background: #f07a1a; padding: 56px 100px;">
+    <div style="display: flex; align-items: center; gap: 40px;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+        <path d="M9 20h6"></path><path d="M10 23h4"></path>
+        <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path>
+      </svg>
+      <p style="font-size: 27px; font-weight: 600; line-height: 1.35; color: #0a2c85;">
+        Cliente confia mais em empresa com visual padronizado. <span style="font-family: 'Archivo Black', 'Archivo', sans-serif;">A farda da sua equipe é a primeira coisa que ele vê.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- A FÁBRICA -->
+  <section id="fabrica" style="background: #faf7f2; padding: 104px 100px;">
+    <div style="display: flex; flex-direction: column; gap: 48px;">
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start;">
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #dc6800;">A fábrica</span>
+          </div>
+          <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 46px; line-height: 1.02; letter-spacing: -0.02em; color: #0a2c85;">
+            Escolha a qualidade Mirante.
+          </h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <p style="font-size: 17px; line-height: 1.65; color: #4b5578;">
+            Tudo acontece no nosso galpão em Paulista: o corte, a costura e a estampa. Antes de embalar, cada peça passa por conferência de medida, acabamento e aplicação da arte — e a entrega sai no nosso próprio veículo.
+          </p>
+          <ul style="display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; align-items: center; gap: 12px; font-size: 16px; color: #101a35;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5 11-11"></path></svg>
+              Tecido escolhido conforme o uso da peça
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; font-size: 16px; color: #101a35;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5 11-11"></path></svg>
+              Costura e acabamento conferidos peça por peça
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; font-size: 16px; color: #101a35;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5 11-11"></path></svg>
+              Arte aprovada por você antes de produzir
+            </li>
+            <li style="display: flex; align-items: center; gap: 12px; font-size: 16px; color: #101a35;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5 11-11"></path></svg>
+              Pontualidade e compromisso na entrega
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px;">
+        <div style="height: 300px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); border: 1px solid #e6ded2; display: flex; align-items: flex-end; padding: 20px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto — fachada da loja em Maranguape II]</span>
+        </div>
+        <div style="height: 300px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); border: 1px solid #e6ded2; display: flex; align-items: flex-end; padding: 20px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto — costureiras e maquinário]</span>
+        </div>
+        <div style="height: 300px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); border: 1px solid #e6ded2; display: flex; align-items: flex-end; padding: 20px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto — entrega saindo na van da Mirante]</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="background: #f2ece3; padding: 104px 100px;">
+    <div style="display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 72px; align-items: start;">
+
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #dc6800;">Dúvidas frequentes</span>
+        </div>
+        <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em; color: #0a2c85;">
+          O que a gente mais responde no WhatsApp.
+        </h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Qual é a quantidade mínima?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">30 peças por pedido. [As artes de camisa de corrida falam em 50 peças — confirmar se o mínimo muda por linha]</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Preciso mandar a arte pronta?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">Não. Se você já tem o logo, a gente aplica; se não tem arte fechada, montamos a proposta visual da peça para você aprovar antes da produção. [confirmar se há custo de criação]</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Qual o prazo de produção?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">[Confirmar prazo médio por faixa de quantidade — ex.: 30 a 100 peças, 100 a 500, acima de 500]</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Dá para misturar tamanhos no mesmo pedido?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">Dá. A grade de tamanhos é fechada junto com a aprovação da arte. [confirmar quais modelagens existem: masculina, feminina, infantil]</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Vocês entregam fora de Paulista?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">A entrega sai no nosso próprio veículo. [Confirmar até onde a van atende e como funciona fora dessa área]</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid #ddd4c6; border-bottom: 1px solid #ddd4c6;">
+          <h3 style="font-size: 18px; font-weight: 700; color: #0a2c85;">Como funciona o pagamento?</h3>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">[Confirmar condições: entrada, parcelamento, faturamento para empresa, emissão de nota]</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCALIZAÇÃO -->
+  <section id="localizacao" style="background: #faf7f2; padding: 100px 100px;">
+    <div style="display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 56px; align-items: center;">
+
+      <div style="display: flex; flex-direction: column; gap: 26px;">
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 28px; height: 2px; background: #f07a1a;"></span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #dc6800;">Onde estamos</span>
+          </div>
+          <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em; color: #0a2c85;">
+            Passe na loja e veja as peças de perto.
+          </h2>
+          <p style="font-size: 16px; line-height: 1.65; color: #4b5578;">Tem amostra pronta no balcão para você sentir a malha e o acabamento antes de fechar o pedido.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 18px; padding: 26px; background: #ffffff; border: 1px solid #e6ded2;">
+          <div style="display: flex; gap: 12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+              <path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10.5" r="2.8"></circle>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #626a8a;">Endereço</span>
+              <span style="font-size: 16px; line-height: 1.55; font-weight: 500; color: #101a35;">Av. Antônio Cabral de Souza, 2806<br>Maranguape II, Paulista – PE, 53409-420</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+              <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #626a8a;">Contato</span>
+              <span style="font-size: 16px; font-weight: 500; color: #101a35;">(81) 9.8104-0516</span>
+              <span style="font-size: 13px; color: #626a8a;">[Nas artes também aparecem 3021-0154, 9.9171-9898 e 9.9668-8313 — confirmar quais entram no site]</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+              <circle cx="12" cy="12" r="9"></circle><path d="M12 6.5V12l3.5 2"></path>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #626a8a;">Horário</span>
+              <span style="font-size: 16px; font-weight: 500; color: #101a35;">[Confirmar horário de funcionamento]</span>
+            </div>
+          </div>
+          <a href="#localizacao" style="display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 14px 22px; background: #f07a1a; color: #0a2c85; font-size: 15px; font-weight: 700; border-radius: 2px;">
+            Traçar rota no Google Maps
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <div style="position: relative; height: 500px; background: #e8e2d6; border: 1px solid #d8cfc0; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background-image: linear-gradient(#ffffff 1.5px, transparent 1.5px), linear-gradient(90deg, #ffffff 1.5px, transparent 1.5px); background-size: 76px 76px; opacity: 0.85;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 246px; height: 16px; background: #ffffff;"></div>
+        <div style="position: absolute; top: 0; bottom: 0; left: 300px; width: 22px; background: #ffffff;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 100px; height: 8px; background: #f4efe4;"></div>
+        <div style="position: absolute; left: 232px; top: 186px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="#f07a1a" stroke="#0a2c85" stroke-width="1.4">
+            <path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10.5" r="2.6" fill="#0a2c85" stroke="none"></circle>
+          </svg>
+          <span style="padding: 7px 12px; background: #0a2c85; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.04em;">Mirante Camisas e Fardamentos</span>
+        </div>
+        <span style="position: absolute; left: 20px; bottom: 18px; padding: 8px 12px; background: rgba(10,44,133,0.9); color: #ffffff; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;">[Google Maps interativo na versão final]</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section id="contato" style="background: #f07a1a; padding: 90px 100px;">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center;">
+
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <h2 style="font-size: 26px; font-weight: 700; line-height: 1.2; color: #0a2c85;">
+          Opa! Vi que você precisa de fardamento...
+        </h2>
+        <h3 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 56px; line-height: 0.98; letter-spacing: -0.025em; color: #0a2c85;">
+          Chama que a Mirante faz!
+        </h3>
+        <div style="display: flex; align-items: flex-end; gap: 24px; padding-top: 6px;">
+          <div style="width: 152px; height: 196px; background: rgba(10,44,133,0.12); border: 1px dashed rgba(10,44,133,0.45); display: flex; align-items: flex-end; justify-content: center; padding: 12px; flex-shrink: 0;">
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0a2c85; text-align: center;">[Mascote águia]</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+              </svg>
+              <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 30px; color: #0a2c85;">(81) 9.8104-0516</span>
+            </div>
+            <span style="font-size: 15px; font-weight: 600; color: #0a2c85;">@mirantecamisasefardamentos</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 34px; background: #ffffff;">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">Seu nome</span>
+            <div style="padding: 14px 14px; border: 1px solid #d8d2c6; font-size: 15px; color: #6f6a60;">Nome completo</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">Empresa ou escola</span>
+            <div style="padding: 14px 14px; border: 1px solid #d8d2c6; font-size: 15px; color: #6f6a60;">Nome da instituição</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">WhatsApp</span>
+            <div style="padding: 14px 14px; border: 1px solid #d8d2c6; font-size: 15px; color: #6f6a60;">(00) 00000-0000</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">Quantidade</span>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 14px; border: 1px solid #d8d2c6; font-size: 15px; color: #6f6a60;">
+              <span>A partir de 30 peças</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6f6a60" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">O que você precisa</span>
+          <div style="padding: 14px 14px; border: 1px solid #d8d2c6; font-size: 15px; line-height: 1.5; color: #6f6a60; min-height: 76px;">Ex.: 80 camisas polo bordadas com o logo da empresa, para entregar até o fim do mês</div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; padding: 17px; background: #0a2c85; color: #ffffff; font-size: 16px; font-weight: 700; border-radius: 2px;">
+          Faça seu orçamento
+        </div>
+        <p style="font-size: 13px; line-height: 1.5; color: #626a8a; text-align: center;">Seus dados vão direto para nossa equipe comercial. [confirmar política de privacidade]</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background: #07205e; padding: 60px 100px 34px; color: #ffffff;">
+    <div style="display: flex; flex-direction: column; gap: 42px;">
+      <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 48px;">
+
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <svg width="46" height="32" viewBox="0 0 52 34" fill="none">
+              <path d="M2 20 C10 17 16 16 22 16 L20 12 C26 13 30 15 33 18 C37 14 43 11 50 10 C44 14 40 19 38 25 C32 22 26 21 20 22 C14 23 7 23 2 20 Z" fill="#ffffff"></path>
+              <path d="M33 18 C33 12 38 7 45 6 C41 9 39 12 39 16" fill="#f07a1a"></path>
+              <circle cx="41" cy="12" r="1.5" fill="#07205e"></circle>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 19px; color: #ffffff;">MIRANTE</span>
+              <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #f07a1a;">Camisas e Fardamentos</span>
+            </div>
+          </div>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.62); max-width: 320px;">
+            Fardamento escolar e industrial, polos, camisas promocionais, batas, aventais, brindes e bandeiras. Fábrica em Paulista – PE.
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f07a1a;">Navegue</span>
+          <a href="#produtos" style="font-size: 15px; color: rgba(255,255,255,0.78);">Produtos</a>
+          <a href="#clientes" style="font-size: 15px; color: rgba(255,255,255,0.78);">Quem veste Mirante</a>
+          <a href="#fabrica" style="font-size: 15px; color: rgba(255,255,255,0.78);">A fábrica</a>
+          <a href="#localizacao" style="font-size: 15px; color: rgba(255,255,255,0.78);">Onde estamos</a>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f07a1a;">Contato</span>
+          <span style="font-size: 15px; color: rgba(255,255,255,0.78);">(81) 9.8104-0516</span>
+          <span style="font-size: 15px; color: rgba(255,255,255,0.78);">@mirantecamisasefardamentos</span>
+          <span style="font-size: 15px; color: rgba(255,255,255,0.78);">[e-mail comercial]</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f07a1a;">Endereço</span>
+          <span style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.78);">Av. Antônio Cabral de Souza, 2806<br>Maranguape II<br>Paulista – PE, 53409-420</span>
+        </div>
+
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,0.14);">
+        <span style="font-size: 13px; color: rgba(255,255,255,0.5);">© 2026 Mirante Camisas e Fardamentos · CNPJ [confirmar]</span>
+        <span style="font-size: 13px; color: rgba(255,255,255,0.5);">Chama que a Mirante faz!</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

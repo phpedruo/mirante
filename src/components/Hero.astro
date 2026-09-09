@@ -1,0 +1,141 @@
+---
+import { brand, contact } from '../data/site';
+
+const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURIComponent(
+  'Olá! Vim pelo site e gostaria de um orçamento de fardamento.',
+)}`;
+---
+
+<section class="hero" id="topo">
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <span class="hero__badge" data-anim="hero">
+        <span class="hero__dot" aria-hidden="true"></span>
+        Fábrica própria em Paulista – PE
+      </span>
+
+      <div class="hero__headline">
+        <h1 class="title-lg" data-anim="hero">Identidade e qualidade<br />para o seu fardamento</h1>
+        <p class="hero__slogan" data-anim="hero">{brand.slogan}</p>
+      </div>
+
+      <p class="lead hero__text" data-anim="hero">
+        Fardamento escolar e industrial, polo, camisa promocional, bata, avental, camisa UV e
+        brinde — produzidos na nossa fábrica, com acabamento conferido peça por peça.
+      </p>
+
+      <div class="hero__actions" data-anim="hero">
+        <a href="#contato" class="btn btn--primary">
+          Faça seu orçamento
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </a>
+        <a href={whatsappUrl} class="btn btn--ghost" target="_blank" rel="noopener">
+          Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__media" data-anim="hero-media">
+      <div class="photo-slot hero__photo">[Foto — pessoa fardada, recorte limpo]</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: calc(var(--section-y) * 0.8) var(--section-y);
+    background: var(--surface);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    max-width: 100%;
+    gap: 9px;
+    padding: 9px 16px;
+    background: var(--orange-050);
+    border-radius: var(--pill);
+    color: #b35400;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .hero__dot {
+    width: 7px;
+    height: 7px;
+    background: var(--orange-500);
+    border-radius: var(--pill);
+    flex-shrink: 0;
+  }
+
+  .hero__headline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero__slogan {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 1.1rem + 2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--orange-600);
+  }
+
+  .hero__text {
+    max-width: 520px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero__actions .btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero__photo {
+    height: 300px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hero);
+  }
+
+  @media (min-width: 768px) {
+    .hero__photo {
+      height: 420px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .hero__inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 72px;
+    }
+
+    .hero__content {
+      gap: 30px;
+    }
+
+    .hero__photo {
+      height: 520px;
+    }
+  }
+</style>

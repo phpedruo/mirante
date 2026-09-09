@@ -1,0 +1,38 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Versão atual — desktop", "x": 0, "y": 0, "w": 1440, "h": 6100 },
+    { "file": "Mobile.dc.html", "title": "Versão atual — mobile", "x": 1560, "y": 0, "w": 390, "h": 4200 },
+    { "file": "Refinada.dc.html", "title": "Versão refinada — UX 2026", "x": 2070, "y": 0, "w": 1440, "h": 6400 }
+  ],
+  "annotations": [
+    {
+      "id": "versao-atual",
+      "x": 0,
+      "y": -320,
+      "w": 640,
+      "text": "VERSÃO ATUAL, sem alterações.\nCatálogo do Instagram, entrega própria, visual padronizado e o mascote no fechamento.\nPreço aparece de leve, na faixa abaixo do hero.\nTudo entre [colchetes] precisa de confirmação; os blocos hachurados são onde entram as fotos."
+    },
+    {
+      "id": "pendencias",
+      "x": 700,
+      "y": -320,
+      "w": 460,
+      "text": "Pendências que valem para as duas versões:\n1. Telefone — as artes mostram quatro números diferentes.\n2. Mínimo de peças — 30 ou 50?\n3. \"O preço mais baixo da região\" é afirmação comparativa; só entra se der para sustentar.\nÁguia e logos de clientes seguem como placeholder."
+    },
+    {
+      "id": "refinada-o-que-mudou",
+      "x": 2070,
+      "y": -400,
+      "w": 700,
+      "text": "VERSÃO REFINADA — inspirada no Google Business Profile.\nO que mudou, e por quê:\n• Fundo branco no lugar do azul cheio. O azul vira acento, não plano de fundo — a página respira e as fotos ganham destaque.\n• Muito mais espaço: seções de ~104px, colunas mais largas, menos coisa por tela.\n• Tipografia maior e mais leve. Archivo Black só no slogan; os títulos passam a peso 700, com corpo de texto em 18px em vez de 17px.\n• Cantos arredondados (cards 20px, blocos 28px) e botões em pílula, no lugar do canto reto industrial.\n• Sombra suave substitui as bordas cinzas — hierarquia por elevação.\n• Blocos alternados imagem/texto na seção da fábrica, no lugar da grade densa.\n• FAQ vira accordion, com só a primeira pergunta aberta.\n• Navegação clara e fixa no topo.\n• CTA final vira um card azul arredondado dentro do branco, e não uma faixa laranja de ponta a ponta."
+    },
+    {
+      "id": "roteiro-gsap",
+      "x": 2810,
+      "y": -400,
+      "w": 620,
+      "text": "ROTEIRO DE ANIMAÇÃO (GSAP)\nUm efeito por seção; nada compete com a leitura.\n• Hero: timeline de entrada — selo, título, slogan, texto e botões em fade-up escalonado (stagger 0.08s); o card da foto entra junto, com leve escala de 0.96 a 1.\n• Faixa de fatos: os quatro números sobem em stagger quando entram na viewport.\n• Vitrine e logos: os dois trilhos com movimento contínuo, e a velocidade acompanha o scroll de leve (ScrollTrigger com scrub) — pausa no hover.\n• Fábrica: parallax discreto na foto (uns 40px) enquanto a lista de itens entra em stagger.\n• Você sabia: o card cresce de 0.97 para 1 ao entrar.\n• FAQ: altura animada na abertura, com o ícone girando de + para −.\n• CTA final: o mascote entra deslizando pela direita.\n• Tudo dentro de gsap.matchMedia(), com prefers-reduced-motion desligando as entradas e os trilhos.\nSó transform e opacity, para não custar caro no celular."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

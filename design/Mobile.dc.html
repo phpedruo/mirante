@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Black&display=swap">
+  <style>
+    body { margin: 0; background: #07205e; font-family: 'Archivo', system-ui, -apple-system, sans-serif; }
+    a { color: #dc6800; text-decoration: none; }
+    a:hover { color: #f07a1a; }
+    p { margin: 0; }
+    h1, h2, h3 { margin: 0; text-wrap: pretty; }
+    ul { margin: 0; padding: 0; list-style: none; }
+
+    @keyframes vitrine-para-direita {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes logos-para-esquerda {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .trilho-vitrine {
+      display: flex;
+      gap: 14px;
+      width: max-content;
+      animation: vitrine-para-direita 56s linear infinite;
+    }
+    .trilho-logos {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: logos-para-esquerda 26s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .trilho-vitrine, .trilho-logos { animation: none; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 390px; color: #101a35; background: #faf7f2;">
+
+  <!-- HEADER -->
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: #0a2c85;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <svg width="44" height="30" viewBox="0 0 52 34" fill="none">
+        <path d="M2 20 C10 17 16 16 22 16 L20 12 C26 13 30 15 33 18 C37 14 43 11 50 10 C44 14 40 19 38 25 C32 22 26 21 20 22 C14 23 7 23 2 20 Z" fill="#ffffff"></path>
+        <path d="M33 18 C33 12 38 7 45 6 C41 9 39 12 39 16" fill="#f07a1a"></path>
+        <circle cx="41" cy="12" r="1.5" fill="#0a2c85"></circle>
+      </svg>
+      <div style="display: flex; flex-direction: column; gap: 1px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 17px; color: #ffffff;">MIRANTE</span>
+        <span style="font-size: 8px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #f07a1a;">Camisas e Fardamentos</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border: 1px solid rgba(255,255,255,0.3); border-radius: 2px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path>
+      </svg>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section style="background: #0a2c85; padding: 36px 20px 40px; color: #ffffff;">
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="width: 22px; height: 2px; background: #f07a1a;"></span>
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f07a1a;">Fábrica em Paulista – PE</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <h2 style="font-size: 21px; font-weight: 700; line-height: 1.2; color: rgba(255,255,255,0.9);">
+          Identidade e qualidade para o seu fardamento?
+        </h2>
+        <h1 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 42px; line-height: 0.96; letter-spacing: -0.025em; color: #ffffff;">
+          Chama que a<br>
+          <span style="color: #f07a1a;">Mirante faz!</span>
+        </h1>
+      </div>
+
+      <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.82);">
+        Fardamento escolar e industrial, polo, camisa promocional, bata, avental, camisa UV e brinde — feitos na nossa fábrica.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="#contato" style="display: flex; align-items: center; justify-content: center; min-height: 54px; background: #f07a1a; color: #0a2c85; font-size: 16px; font-weight: 700; border-radius: 2px;">
+          Faça seu orçamento no WhatsApp
+        </a>
+        <a href="#produtos" style="display: flex; align-items: center; justify-content: center; min-height: 54px; border: 1px solid rgba(255,255,255,0.42); color: #ffffff; font-size: 16px; font-weight: 600; border-radius: 2px;">
+          Ver os produtos
+        </a>
+      </div>
+
+      <div style="height: 250px; background: #0c37a8; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0 12px, rgba(255,255,255,0) 12px 24px); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: flex-end; padding: 16px;">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.72);">[Foto — pessoa fardada]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAIXA DE FATOS -->
+  <section style="background: #fde9d4; padding: 26px 20px;">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 22px; line-height: 1; color: #0a2c85;">[X] anos</span>
+        <span style="font-size: 13px; font-weight: 500; color: #1440bd;">fabricando em Pernambuco</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 22px; line-height: 1; color: #0a2c85;">Preço baixo</span>
+        <span style="font-size: 13px; font-weight: 500; color: #1440bd;">o melhor da região [confirmar]</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 22px; line-height: 1; color: #0a2c85;">Entrega própria</span>
+        <span style="font-size: 13px; font-weight: 500; color: #1440bd;">nosso veículo leva o pedido</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 22px; line-height: 1; color: #0a2c85;">Produção própria</span>
+        <span style="font-size: 13px; font-weight: 500; color: #1440bd;">corte, costura e estampa</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- O QUE PRODUZIMOS -->
+  <section id="produtos" style="background: #faf7f2; padding: 48px 0;">
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 22px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #dc6800;">O que produzimos</span>
+        </div>
+        <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 29px; line-height: 1.05; letter-spacing: -0.02em; color: #0a2c85;">
+          É avental? É bata? É camisa de corrida?
+        </h2>
+      </div>
+
+      <div style="position: relative; overflow: hidden;">
+        <div class="trilho-vitrine">
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Fardamento escolar</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas polo</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Fardamento pesado</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Batas e jalecos</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Aventais</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas promocionais</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Jogos internos</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas UV</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas para corrida</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Roupas de ballet</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Brindes</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Bandeiras</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Fardamento escolar</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas polo</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Fardamento pesado</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Batas e jalecos</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Aventais</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas promocionais</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Jogos internos</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas UV</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Camisas para corrida</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Roupas de ballet</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Brindes</h3></div></div>
+          <div style="display: flex; flex-direction: column; width: 204px; background: #ffffff; border: 1px solid #e6ded2;"><div style="height: 150px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px);"></div><div style="padding: 14px;"><h3 style="font-size: 15px; font-weight: 700; color: #0a2c85;">Bandeiras</h3></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUEM VESTE MIRANTE -->
+  <section style="background: #0a2c85; padding: 44px 0; color: #ffffff;">
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 22px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f07a1a;">Quem veste Mirante</span>
+        </div>
+        <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 27px; line-height: 1.05; letter-spacing: -0.02em; color: #ffffff;">
+          Marcas que já saíram fardadas daqui.
+        </h2>
+      </div>
+      <div style="position: relative; overflow: hidden;">
+        <div class="trilho-logos">
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+          <div style="display: flex; align-items: center; justify-content: center; width: 150px; height: 84px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55);">[Logo]</span></div>
+        </div>
+      </div>
+      <p style="font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.6); padding: 0 20px;">[Confirmar quais marcas podem ser exibidas e enviar os logos em vetor]</p>
+    </div>
+  </section>
+
+  <!-- VOCÊ SABIA -->
+  <section style="background: #f07a1a; padding: 32px 20px;">
+    <div style="display: flex; gap: 16px; align-items: flex-start;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0a2c85" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+        <path d="M9 20h6"></path><path d="M10 23h4"></path>
+        <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path>
+      </svg>
+      <p style="font-size: 19px; font-weight: 600; line-height: 1.35; color: #0a2c85;">
+        Cliente confia mais em empresa com visual padronizado. <span style="font-family: 'Archivo Black', 'Archivo', sans-serif;">A farda da sua equipe é a primeira coisa que ele vê.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- A FÁBRICA -->
+  <section style="background: #faf7f2; padding: 48px 20px;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 22px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #dc6800;">A fábrica</span>
+        </div>
+        <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 29px; line-height: 1.05; letter-spacing: -0.02em; color: #0a2c85;">
+          Escolha a qualidade Mirante.
+        </h2>
+        <p style="font-size: 15px; line-height: 1.6; color: #4b5578;">
+          Corte, costura e estampa no nosso galpão em Paulista. Antes de embalar, cada peça passa por conferência de medida e acabamento — e a entrega sai no nosso próprio veículo.
+        </p>
+      </div>
+      <div style="height: 200px; background: #f2ece3; background-image: repeating-linear-gradient(135deg, rgba(10,44,133,0.05) 0 12px, rgba(10,44,133,0) 12px 24px); border: 1px solid #e6ded2; display: flex; align-items: flex-end; padding: 16px;">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #626a8a;">[Foto — fachada / produção]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCALIZAÇÃO -->
+  <section id="localizacao" style="background: #f2ece3; padding: 48px 20px;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 22px; height: 2px; background: #f07a1a;"></span>
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #dc6800;">Onde estamos</span>
+        </div>
+        <h2 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 29px; line-height: 1.05; letter-spacing: -0.02em; color: #0a2c85;">
+          Passe na loja e veja as peças de perto.
+        </h2>
+      </div>
+
+      <div style="position: relative; height: 240px; background: #e8e2d6; border: 1px solid #d8cfc0; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background-image: linear-gradient(#ffffff 1.5px, transparent 1.5px), linear-gradient(90deg, #ffffff 1.5px, transparent 1.5px); background-size: 62px 62px; opacity: 0.85;"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 118px; height: 14px; background: #ffffff;"></div>
+        <div style="position: absolute; top: 0; bottom: 0; left: 128px; width: 18px; background: #ffffff;"></div>
+        <div style="position: absolute; left: 96px; top: 74px; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="#f07a1a" stroke="#0a2c85" stroke-width="1.4">
+            <path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10.5" r="2.6" fill="#0a2c85" stroke="none"></circle>
+          </svg>
+          <span style="padding: 5px 9px; background: #0a2c85; color: #ffffff; font-size: 11px; font-weight: 700;">Mirante</span>
+        </div>
+        <span style="position: absolute; left: 12px; bottom: 12px; padding: 6px 10px; background: rgba(10,44,133,0.9); color: #ffffff; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">[Google Maps na versão final]</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 20px; background: #ffffff; border: 1px solid #e6ded2;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #626a8a;">Endereço</span>
+          <span style="font-size: 15px; line-height: 1.55; font-weight: 500; color: #101a35;">Av. Antônio Cabral de Souza, 2806<br>Maranguape II, Paulista – PE, 53409-420</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #626a8a;">Horário</span>
+          <span style="font-size: 15px; font-weight: 500; color: #101a35;">[Confirmar horário]</span>
+        </div>
+        <a href="#localizacao" style="display: flex; align-items: center; justify-content: center; min-height: 50px; background: #f07a1a; color: #0a2c85; font-size: 15px; font-weight: 700; border-radius: 2px;">
+          Traçar rota no Google Maps
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section id="contato" style="background: #f07a1a; padding: 44px 20px;">
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <h2 style="font-size: 19px; font-weight: 700; line-height: 1.25; color: #0a2c85;">
+        Opa! Vi que você precisa de fardamento...
+      </h2>
+      <h3 style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 36px; line-height: 0.98; letter-spacing: -0.02em; color: #0a2c85;">
+        Chama que a Mirante faz!
+      </h3>
+      <div style="display: flex; align-items: flex-end; gap: 16px;">
+        <div style="width: 116px; height: 150px; background: rgba(10,44,133,0.12); border: 1px dashed rgba(10,44,133,0.45); display: flex; align-items: flex-end; justify-content: center; padding: 10px; flex-shrink: 0;">
+          <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0a2c85; text-align: center;">[Mascote águia]</span>
+        </div>
+        <p style="font-size: 15px; line-height: 1.6; color: #0a2c85; padding-bottom: 6px;">Diz o que você precisa e para quantas pessoas. A gente volta com a arte e o preço.</p>
+      </div>
+      <a href="#whatsapp" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; background: #0a2c85; color: #ffffff; font-size: 16px; font-weight: 700; border-radius: 2px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+        </svg>
+        (81) 9.8104-0516
+      </a>
+      <span style="font-size: 14px; font-weight: 600; color: #0a2c85;">@mirantecamisasefardamentos</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background: #07205e; padding: 32px 20px 26px; color: #ffffff;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="42" height="28" viewBox="0 0 52 34" fill="none">
+          <path d="M2 20 C10 17 16 16 22 16 L20 12 C26 13 30 15 33 18 C37 14 43 11 50 10 C44 14 40 19 38 25 C32 22 26 21 20 22 C14 23 7 23 2 20 Z" fill="#ffffff"></path>
+          <path d="M33 18 C33 12 38 7 45 6 C41 9 39 12 39 16" fill="#f07a1a"></path>
+          <circle cx="41" cy="12" r="1.5" fill="#07205e"></circle>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-family: 'Archivo Black', 'Archivo', sans-serif; font-size: 16px; color: #ffffff;">MIRANTE</span>
+          <span style="font-size: 8px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #f07a1a;">Camisas e Fardamentos</span>
+        </div>
+      </div>
+      <p style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.62);">
+        Av. Antônio Cabral de Souza, 2806 — Maranguape II, Paulista – PE, 53409-420<br>(81) 9.8104-0516 · @mirantecamisasefardamentos
+      </p>
+      <span style="font-size: 12px; color: rgba(255,255,255,0.5); padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.14);">© 2026 Mirante Camisas e Fardamentos · CNPJ [confirmar]</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

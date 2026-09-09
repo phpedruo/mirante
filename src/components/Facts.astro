@@ -1,0 +1,84 @@
+---
+import { company } from '../data/site';
+
+const facts = [
+  // O número de anos só entra quando o dado existir em site.ts.
+  ...(company.yearsInBusiness
+    ? [{ value: `${company.yearsInBusiness} anos`, label: 'fabricando em Pernambuco' }]
+    : []),
+  { value: 'Preço baixo', label: 'orçamento justo, direto da fábrica' },
+  { value: 'Entrega própria', label: 'nosso veículo leva o pedido' },
+  { value: 'Produção própria', label: 'corte, costura e estampa no galpão' },
+];
+---
+
+<section class="facts">
+  <div class="container">
+    <ul class="facts__list" style={`--facts-count: ${facts.length}`}>
+      {facts.map((fact) => (
+        <li class="facts__item" data-anim="fact">
+          <span class="facts__value">{fact.value}</span>
+          <span class="facts__label">{fact.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .facts {
+    padding-bottom: var(--section-y);
+    background: var(--surface);
+  }
+
+  .facts__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+    padding: 26px 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+  }
+
+  @media (min-width: 480px) {
+    .facts__list {
+      gap: 24px 20px;
+      padding: 32px 24px;
+    }
+  }
+
+  .facts__item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .facts__value {
+    font-size: clamp(19px, 0.9rem + 1.6vw, 30px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--blue-900);
+    /* "Produção própria" é largo demais para meia coluna em telas estreitas. */
+    overflow-wrap: break-word;
+  }
+
+  .facts__label {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--muted-2);
+  }
+
+  @media (min-width: 900px) {
+    .facts__list {
+      grid-template-columns: repeat(var(--facts-count), minmax(0, 1fr));
+      gap: 8px;
+      padding: 40px 44px;
+    }
+
+    .facts__item + .facts__item {
+      padding-left: 32px;
+      border-left: 1px solid var(--border);
+    }
+  }
+</style>

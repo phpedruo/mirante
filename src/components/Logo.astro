@@ -1,0 +1,67 @@
+---
+/**
+ * Lockup da marca. O símbolo da águia é provisório — substituir pelo vetor
+ * oficial quando ele chegar, mantendo a mesma proporção.
+ */
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { tone = 'light', class: className } = Astro.props;
+const birdFill = tone === 'light' ? '#0a2c85' : '#ffffff';
+const eyeFill = tone === 'light' ? '#ffffff' : '#0a2c85';
+const nameColor = tone === 'light' ? 'var(--blue-900)' : '#ffffff';
+const subColor = tone === 'light' ? 'var(--orange-600)' : 'var(--orange-500)';
+---
+
+<span class:list={['logo', className]}>
+  <svg viewBox="0 0 52 34" aria-hidden="true" focusable="false">
+    <path
+      d="M2 20 C10 17 16 16 22 16 L20 12 C26 13 30 15 33 18 C37 14 43 11 50 10 C44 14 40 19 38 25 C32 22 26 21 20 22 C14 23 7 23 2 20 Z"
+      fill={birdFill}
+    ></path>
+    <path d="M33 18 C33 12 38 7 45 6 C41 9 39 12 39 16" fill="#f07a1a"></path>
+    <circle cx="41" cy="12" r="1.5" fill={eyeFill}></circle>
+  </svg>
+  <span class="logo__text">
+    <span class="logo__name">MIRANTE</span>
+    <span class="logo__sub">Camisas e Fardamentos</span>
+  </span>
+</span>
+
+<style define:vars={{ nameColor, subColor }}>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  .logo svg {
+    width: 46px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo__name {
+    font-family: var(--font-display);
+    font-size: 19px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--nameColor);
+  }
+
+  .logo__sub {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--subColor);
+  }
+</style>

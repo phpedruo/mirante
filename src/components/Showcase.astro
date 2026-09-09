@@ -1,0 +1,125 @@
+---
+import { products } from '../data/site';
+
+// A lista é duplicada para o trilho poder reiniciar sem salto visível.
+const track = [...products, ...products];
+---
+
+<section class="showcase" id="produtos">
+  <div class="container showcase__intro">
+    <span class="eyebrow" data-anim="up">O que produzimos</span>
+    <h2 class="title-md" data-anim="up">É avental? É bata? É camisa de corrida?</h2>
+    <p class="lead" data-anim="up">
+      Cada peça pede um tecido, uma modelagem e um tipo de personalização diferentes — e a gente
+      indica a melhor combinação junto com o orçamento.
+    </p>
+  </div>
+
+  <div class="marquee" data-marquee="ltr">
+    <ul class="marquee__track" data-marquee-track>
+      {track.map((product, index) => (
+        <li class="product card" aria-hidden={index >= products.length ? 'true' : undefined}>
+          {product.photo ? (
+            <img class="product__photo" src={product.photo} alt={product.name} loading="lazy" decoding="async" width="292" height="224" />
+          ) : (
+            <div class="photo-slot product__photo" aria-hidden="true"></div>
+          )}
+          <div class="product__body">
+            <h3 class="product__name">{product.name}</h3>
+            <p class="product__text">{product.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .showcase {
+    padding-block: var(--section-y);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .showcase__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 720px;
+    margin-bottom: 40px;
+  }
+
+  .marquee {
+    position: relative;
+    padding-block: 8px;
+    overflow: hidden;
+  }
+
+  .marquee__track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .product {
+    display: flex;
+    flex-direction: column;
+    width: 232px;
+    overflow: hidden;
+  }
+
+  .product__photo {
+    height: 176px;
+    border-radius: 0;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .product__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+  }
+
+  .product__name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .product__text {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted-2);
+  }
+
+  @media (min-width: 768px) {
+    .marquee__track {
+      gap: 24px;
+    }
+
+    .product {
+      width: 292px;
+    }
+
+    .product__photo {
+      height: 224px;
+    }
+
+    .product__name {
+      font-size: 19px;
+    }
+
+    .product__body {
+      padding: 24px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .showcase__intro {
+      margin-bottom: 48px;
+    }
+  }
+</style>

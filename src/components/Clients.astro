@@ -1,0 +1,108 @@
+---
+import { clients } from '../data/site';
+
+// Enquanto não houver autorização e arquivos dos logos, a esteira roda com placeholders.
+const placeholders = Array.from({ length: 8 }, (_, index) => ({
+  name: '',
+  logo: '',
+  key: `placeholder-${index}`,
+}));
+
+const items = clients.length > 0 ? clients : placeholders;
+const track = [...items, ...items];
+---
+
+<section class="clients" id="clientes">
+  <div class="container clients__intro">
+    <span class="eyebrow" data-anim="up">Quem veste Mirante</span>
+    <h2 class="title-md" data-anim="up">Marcas que já saíram fardadas daqui</h2>
+    <p class="lead" data-anim="up">
+      Escolas, indústrias, restaurantes e comércios que confiaram a peça da equipe à nossa
+      produção.
+    </p>
+  </div>
+
+  <div class="marquee" data-marquee="rtl">
+    <ul class="marquee__track" data-marquee-track>
+      {track.map((item, index) => (
+        <li class="clients__plate" aria-hidden={index >= items.length ? 'true' : undefined}>
+          {item.logo ? (
+            <img src={item.logo} alt={item.name} loading="lazy" decoding="async" />
+          ) : (
+            <span class="clients__placeholder">[Logo cliente]</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .clients {
+    padding-block: var(--section-y);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .clients__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  .marquee {
+    position: relative;
+    padding-block: 6px;
+    overflow: hidden;
+  }
+
+  .marquee__track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .clients__plate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 168px;
+    height: 96px;
+    padding: 18px;
+    background: var(--surface-2);
+    border-radius: 18px;
+  }
+
+  .clients__plate img {
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .clients__placeholder {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint-2);
+  }
+
+  @media (min-width: 768px) {
+    .marquee__track {
+      gap: 24px;
+    }
+
+    .clients__plate {
+      width: 216px;
+      height: 120px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .clients__intro {
+      margin-bottom: 44px;
+    }
+  }
+</style>

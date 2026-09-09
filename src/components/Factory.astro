@@ -1,0 +1,119 @@
+---
+import { factoryPoints } from '../data/site';
+---
+
+<section class="factory" id="fabrica">
+  <div class="container factory__inner">
+    <div class="factory__media" data-anim="media">
+      <div class="photo-slot factory__photo">[Foto — costureiras e maquinário]</div>
+    </div>
+
+    <div class="factory__content">
+      <span class="eyebrow" data-anim="up">A fábrica</span>
+      <h2 class="title-md" data-anim="up">Escolha a qualidade Mirante</h2>
+      <p class="lead" data-anim="up">
+        Tudo acontece no nosso galpão em Paulista: o corte, a costura e a estampa. Antes de
+        embalar, cada peça passa por conferência de medida, acabamento e aplicação da arte — e a
+        entrega sai no nosso próprio veículo.
+      </p>
+      <ul class="factory__list">
+        {factoryPoints.map((point) => (
+          <li class="factory__item" data-anim="point">
+            <span class="factory__check" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m4 12.5 5 5 11-11"></path>
+              </svg>
+            </span>
+            {point}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .factory {
+    padding-block: var(--section-y);
+    background: var(--surface-2);
+  }
+
+  .factory__inner {
+    display: grid;
+    gap: 36px;
+    align-items: center;
+  }
+
+  /* O invólucro recorta a foto para o parallax não vazar para fora do card. */
+  .factory__media {
+    height: 280px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .factory__photo {
+    height: 112%;
+    margin-top: -6%;
+    background-color: #e6eaf5;
+  }
+
+  .factory__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .factory__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .factory__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .factory__check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: var(--orange-050);
+    border-radius: var(--pill);
+    color: var(--orange-600);
+    flex-shrink: 0;
+  }
+
+  .factory__check svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  @media (min-width: 768px) {
+    .factory__media {
+      height: 400px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .factory__inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 80px;
+    }
+
+    .factory__content {
+      gap: 26px;
+    }
+
+    .factory__media {
+      height: 480px;
+    }
+  }
+</style>

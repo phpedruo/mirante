@@ -1,0 +1,165 @@
+---
+import Logo from './Logo.astro';
+import { address, brand, company, contact } from '../data/site';
+
+const year = new Date().getFullYear();
+
+const links = [
+  { href: '#produtos', label: 'Produtos' },
+  { href: '#clientes', label: 'Quem veste Mirante' },
+  { href: '#fabrica', label: 'A fábrica' },
+  { href: '#duvidas', label: 'Dúvidas' },
+];
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__cols">
+      <div class="footer__brand">
+        <Logo tone="light" />
+        <p class="footer__about">
+          Fardamento escolar e industrial, polos, camisas promocionais, batas, aventais, brindes e
+          bandeiras. Fábrica em {address.city} – {address.state}.
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__title">Navegue</h2>
+        <ul>
+          {links.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__title">Contato</h2>
+        <ul>
+          <li>
+            <a href={`https://wa.me/${contact.whatsappDigits}`} target="_blank" rel="noopener">
+              {contact.whatsappDisplay}
+            </a>
+          </li>
+          <li>
+            <a href={brand.instagramUrl} target="_blank" rel="noopener">{brand.instagram}</a>
+          </li>
+          {contact.email && (
+            <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+          )}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__title">Endereço</h2>
+        <address class="footer__address">
+          {address.street}<br />
+          {address.district}<br />
+          {address.city} – {address.state}, {address.zip}
+        </address>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>
+        © {year} {brand.name}{company.cnpj ? ` · CNPJ ${company.cnpj}` : ''}
+      </span>
+      <span>{brand.slogan}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: calc(var(--section-y) * 0.7) 40px;
+    background: var(--surface-2);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .footer__cols {
+    display: grid;
+    gap: 32px;
+  }
+
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .footer__about {
+    max-width: 320px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--muted-2);
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer__title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: var(--blue-900);
+  }
+
+  .footer__col a {
+    font-size: 15px;
+    color: var(--muted-2);
+  }
+
+  .footer__col a:hover {
+    color: var(--blue-900);
+  }
+
+  .footer__address {
+    font-size: 15px;
+    font-style: normal;
+    line-height: 1.65;
+    color: var(--muted-2);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--faint);
+  }
+
+  @media (min-width: 640px) {
+    .footer__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .footer__cols {
+      grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+      gap: 48px;
+    }
+
+    .footer__inner {
+      gap: 48px;
+    }
+  }
+</style>

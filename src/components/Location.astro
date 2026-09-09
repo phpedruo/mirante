@@ -1,0 +1,261 @@
+---
+import { address, company, contact } from '../data/site';
+
+const mapsEmbed = `https://www.google.com/maps?q=${address.mapsQuery}&output=embed`;
+const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.mapsQuery}`;
+---
+
+<section class="location" id="localizacao">
+  <div class="container location__inner">
+    <div class="location__content">
+      <div class="location__head">
+        <span class="eyebrow" data-anim="up">Onde estamos</span>
+        <h2 class="title-md" data-anim="up">Passe na loja e veja as peças de perto</h2>
+        <p class="lead" data-anim="up">
+          Tem amostra pronta no balcão para você sentir a malha e o acabamento antes de fechar o
+          pedido.
+        </p>
+      </div>
+
+      <div class="location__card" data-anim="up">
+        <div class="location__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"></path>
+            <circle cx="12" cy="10.5" r="2.8"></circle>
+          </svg>
+          <div>
+            <span class="location__label">Endereço</span>
+            <address class="location__value">
+              {address.street}<br />
+              {address.district}, {address.city} – {address.state}, {address.zip}
+            </address>
+          </div>
+        </div>
+
+        <div class="location__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+          </svg>
+          <div>
+            <span class="location__label">WhatsApp</span>
+            <a class="location__value location__phone" href={`https://wa.me/${contact.whatsappDigits}`} target="_blank" rel="noopener">
+              {contact.whatsappDisplay}
+            </a>
+          </div>
+        </div>
+
+        {company.openingHours && (
+          <div class="location__row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 6.5V12l3.5 2"></path>
+            </svg>
+            <div>
+              <span class="location__label">Horário</span>
+              <span class="location__value">{company.openingHours}</span>
+            </div>
+          </div>
+        )}
+
+        <a href={mapsLink} class="btn btn--primary location__cta" target="_blank" rel="noopener">
+          Traçar rota no Google Maps
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- O mapa só é carregado quando entra na tela, para não pesar no primeiro carregamento. -->
+    <div class="location__map" data-map data-map-src={mapsEmbed}>
+      <span class="location__map-hint">Carregando o mapa…</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .location {
+    padding-block: var(--section-y);
+    background: var(--surface);
+  }
+
+  .location__inner {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .location__content {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .location__head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .location__card {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+  }
+
+  .location__row {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Sem isto o endereço longo empurra a linha para fora do card. */
+  .location__row > div {
+    min-width: 0;
+  }
+
+  .location__row > svg {
+    width: 21px;
+    height: 21px;
+    color: var(--orange-600);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .location__row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .location__label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .location__value {
+    font-size: 17px;
+    font-style: normal;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  .location__phone {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .location__phone:hover {
+    color: var(--blue-700);
+  }
+
+  .location__cta {
+    align-self: stretch;
+    min-height: 50px;
+    padding-inline: 22px;
+    font-size: 15px;
+  }
+
+  .location__cta svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .location__map {
+    position: relative;
+    height: 320px;
+    background: var(--surface-3);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .location__map :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .location__map-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--faint);
+  }
+
+  @media (min-width: 480px) {
+    .location__card {
+      padding: 26px;
+    }
+
+    .location__row {
+      gap: 14px;
+    }
+
+    .location__cta {
+      align-self: flex-start;
+      padding-inline: 28px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .location__card {
+      padding: 32px;
+    }
+
+    .location__map {
+      height: 420px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .location__inner {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 64px;
+    }
+
+    .location__map {
+      height: 520px;
+    }
+  }
+</style>
+
+<script>
+  const container = document.querySelector<HTMLElement>('[data-map]');
+  const src = container?.dataset.mapSrc;
+
+  if (container && src) {
+    const load = () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.loading = 'lazy';
+      iframe.title = 'Mapa com a localização da Mirante Camisas e Fardamentos';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.allowFullscreen = true;
+      container.replaceChildren(iframe);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            load();
+          }
+        },
+        { rootMargin: '300px' },
+      );
+      observer.observe(container);
+    } else {
+      load();
+    }
+  }
+</script>

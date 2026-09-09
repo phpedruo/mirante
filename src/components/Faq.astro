@@ -1,0 +1,164 @@
+---
+import { faq } from '../data/site';
+---
+
+<section class="faq" id="duvidas">
+  <div class="container faq__inner">
+    <div class="faq__intro">
+      <span class="eyebrow" data-anim="up">Dúvidas frequentes</span>
+      <h2 class="title-md" data-anim="up">O que a gente mais responde no WhatsApp</h2>
+    </div>
+
+    <!-- Sem JavaScript todas as respostas ficam visíveis; o script fecha as demais. -->
+    <ul class="faq__list" data-faq>
+      {faq.map((item, index) => (
+        <li class="faq__item">
+          <h3 class="faq__heading">
+            <button
+              type="button"
+              class="faq__trigger"
+              id={`faq-trigger-${index}`}
+              aria-expanded="true"
+              aria-controls={`faq-panel-${index}`}
+              data-faq-trigger
+            >
+              <span>{item.question}</span>
+              <span class="faq__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                  <path d="M5 12h14"></path>
+                  <path class="faq__icon-bar" d="M12 5v14"></path>
+                </svg>
+              </span>
+            </button>
+          </h3>
+          <div
+            class="faq__panel"
+            id={`faq-panel-${index}`}
+            role="region"
+            aria-labelledby={`faq-trigger-${index}`}
+            data-faq-panel
+          >
+            <p class="faq__answer">{item.answer}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .faq {
+    padding-block: var(--section-y);
+    background: var(--surface-2);
+  }
+
+  .faq__inner {
+    display: grid;
+    gap: 36px;
+    align-items: start;
+  }
+
+  .faq__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faq__item {
+    background: var(--surface);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .faq__heading {
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+    padding: 20px 18px;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: left;
+    color: var(--blue-900);
+    cursor: pointer;
+  }
+
+  .faq__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--faint-2);
+    transition: color 0.18s ease;
+  }
+
+  .faq__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .faq__trigger[aria-expanded='true'] .faq__icon {
+    color: var(--orange-600);
+  }
+
+  .faq__icon-bar {
+    transform-origin: center;
+  }
+
+  .faq__panel {
+    overflow: hidden;
+  }
+
+  .faq__answer {
+    padding: 0 18px 20px;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  @media (min-width: 480px) {
+    .faq__trigger {
+      gap: 20px;
+      padding: 22px 24px;
+    }
+
+    .faq__answer {
+      padding: 0 24px 24px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .faq__trigger {
+      padding: 26px 32px;
+      font-size: 19px;
+    }
+
+    .faq__answer {
+      padding: 0 32px 28px;
+      font-size: 17px;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .faq__inner {
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: 80px;
+    }
+  }
+</style>

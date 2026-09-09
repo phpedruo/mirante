@@ -1,0 +1,298 @@
+:root {
+  /* Marca */
+  --blue-900: #0a2c85;
+  --blue-700: #0c37a8;
+  --blue-600: #1440bd;
+  --orange-600: #dc6800;
+  --orange-500: #f07a1a;
+  --orange-100: #fde9d4;
+  --orange-050: #fff2e4;
+
+  /* Superfícies e texto */
+  --surface: #ffffff;
+  --surface-2: #f5f7fc;
+  --surface-3: #eef1f8;
+  --ink: #1c2333;
+  --muted: #4b5578;
+  --muted-2: #5b6480;
+  --faint: #7d859c;
+  --faint-2: #8d95ab;
+  --border: #e2e7f2;
+  --border-strong: #ccd3e4;
+
+  /* Forma */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 32px;
+  --pill: 999px;
+
+  --shadow-card: 0 1px 2px rgb(16 26 53 / 5%), 0 10px 28px rgb(16 26 53 / 7%);
+  --shadow-hero: 0 1px 2px rgb(16 26 53 / 5%), 0 18px 44px rgb(16 26 53 / 8%);
+
+  /* Ritmo */
+  --gutter: 16px;
+  --section-y: 64px;
+
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-display: 'Archivo Black', 'Archivo Variable', system-ui, sans-serif;
+}
+
+@media (min-width: 480px) {
+  :root {
+    --gutter: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 48px;
+    --section-y: 88px;
+  }
+}
+
+@media (min-width: 1080px) {
+  :root {
+    --gutter: 80px;
+    --section-y: 104px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Compensa o cabeçalho fixo ao pular para uma âncora. */
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--blue-900);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--blue-700);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--blue-600);
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--orange-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Estruturas repetidas ---------- */
+
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.eyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange-600);
+}
+
+.title-lg {
+  font-size: clamp(30px, 1.25rem + 3.4vw, 58px);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.06;
+}
+
+.title-md {
+  font-size: clamp(28px, 1.4rem + 2.2vw, 42px);
+  font-weight: 700;
+}
+
+.lead {
+  font-size: clamp(17px, 1rem + 0.3vw, 19px);
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  /* max-width impede o botão de esticar além do container em telas estreitas;
+     o padding vertical deixa o rótulo quebrar em duas linhas sem cortar. */
+  max-width: 100%;
+  padding: 13px 28px;
+  border: 1px solid transparent;
+  border-radius: var(--pill);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.btn svg {
+  flex-shrink: 0;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--blue-900);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--blue-700);
+  color: #fff;
+}
+
+.btn--accent {
+  background: var(--orange-500);
+  color: var(--blue-900);
+  font-weight: 700;
+}
+
+.btn--accent:hover {
+  background: var(--orange-600);
+  color: #fff;
+}
+
+.btn--ghost {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--blue-900);
+}
+
+.btn--ghost:hover {
+  border-color: var(--blue-900);
+  color: var(--blue-900);
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* Placeholder de foto, enquanto as imagens reais não chegam. */
+.photo-slot {
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+  background-color: var(--surface-3);
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(10 44 133 / 4.5%) 0 14px,
+    rgb(10 44 133 / 0%) 14px 28px
+  );
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Estado inicial das animações ----------
+   Só esconde quando o JS assumiu o controle (classe no <html>), para a página
+   continuar legível se o script falhar ou o visitante bloquear JavaScript. */
+.js-anim [data-anim] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js-anim [data-anim] {
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
