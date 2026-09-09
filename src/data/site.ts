@@ -161,8 +161,29 @@ export const faq: FaqItem[] = [
   },
 ];
 
+/**
+ * Controla se o site já está no ar para os buscadores.
+ *
+ * Enquanto `isLive` for `false`, toda página sai com `noindex, nofollow` e o
+ * `robots.txt` bloqueia os robôs — assim uma URL de teste (domínio provisório,
+ * preview de hospedagem) não corre o risco de ser indexada antes da hora, o
+ * que criaria conteúdo duplicado quando o domínio final entrar no ar.
+ *
+ * No dia do lançamento: mude para `true`, preencha `site` em
+ * `astro.config.mjs` e descomente a integração do sitemap nesse arquivo.
+ */
+export const launch = {
+  isLive: false,
+};
+
 export const seo = {
   title: 'Mirante Camisas e Fardamentos | Fábrica de uniformes em Paulista – PE',
   description:
-    'Fábrica de fardamento escolar e industrial, camisas polo e promocionais, batas, aventais, brindes e bandeiras em Paulista, Pernambuco. Produção própria, do corte à entrega.',
+    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes em Paulista – PE. Produção própria, do corte à entrega.',
+  /**
+   * PREENCHER: caminho de uma imagem 1200×630 (JPG ou PNG) em `public/`, usada
+   * quando o link do site é compartilhado no WhatsApp, Instagram etc. Vazio
+   * omite a tag em vez de apontar para um arquivo que não existe.
+   */
+  ogImage: '',
 };

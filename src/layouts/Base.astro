@@ -2,7 +2,7 @@
 import '@fontsource-variable/archivo';
 import '@fontsource/archivo-black';
 import '../styles/global.css';
-import { address, brand, company, contact, seo } from '../data/site';
+import { address, brand, company, contact, launch, seo } from '../data/site';
 
 interface Props {
   title?: string;
@@ -10,6 +10,11 @@ interface Props {
 }
 
 const { title = seo.title, description = seo.description } = Astro.props;
+
+// Astro.site só existe depois que `site` for preenchido em astro.config.mjs.
+// Até lá, essas tags saem sem URL absoluta em vez de apontar para localhost.
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
+const ogImageUrl = seo.ogImage && Astro.site ? new URL(seo.ogImage, Astro.site) : null;
 
 const localBusiness = {
   '@context': 'https://schema.org',
@@ -29,6 +34,7 @@ const localBusiness = {
   sameAs: [brand.instagramUrl],
   ...(company.openingHours ? { openingHours: company.openingHours } : {}),
   ...(contact.email ? { email: contact.email } : {}),
+  ...(canonicalUrl ? { url: canonicalUrl.toString() } : {}),
 };
 ---
 
@@ -39,11 +45,34 @@ const localBusiness = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    {
+      launch.isLive ? (
+        <meta name="robots" content="index, follow" />
+      ) : (
+        // Site ainda não lançado: nenhuma página deve ser indexada.
+        // Ver `launch.isLive` em src/data/site.ts para ligar no dia do lançamento.
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
+
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl.toString()} />}
+
     <meta name="theme-color" content="#0a2c85" />
+
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={brand.name} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl.toString()} />}
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl.toString()} />}
+
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl.toString()} />}
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
     <script is:inline>

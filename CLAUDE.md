@@ -77,7 +77,21 @@ Convenções que atravessam os componentes:
 - **Fotos reais** da fábrica e dos produtos. São o ativo mais importante da página; hoje há placeholders hachurados. Nunca substituir por banco de imagens genérico passado como se fosse da empresa.
 - **Logo em vetor.** O símbolo da águia em `src/components/Logo.astro` e em `public/favicon.svg` é um desenho provisório.
 - **Logos de clientes** (`clients` em `site.ts`): a lista está vazia e a esteira roda com placeholders. Só incluir marcas com autorização.
-- **Domínio**: preencher `site` em `astro.config.mjs` quando existir.
+- **Imagem de Open Graph** (`seo.ogImage` em `site.ts`): 1200×630, usada quando o link é compartilhado. Vazia hoje, então a tag nem é gerada.
+
+## Checklist de lançamento (SEO)
+
+O site está deliberadamente configurado para **não ser indexado** enquanto não for lançado — evita que uma URL de teste ou domínio provisório fique indexada e depois compita com o domínio final. No dia do lançamento, nesta ordem:
+
+1. Comprar/apontar o domínio e preencher `site: 'https://...'` em `astro.config.mjs`.
+2. Descomentar o import e a integração do `@astrojs/sitemap` no mesmo arquivo (já instalado).
+3. Mudar `launch.isLive` para `true` em `src/data/site.ts`. Isso, sozinho, muda o `<meta name="robots">` de todas as páginas e o `robots.txt` de "bloquear tudo" para "liberar tudo" — nenhum outro arquivo precisa mudar.
+4. Rodar `npm run build` e conferir em `dist/robots.txt` que saiu `Allow: /` e uma linha `Sitemap:`.
+5. Cadastrar o domínio no **Google Search Console** (verificação por DNS ou meta tag) e enviar a URL do sitemap gerado (`/sitemap-index.xml`).
+6. Criar ou reivindicar o **Google Business Profile** da empresa — para um negócio físico local, isso pesa tanto quanto o site em resultados de busca e é o que alimenta o Google Maps.
+7. Preencher `seo.ogImage` com uma imagem 1200×630 para o link ficar bonito ao ser compartilhado no WhatsApp/Instagram.
+
+Medir depois do lançamento: Search Console (impressões, cliques, posição média, cobertura de indexação) é gratuito e não pesa no site. Para analytics de comportamento, qualquer opção teria que entrar como script de terceiro — isso é uma decisão pendente, a ser tomada quando o lançamento estiver mais próximo, pesando o custo de performance de cada ferramenta.
 
 ## Referência de design
 
