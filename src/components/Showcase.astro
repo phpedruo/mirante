@@ -1,32 +1,73 @@
 ---
-import { products } from '../data/site';
+import { fabrics, factoryPoints, productCategories } from '../data/site';
 
 // A lista é duplicada para o trilho poder reiniciar sem salto visível.
-const track = [...products, ...products];
+const track = [...productCategories, ...productCategories];
 ---
 
 <section class="showcase" id="produtos">
   <div class="container showcase__intro">
-    <span class="eyebrow" data-anim="up">O que produzimos</span>
-    <h2 class="title-md" data-anim="up">É avental? É bata? É camisa de corrida?</h2>
+    <span class="eyebrow" data-anim="up">Tecidos e malhas</span>
+    <h2 class="title-md" data-anim="up">Qual tecido a sua peça pede?</h2>
     <p class="lead" data-anim="up">
-      Cada peça pede um tecido, uma modelagem e um tipo de personalização diferentes — e a gente
-      indica a melhor combinação junto com o orçamento.
+      Do piquet da polo ao brim do macacão, cada uso pede uma malha, uma gramatura e um tipo de
+      personalização — e a gente indica a combinação junto com o orçamento.
     </p>
+  </div>
+
+  <div class="container">
+    <ul class="fabrics">
+      {fabrics.map((fabric) => (
+        <li class="fabric" data-anim="point">
+          {fabric.photo ? (
+            <img
+              class="fabric__photo"
+              src={fabric.photo}
+              alt={`Tecido ${fabric.name}`}
+              loading="lazy"
+              decoding="async"
+              width="300"
+              height="200"
+            />
+          ) : (
+            <div class="photo-slot fabric__photo" aria-hidden="true"></div>
+          )}
+          <div class="fabric__body">
+            <h3 class="fabric__name">{fabric.name}</h3>
+            <p class="fabric__use">{fabric.use}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <ul class="quality">
+      {factoryPoints.map((point) => (
+        <li class="quality__item" data-anim="point">
+          <span class="quality__check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m4 12.5 5 5 11-11"></path>
+            </svg>
+          </span>
+          {point}
+        </li>
+      ))}
+    </ul>
+
+    <h3 class="showcase__sub" data-anim="up">Por categoria</h3>
   </div>
 
   <div class="marquee" data-marquee="ltr">
     <ul class="marquee__track" data-marquee-track>
-      {track.map((product, index) => (
-        <li class="product card" aria-hidden={index >= products.length ? 'true' : undefined}>
-          {product.photo ? (
-            <img class="product__photo" src={product.photo} alt={product.name} loading="lazy" decoding="async" width="292" height="224" />
+      {track.map((category, index) => (
+        <li class="product card" aria-hidden={index >= productCategories.length ? 'true' : undefined}>
+          {category.photo ? (
+            <img class="product__photo" src={category.photo} alt={category.name} loading="lazy" decoding="async" width="292" height="224" />
           ) : (
             <div class="photo-slot product__photo" aria-hidden="true"></div>
           )}
           <div class="product__body">
-            <h3 class="product__name">{product.name}</h3>
-            <p class="product__text">{product.description}</p>
+            <h4 class="product__name">{category.name}</h4>
+            <p class="product__text">{category.description}</p>
           </div>
         </li>
       ))}
@@ -36,7 +77,7 @@ const track = [...products, ...products];
 
 <style>
   .showcase {
-    padding-block: var(--section-y);
+    padding-block: var(--section-pad);
     background: var(--surface);
     overflow: hidden;
   }
@@ -47,6 +88,89 @@ const track = [...products, ...products];
     gap: 16px;
     max-width: 720px;
     margin-bottom: 40px;
+  }
+
+  /* Flex em vez de grid para a última fileira (são 7 tecidos) ficar centrada
+     em vez de deixar um buraco na ponta. A largura do card é calculada por
+     breakpoint, então todos ficam do mesmo tamanho. */
+  .fabrics {
+    --fabric-gap: 14px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--fabric-gap);
+  }
+
+  .fabric {
+    flex: 0 1 100%;
+    overflow: hidden;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .fabric__photo {
+    width: 100%;
+    height: 132px;
+    object-fit: cover;
+  }
+
+  .fabric__body {
+    padding: 16px 18px 18px;
+  }
+
+  .fabric__name {
+    margin-bottom: 6px;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .fabric__use {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--muted-2);
+  }
+
+  /* Os pontos de qualidade que vinham da seção "A fábrica". */
+  .quality {
+    display: grid;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .quality__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .quality__check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent-wash);
+    border-radius: var(--pill);
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .quality__check svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .showcase__sub {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: clamp(20px, 1rem + 1.2vw, 26px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
   }
 
   .marquee {
@@ -83,10 +207,14 @@ const track = [...products, ...products];
     padding: 20px;
   }
 
+  /* h4 não entra na regra de cor dos títulos em global.css, então a cor da
+     marca vem daqui — os cards continuam iguais aos de antes. */
   .product__name {
     font-size: 17px;
     font-weight: 600;
+    line-height: 1.2;
     letter-spacing: -0.01em;
+    color: var(--heading);
   }
 
   .product__text {
@@ -95,7 +223,22 @@ const track = [...products, ...products];
     color: var(--muted-2);
   }
 
+  @media (min-width: 560px) {
+    .fabric {
+      flex-basis: calc((100% - var(--fabric-gap)) / 2);
+    }
+
+    .quality {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 28px;
+    }
+  }
+
   @media (min-width: 768px) {
+    .fabric {
+      flex-basis: calc((100% - var(--fabric-gap) * 2) / 3);
+    }
+
     .marquee__track {
       gap: 24px;
     }
@@ -119,7 +262,29 @@ const track = [...products, ...products];
 
   @media (min-width: 1080px) {
     .showcase__intro {
-      margin-bottom: 48px;
+      margin-bottom: 56px;
+    }
+
+    .fabrics {
+      --fabric-gap: 16px;
+    }
+
+    .fabric {
+      flex-basis: calc((100% - var(--fabric-gap) * 3) / 4);
+    }
+
+    .fabric__photo {
+      height: 148px;
+    }
+
+    .quality {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 40px;
+    }
+
+    .showcase__sub {
+      margin-top: 64px;
+      margin-bottom: 24px;
     }
   }
 </style>

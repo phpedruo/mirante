@@ -4,11 +4,14 @@ import { address, brand, company, contact } from '../data/site';
 
 const year = new Date().getFullYear();
 
+// Razão social quando ela for preenchida; até lá, o nome da marca.
+const legalName = company.legalName || brand.name;
+
 const links = [
   { href: '#produtos', label: 'Produtos' },
   { href: '#clientes', label: 'Quem veste Mirante' },
-  { href: '#fabrica', label: 'A fábrica' },
   { href: '#duvidas', label: 'Dúvidas' },
+  { href: '#localizacao', label: 'Onde estamos' },
 ];
 ---
 
@@ -16,7 +19,7 @@ const links = [
   <div class="container footer__inner">
     <div class="footer__cols">
       <div class="footer__brand">
-        <Logo tone="light" />
+        <Logo />
         <p class="footer__about">
           Fardamento escolar e industrial, polos, camisas promocionais, batas, aventais, brindes e
           bandeiras. Fábrica em {address.city} – {address.state}.
@@ -36,7 +39,7 @@ const links = [
         <h2 class="footer__title">Contato</h2>
         <ul>
           <li>
-            <a href={`https://wa.me/${contact.whatsappDigits}`} target="_blank" rel="noopener">
+            <a href={contact.whatsappUrl()} target="_blank" rel="noopener">
               {contact.whatsappDisplay}
             </a>
           </li>
@@ -60,8 +63,9 @@ const links = [
     </div>
 
     <div class="footer__bottom">
-      <span>
-        © {year} {brand.name}{company.cnpj ? ` · CNPJ ${company.cnpj}` : ''}
+      <span class="footer__legal">
+        © {year} {legalName}. Todos os direitos reservados.
+        {company.cnpj && <span class="footer__cnpj">CNPJ {company.cnpj}</span>}
       </span>
       <span>{brand.slogan}</span>
     </div>
@@ -69,8 +73,9 @@ const links = [
 </footer>
 
 <style>
+  /* Faixa de outro fundo: o espaço é interno, então usa --section-y inteiro. */
   .footer {
-    padding-block: calc(var(--section-y) * 0.7) 40px;
+    padding-block: var(--section-y) 40px;
     background: var(--surface-2);
   }
 
@@ -114,7 +119,7 @@ const links = [
     font-size: 13px;
     font-weight: 600;
     letter-spacing: normal;
-    color: var(--blue-900);
+    color: var(--heading);
   }
 
   .footer__col a {
@@ -123,7 +128,7 @@ const links = [
   }
 
   .footer__col a:hover {
-    color: var(--blue-900);
+    color: var(--heading);
   }
 
   .footer__address {
@@ -143,6 +148,10 @@ const links = [
     border-top: 1px solid var(--border);
     font-size: 14px;
     color: var(--faint);
+  }
+
+  .footer__cnpj::before {
+    content: ' · ';
   }
 
   @media (min-width: 640px) {

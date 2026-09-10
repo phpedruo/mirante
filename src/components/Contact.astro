@@ -1,5 +1,5 @@
 ---
-import { brand, contact, formAccessKey } from '../data/site';
+import { assets, brand, contact, formAccessKey, quantities } from '../data/site';
 
 if (!formAccessKey) {
   console.warn(
@@ -7,11 +7,13 @@ if (!formAccessKey) {
   );
 }
 
-const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURIComponent(
-  'Olá! Vim pelo site e gostaria de um orçamento.',
-)}`;
+const whatsappUrl = contact.whatsappUrl();
 
-const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças', 'Mais de 500 peças'];
+const nextSteps = [
+  'Um consultor confere com você o que a sua equipe precisa.',
+  'Você recebe a proposta com a arte da peça e o orçamento.',
+  'Aprovou, a gente produz e entrega no nosso veículo.',
+];
 ---
 
 <section class="contact" id="contato">
@@ -22,7 +24,15 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
         <p class="contact__slogan">{brand.slogan}</p>
 
         <div class="contact__mascot-row">
-          <div class="contact__mascot" aria-hidden="true">[Mascote águia]</div>
+          <div class:list={['contact__mascot', assets.mascot && 'contact__mascot--art']} aria-hidden="true">
+            {
+              assets.mascot ? (
+                <img class="contact__mascot-art" src={assets.mascot} alt="" loading="lazy" decoding="async" />
+              ) : (
+                '[Mascote águia]'
+              )
+            }
+          </div>
           <div class="contact__channels">
             <a href={whatsappUrl} class="btn btn--accent" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -81,14 +91,57 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
 
         <p class="contact__status" data-form-status role="status" aria-live="polite"></p>
         <p class="contact__note">Seus dados vão direto para nossa equipe comercial.</p>
+
+        {
+          // Sem a chave do Web3Forms o envio nunca chega ao painel de sucesso.
+          // Este atalho existe só em `npm run dev` e não vai para o build.
+          import.meta.env.DEV && (
+            <button type="button" class="contact__dev" data-form-preview>
+              dev: ver painel de sucesso
+            </button>
+          )
+        }
       </form>
+
+      <div class="contact__done" data-form-done role="status" hidden>
+        <span class="contact__done-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m4 12.5 5 5 11-11"></path>
+          </svg>
+        </span>
+
+        <h3 class="contact__done-title" tabindex="-1" data-form-done-title>Recebido. Obrigado!</h3>
+
+        <p class="contact__done-text">
+          Nossa equipe especializada já está com o seu pedido e entra em contato pelo WhatsApp
+          que você deixou.
+        </p>
+
+        <div class="contact__done-steps">
+          <span class="contact__done-label">O que acontece agora</span>
+          <ol class="contact__steps">
+            {nextSteps.map((step) => (
+              <li class="contact__step">{step}</li>
+            ))}
+          </ol>
+        </div>
+
+        <a href={whatsappUrl} class="btn btn--accent contact__done-cta" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15.5v3a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19 19 0 0 1-6-6 19.5 19.5 0 0 1-3-8.6A2 2 0 0 1 3.3 1h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L7.2 9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path>
+          </svg>
+          Adiantar pelo WhatsApp
+        </a>
+
+        <button type="button" class="contact__again" data-form-again>Enviar outro pedido</button>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .contact {
-    padding-bottom: var(--section-y);
+    padding-block: var(--section-pad);
     background: var(--surface);
   }
 
@@ -96,7 +149,7 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
     display: grid;
     gap: 32px;
     padding: 26px 18px;
-    background: var(--blue-900);
+    background: var(--brand-fill);
     border-radius: var(--radius-lg);
   }
 
@@ -149,6 +202,19 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
     flex-shrink: 0;
   }
 
+  /* Com o vetor no lugar, a moldura provisória some. */
+  .contact__mascot--art {
+    height: auto;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .contact__mascot-art {
+    width: 100%;
+    height: auto;
+  }
+
   .contact__channels {
     display: flex;
     flex-direction: column;
@@ -175,7 +241,7 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
     flex-direction: column;
     gap: 16px;
     padding: 20px;
-    background: var(--surface);
+    background: var(--card);
     border-radius: var(--radius-md);
   }
 
@@ -250,11 +316,165 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
     color: #1b6b3a;
   }
 
+  /* Vermelho e verde escuros somem no painel escuro; aqui eles clareiam. */
+  :global(html[data-theme='dark']) .contact__status[data-state='erro'] {
+    color: #ff9b91;
+  }
+
+  :global(html[data-theme='dark']) .contact__status[data-state='ok'] {
+    color: #6fd39b;
+  }
+
   .contact__note {
     font-size: 13px;
     line-height: 1.5;
     color: var(--faint);
     text-align: center;
+  }
+
+  .contact__dev {
+    align-self: center;
+    padding: 6px 10px;
+    background: none;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--faint);
+    cursor: pointer;
+  }
+
+  /* ---- Painel de agradecimento ------------------------------------ *
+     Ocupa o mesmo lugar do formulário dentro do card azul, com o mesmo
+     fundo e o mesmo raio, para a seção não mudar de cara no envio. */
+  .contact__done {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 20px;
+    background: var(--card);
+    border-radius: var(--radius-md);
+    animation: done-in 0.45s ease-out both;
+  }
+
+  /* `display: flex` acima venceria o [hidden] do navegador. */
+  .contact__done[hidden],
+  .contact__form[hidden] {
+    display: none;
+  }
+
+  @keyframes done-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  .contact__done-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--accent-wash);
+    border-radius: var(--pill);
+    color: var(--accent);
+  }
+
+  .contact__done-check svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .contact__done-title {
+    font-size: clamp(22px, 1.2rem + 1.4vw, 30px);
+    font-weight: 700;
+  }
+
+  .contact__done-title:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .contact__done-text {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .contact__done-steps {
+    width: 100%;
+    padding: 18px 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .contact__done-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .contact__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    counter-reset: step;
+  }
+
+  .contact__step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink);
+    counter-increment: step;
+  }
+
+  .contact__step::before {
+    content: counter(step);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--brand-fill);
+    border-radius: var(--pill);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .contact__done-cta {
+    align-self: stretch;
+  }
+
+  .contact__done-cta svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact__again {
+    align-self: center;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--muted-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .contact__again:hover {
+    color: var(--link-hover);
   }
 
   @media (min-width: 480px) {
@@ -264,6 +484,10 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
 
     .contact__form {
       padding: 24px;
+    }
+
+    .contact__done {
+      padding: 28px 24px;
     }
 
     .contact__mascot-row {
@@ -297,6 +521,11 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
       padding: 32px;
     }
 
+    .contact__done {
+      gap: 18px;
+      padding: 36px 32px;
+    }
+
     .contact__mascot {
       width: 148px;
       height: 190px;
@@ -319,6 +548,11 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
       padding: 36px;
       border-radius: var(--radius-lg);
     }
+
+    .contact__done {
+      padding: 44px 40px;
+      border-radius: var(--radius-lg);
+    }
   }
 </style>
 
@@ -326,12 +560,37 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
   const form = document.querySelector<HTMLFormElement>('[data-form]');
   const status = document.querySelector<HTMLElement>('[data-form-status]');
   const submit = document.querySelector<HTMLButtonElement>('[data-form-submit]');
+  const done = document.querySelector<HTMLElement>('[data-form-done]');
+  const doneTitle = document.querySelector<HTMLElement>('[data-form-done-title]');
+  const again = document.querySelector<HTMLButtonElement>('[data-form-again]');
 
   const say = (message: string, state: 'ok' | 'erro') => {
     if (!status) return;
     status.textContent = message;
     status.dataset.state = state;
   };
+
+  /** Troca o formulário pelo agradecimento, dentro do mesmo card. */
+  const showDone = (firstName: string) => {
+    if (!form || !done) return;
+
+    if (doneTitle) {
+      doneTitle.textContent = firstName ? `Recebido, ${firstName}. Obrigado!` : 'Recebido. Obrigado!';
+    }
+
+    say('', 'ok');
+    form.hidden = true;
+    done.hidden = false;
+    // Quem navega por teclado ou leitor de tela precisa ser levado até a resposta.
+    doneTitle?.focus();
+  };
+
+  again?.addEventListener('click', () => {
+    if (!form || !done) return;
+    done.hidden = true;
+    form.hidden = false;
+    form.querySelector<HTMLInputElement>('input, textarea, select')?.focus();
+  });
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -349,6 +608,9 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
 
     const data = Object.fromEntries(new FormData(form).entries());
     if (data.botcheck) return;
+
+    // Lido antes do reset, para o agradecimento poder chamar a pessoa pelo nome.
+    const firstName = String(data.nome ?? '').trim().split(/\s+/)[0] ?? '';
 
     submit?.setAttribute('disabled', 'true');
     say('Enviando...', 'ok');
@@ -368,7 +630,7 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       form.reset();
-      say('Recebemos o seu pedido. Nossa equipe entra em contato pelo WhatsApp.', 'ok');
+      showDone(firstName);
     } catch {
       say(
         'Não conseguimos enviar agora. Tente de novo ou chame a gente pelo WhatsApp.',
@@ -377,5 +639,11 @@ const quantities = ['Menos de 50 peças', '50 a 100 peças', '100 a 500 peças',
     } finally {
       submit?.removeAttribute('disabled');
     }
+  });
+
+  // O botão só é renderizado em desenvolvimento; em produção não existe.
+  document.querySelector<HTMLButtonElement>('[data-form-preview]')?.addEventListener('click', () => {
+    const nome = form?.querySelector<HTMLInputElement>('[name="nome"]')?.value ?? '';
+    showDone(nome.trim().split(/\s+/)[0] ?? '');
   });
 </script>

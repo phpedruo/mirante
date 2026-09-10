@@ -38,7 +38,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
           </svg>
           <div>
             <span class="location__label">WhatsApp</span>
-            <a class="location__value location__phone" href={`https://wa.me/${contact.whatsappDigits}`} target="_blank" rel="noopener">
+            <a class="location__value location__phone" href={contact.whatsappUrl()} target="_blank" rel="noopener">
               {contact.whatsappDisplay}
             </a>
           </div>
@@ -75,7 +75,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
 
 <style>
   .location {
-    padding-block: var(--section-y);
+    padding-block: var(--section-pad);
     background: var(--surface);
   }
 
@@ -119,7 +119,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
   .location__row > svg {
     width: 21px;
     height: 21px;
-    color: var(--orange-600);
+    color: var(--accent);
     flex-shrink: 0;
     margin-top: 2px;
   }
@@ -151,7 +151,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
   }
 
   .location__phone:hover {
-    color: var(--blue-700);
+    color: var(--link-hover);
   }
 
   .location__cta {
@@ -179,6 +179,13 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
     height: 100%;
     border: 0;
     display: block;
+  }
+
+  /* O mapa do Google é sempre claro e vira um facho de branco no meio da
+     página escura. O escurecimento é leve de propósito: mais que isso e as
+     ruas e os nomes começam a sumir. */
+  :global(html[data-theme='dark']) .location__map :global(iframe) {
+    filter: brightness(0.84) contrast(1.06);
   }
 
   .location__map-hint {

@@ -20,6 +20,21 @@
   --border: #e2e7f2;
   --border-strong: #ccd3e4;
 
+  /* Papéis semânticos.
+     A escala da marca acima é a cor literal do logo e não muda nunca. Estes
+     dizem *para que serve* a cor, e são os únicos que o modo escuro redefine.
+     Por isso um componente pede --heading, e não --blue-900 direto: senão o
+     mesmo token teria que virar claro no título e continuar escuro no botão. */
+  --heading: var(--blue-900);
+  --accent: var(--orange-600);
+  --accent-wash: var(--orange-050);
+  --on-accent: var(--blue-900);
+  --brand-fill: var(--blue-900);
+  --brand-fill-hover: var(--blue-700);
+  --card: var(--surface);
+  --link: var(--blue-700);
+  --link-hover: var(--blue-600);
+
   /* Forma */
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -30,12 +45,61 @@
   --shadow-card: 0 1px 2px rgb(16 26 53 / 5%), 0 10px 28px rgb(16 26 53 / 7%);
   --shadow-hero: 0 1px 2px rgb(16 26 53 / 5%), 0 18px 44px rgb(16 26 53 / 8%);
 
-  /* Ritmo */
+  /* Ritmo
+     --section-y é o espaço que deve existir entre duas seções.
+     Seção sobre o mesmo fundo usa --section-pad (metade em cima e metade
+     embaixo), então o encontro de duas soma exatamente --section-y. Seção em
+     faixa de outro fundo (Faq, rodapé) usa --section-y inteiro, porque aí o
+     espaço é interno à faixa e a troca de cor já marca a separação. */
   --gutter: 16px;
-  --section-y: 64px;
+  --section-y: 72px;
+  --section-pad: calc(var(--section-y) / 2);
 
   --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, sans-serif;
   --font-display: 'Archivo Black', 'Archivo Variable', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Modo escuro ----------
+   O atributo é escrito no <html> antes da primeira pintura pelo script inline
+   do Base.astro, então não existe piscada de branco. Sem JavaScript o atributo
+   nunca aparece e a página fica no modo claro, que é o design aprovado.
+
+   Só papéis semânticos e superfícies mudam aqui; a escala da marca continua
+   sendo a cor do logo, para o laranja seguir sendo o mesmo nos dois modos. */
+:root[data-theme='dark'] {
+  /* A página é a camada mais escura e cada camada acima clareia, mantendo a
+     mesma leitura de profundidade do modo claro (onde a página é a mais clara). */
+  --surface: #0d1422;
+  --surface-2: #151d2e;
+  --surface-3: #1d2740;
+  --card: #1a2337;
+
+  --ink: #e3e8f4;
+  --muted: #aab4cd;
+  --muted-2: #9ca6c2;
+  --faint: #8b95b2;
+  --faint-2: #7d87a4;
+  --border: #26314b;
+  --border-strong: #3a4667;
+
+  --heading: #eef2fb;
+  --accent: var(--orange-500);
+  --accent-wash: #2e1d0e;
+  /* Texto sobre laranja continua escuro: o laranja é claro nos dois modos. */
+  --on-accent: #10192e;
+  --brand-fill: var(--blue-700);
+  --brand-fill-hover: var(--blue-600);
+  --link: #8fb0ff;
+  --link-hover: #b9ccff;
+
+  /* Sombra colorida não aparece no escuro; só o preto ainda cria profundidade. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 10px 28px rgb(0 0 0 / 45%);
+  --shadow-hero: 0 1px 2px rgb(0 0 0 / 40%), 0 18px 44px rgb(0 0 0 / 50%);
+
+  /* Faz o navegador desenhar select, barra de rolagem e cursor na versão escura. */
+  color-scheme: dark;
 }
 
 @media (min-width: 480px) {
@@ -47,14 +111,14 @@
 @media (min-width: 768px) {
   :root {
     --gutter: 48px;
-    --section-y: 88px;
+    --section-y: 96px;
   }
 }
 
 @media (min-width: 1080px) {
   :root {
     --gutter: 80px;
-    --section-y: 104px;
+    --section-y: 120px;
   }
 }
 
@@ -98,7 +162,7 @@ p {
 h1,
 h2,
 h3 {
-  color: var(--blue-900);
+  color: var(--heading);
   letter-spacing: -0.025em;
   line-height: 1.1;
   text-wrap: balance;
@@ -115,12 +179,12 @@ ul {
 }
 
 a {
-  color: var(--blue-700);
+  color: var(--link);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--blue-600);
+  color: var(--link-hover);
 }
 
 img,
@@ -145,7 +209,7 @@ svg {
 }
 
 .section {
-  padding-block: var(--section-y);
+  padding-block: var(--section-pad);
 }
 
 .eyebrow {
@@ -154,7 +218,7 @@ svg {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--orange-600);
+  color: var(--accent);
 }
 
 .title-lg {
@@ -206,18 +270,18 @@ svg {
 }
 
 .btn--primary {
-  background: var(--blue-900);
+  background: var(--brand-fill);
   color: #fff;
 }
 
 .btn--primary:hover {
-  background: var(--blue-700);
+  background: var(--brand-fill-hover);
   color: #fff;
 }
 
 .btn--accent {
   background: var(--orange-500);
-  color: var(--blue-900);
+  color: var(--on-accent);
   font-weight: 700;
 }
 
@@ -229,16 +293,16 @@ svg {
 .btn--ghost {
   background: var(--surface);
   border-color: var(--border-strong);
-  color: var(--blue-900);
+  color: var(--heading);
 }
 
 .btn--ghost:hover {
-  border-color: var(--blue-900);
-  color: var(--blue-900);
+  border-color: var(--heading);
+  color: var(--heading);
 }
 
 .card {
-  background: var(--surface);
+  background: var(--card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
 }
@@ -259,6 +323,15 @@ svg {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* A hachura é navy sobre claro; no escuro ela desapareceria no fundo. */
+:root[data-theme='dark'] .photo-slot {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(255 255 255 / 5%) 0 14px,
+    rgb(255 255 255 / 0%) 14px 28px
+  );
 }
 
 .visually-hidden {

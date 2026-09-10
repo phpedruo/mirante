@@ -1,27 +1,32 @@
 ---
-import { brand, contact } from '../data/site';
+import Logo from './Logo.astro';
+import { brand, contact, heroSlides, heroStats } from '../data/site';
 
-const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURIComponent(
+const whatsappUrl = contact.whatsappUrl(
   'Olá! Vim pelo site e gostaria de um orçamento de fardamento.',
-)}`;
+);
+
+// Dois ciclos de 0 a 9: o rolo dá uma volta inteira antes de parar no dígito,
+// que é o que dá a sensação de caça-níquel. O repouso é o segundo ciclo.
+const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 ---
 
 <section class="hero" id="topo">
   <div class="container hero__inner">
     <div class="hero__content">
-      <span class="hero__badge" data-anim="hero">
-        <span class="hero__dot" aria-hidden="true"></span>
-        Fábrica própria em Paulista – PE
-      </span>
+      <div class="hero__brand" data-anim="hero">
+        <Logo />
+      </div>
 
       <div class="hero__headline">
-        <h1 class="title-lg" data-anim="hero">Identidade e qualidade<br />para o seu fardamento</h1>
+        <h1 class="title-lg" data-anim="hero">Padrão e qualidade<br />para o seu fardamento</h1>
         <p class="hero__slogan" data-anim="hero">{brand.slogan}</p>
       </div>
 
       <p class="lead hero__text" data-anim="hero">
-        Fardamento escolar e industrial, polo, camisa promocional, bata, avental, camisa UV e
-        brinde — produzidos na nossa fábrica, com acabamento conferido peça por peça.
+        Fardamento escolar e operacional, polo, camisa promocional, bata, avental, camisa UV e
+        brinde — produzidos na nossa fábrica em Paulista – PE, com acabamento conferido peça
+        por peça.
       </p>
 
       <div class="hero__actions" data-anim="hero">
@@ -38,14 +43,60 @@ const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURICom
     </div>
 
     <div class="hero__media" data-anim="hero-media">
-      <div class="photo-slot hero__photo">[Foto — pessoa fardada, recorte limpo]</div>
+      {
+        heroSlides.length > 0 ? (
+          <div class="outdoor" data-outdoor>
+            {heroSlides.map((slide, index) => (
+              <div class="outdoor__slide" data-outdoor-slide>
+                <img
+                  class="outdoor__img"
+                  src={slide.src}
+                  alt={slide.alt}
+                  decoding="async"
+                  fetchpriority={index === 0 ? 'high' : undefined}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="photo-slot hero__photo">[Outdoor — artes e fotos]</div>
+        )
+      }
     </div>
+
+    <ul class="hero__stats" data-anim="hero">
+      {heroStats.map((stat) => (
+        <li class="stat">
+          {stat.number && (
+            <span class="stat__value">
+              {/* O número de verdade, para leitor de tela e para o texto copiado. */}
+              <span class="visually-hidden">{stat.number}{stat.suffix}</span>
+
+              <span class="stat__odometer" aria-hidden="true">
+                {stat.number.split('').map((digit) => (
+                  <span class="reel">
+                    <span class="reel__strip" style={`--digit:${digit}`} data-reel={digit}>
+                      {REEL.map((value) => (
+                        <span class="reel__digit">{value}</span>
+                      ))}
+                    </span>
+                  </span>
+                ))}
+              </span>
+
+              {stat.suffix && <span aria-hidden="true">{stat.suffix}</span>}
+            </span>
+          )}
+          <span class="stat__text">{stat.text}</span>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
 
 <style>
   .hero {
-    padding-block: calc(var(--section-y) * 0.8) var(--section-y);
+    padding-block: calc(var(--section-pad) * 1.1) var(--section-pad);
     background: var(--surface);
   }
 
@@ -61,26 +112,13 @@ const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURICom
     gap: 26px;
   }
 
-  .hero__badge {
-    display: inline-flex;
-    align-items: center;
-    align-self: flex-start;
-    max-width: 100%;
-    gap: 9px;
-    padding: 9px 16px;
-    background: var(--orange-050);
-    border-radius: var(--pill);
-    color: #b35400;
-    font-size: 14px;
-    font-weight: 600;
-  }
+  /* A marca abre a página em tamanho grande. Só a altura é definida; a
+     largura sai da proporção do vetor, então o lockup nunca distorce. */
+  .hero__brand {
+    --logo-height: clamp(80px, 15vw, 140px);
 
-  .hero__dot {
-    width: 7px;
-    height: 7px;
-    background: var(--orange-500);
-    border-radius: var(--pill);
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   .hero__headline {
@@ -94,7 +132,7 @@ const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURICom
     font-size: clamp(22px, 1.1rem + 2vw, 30px);
     line-height: 1.1;
     letter-spacing: -0.015em;
-    color: var(--orange-600);
+    color: var(--accent);
   }
 
   .hero__text {
@@ -118,9 +156,111 @@ const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURICom
     box-shadow: var(--shadow-hero);
   }
 
+  /* ---- Outdoor ----------------------------------------------------- *
+     As artes ficam empilhadas no mesmo quadro; a coreografia em
+     animations.ts puxa a atual para fora enquanto a próxima entra. */
+  .outdoor {
+    position: relative;
+    height: 300px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-hero);
+  }
+
+  .outdoor__slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Sem JavaScript, ou com "reduzir movimento", o quadro para na primeira arte
+     em vez de mostrar todas empilhadas. */
+  .outdoor__slide + .outdoor__slide {
+    opacity: 0;
+  }
+
+  /* O quadro tem proporção fixa e a arte preenche: o que estiver encostado na
+     borda perde pedaço, por isso o assunto vai no centro. */
+  .outdoor__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---- Rodapé do hero ---------------------------------------------- */
+  /* Linha de base comum: "Entrega grátis" não tem número para casar a altura,
+     e sem isto ele flutuaria acima dos outros dois. */
+  .hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 16px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+  }
+
+  .stat__value {
+    /* Altura de uma casa do rolo. Vale para a janela, para cada dígito e para
+       o passo do giro — os três precisam bater, senão o número desalinha. */
+    --reel-h: 1.15em;
+
+    display: inline-flex;
+    align-items: center;
+    font-size: clamp(26px, 1.1rem + 1.5vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    /* Sem largura tabular cada dígito ocupa um espaço diferente e o número
+       treme na horizontal enquanto gira. */
+    font-variant-numeric: tabular-nums;
+    color: var(--heading);
+  }
+
+  .stat__odometer {
+    display: inline-flex;
+    /* Copiar a faixa deve levar "10+", não os vinte dígitos do rolo. */
+    user-select: none;
+  }
+
+  .reel {
+    display: block;
+    width: 1ch;
+    height: var(--reel-h);
+    overflow: hidden;
+  }
+
+  /* Posição de repouso, a mesma que o GSAP escreve no fim: sem JS o número já
+     nasce certo, em vez de mostrar o zero do começo do rolo. */
+  .reel__strip {
+    display: block;
+    transform: translateY(calc((var(--digit) + 10) * var(--reel-h) * -1));
+  }
+
+  .reel__digit {
+    display: block;
+    height: var(--reel-h);
+    line-height: var(--reel-h);
+    text-align: center;
+  }
+
+  .stat__text {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
   @media (min-width: 768px) {
-    .hero__photo {
+    .hero__photo,
+    .outdoor {
       height: 420px;
+    }
+
+    .hero__stats {
+      gap: 18px 48px;
     }
   }
 
@@ -134,8 +274,19 @@ const whatsappUrl = `https://wa.me/${contact.whatsappDigits}?text=${encodeURICom
       gap: 30px;
     }
 
-    .hero__photo {
+    .hero__photo,
+    .outdoor {
       height: 520px;
+    }
+
+    /* A faixa é o rodapé do hero inteiro, não da coluna de texto: a régua
+       atravessa as duas colunas, então os itens se espalham por baixo dela em
+       vez de ficarem amontoados num canto. */
+    .hero__stats {
+      grid-column: 1 / -1;
+      justify-content: space-between;
+      gap: 20px 48px;
+      padding-top: 30px;
     }
   }
 </style>

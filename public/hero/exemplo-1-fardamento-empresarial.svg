@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 866">
+  <rect width="1000" height="866" fill="#0a2c85"/>
+  <rect width="1000" height="866" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="3" stroke-dasharray="14 10"/>
+  <g fill="#ffffff" font-family="sans-serif" text-anchor="middle">
+    <text x="500" y="410" font-size="42" font-weight="700">EXEMPLO — SLIDE 1</text>
+    <text x="500" y="465" font-size="26" fill="#c9d6f5">Fardamento empresarial</text>
+    <text x="500" y="510" font-size="18" fill="#93a6dd">Troque por uma foto real em /public/hero/</text>
+  </g>
+</svg>

@@ -4,7 +4,6 @@ import Logo from './Logo.astro';
 const links = [
   { href: '#produtos', label: 'Produtos' },
   { href: '#clientes', label: 'Quem veste Mirante' },
-  { href: '#fabrica', label: 'A fábrica' },
   { href: '#duvidas', label: 'Dúvidas' },
   { href: '#localizacao', label: 'Onde estamos' },
 ];
@@ -13,7 +12,7 @@ const links = [
 <header class="site-header" data-header>
   <div class="container site-header__inner">
     <a href="#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
-      <Logo tone="light" />
+      <Logo />
     </a>
 
     <nav class="site-header__nav" id="nav-principal" aria-label="Navegação principal">
@@ -26,6 +25,20 @@ const links = [
     </nav>
 
     <div class="site-header__actions">
+      <!-- Só aparece com JavaScript: sem ele o botão não teria o que fazer. -->
+      <button type="button" class="theme-toggle" aria-label="Alternar modo escuro" aria-pressed="false" data-theme-toggle>
+        <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"></path>
+        </svg>
+        <svg class="theme-toggle__icon theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 2.7v2.1"></path><path d="M12 19.2v2.1"></path>
+          <path d="M4.9 4.9l1.5 1.5"></path><path d="M17.6 17.6l1.5 1.5"></path>
+          <path d="M2.7 12h2.1"></path><path d="M19.2 12h2.1"></path>
+          <path d="M4.9 19.1l1.5-1.5"></path><path d="M17.6 6.4l1.5-1.5"></path>
+        </svg>
+      </button>
+
       <a href="#contato" class="btn btn--primary site-header__cta">Faça seu orçamento</a>
       <button
         type="button"
@@ -57,6 +70,11 @@ const links = [
     box-shadow: 0 1px 16px rgb(16 26 53 / 8%);
   }
 
+  /* Sombra navy sobre fundo escuro não se vê; só preto ainda separa a faixa. */
+  :global(html[data-theme='dark']) .site-header[data-scrolled] {
+    box-shadow: 0 1px 16px rgb(0 0 0 / 55%);
+  }
+
   .site-header__inner {
     display: flex;
     align-items: center;
@@ -81,14 +99,60 @@ const links = [
     color: #3f4a63;
   }
 
+  /* Esse cinza-azulado é escuro demais para fundo escuro. */
+  :global(html[data-theme='dark']) .site-header__nav a {
+    color: var(--muted);
+  }
+
   .site-header__nav a:hover {
-    color: var(--blue-900);
+    color: var(--heading);
   }
 
   .site-header__actions {
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .theme-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--heading);
+    cursor: pointer;
+    transition: border-color 0.18s ease;
+  }
+
+  :global(html.js) .theme-toggle {
+    display: inline-flex;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--heading);
+  }
+
+  .theme-toggle__icon {
+    width: 21px;
+    height: 21px;
+  }
+
+  /* No claro o botão oferece a lua (o que ele vai ligar); no escuro, o sol. */
+  .theme-toggle__sun {
+    display: none;
+  }
+
+  :global(html[data-theme='dark']) .theme-toggle__sun {
+    display: block;
+  }
+
+  :global(html[data-theme='dark']) .theme-toggle__moon {
+    display: none;
   }
 
   .site-header__cta {
@@ -111,7 +175,7 @@ const links = [
     background: var(--surface);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
-    color: var(--blue-900);
+    color: var(--heading);
     cursor: pointer;
   }
 
@@ -132,6 +196,10 @@ const links = [
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       box-shadow: 0 16px 32px rgb(16 26 53 / 10%);
+    }
+
+    :global(html[data-theme='dark']) .site-header__nav {
+      box-shadow: 0 16px 32px rgb(0 0 0 / 55%);
     }
 
     .site-header__nav[data-open] {
@@ -166,6 +234,12 @@ const links = [
     .site-header__toggle {
       display: inline-flex;
     }
+
+    /* Alinha com o botão do menu, que é maior que o CTA do desktop. */
+    .theme-toggle {
+      width: 48px;
+      height: 48px;
+    }
   }
 
   @media (min-width: 1080px) {
@@ -197,6 +271,32 @@ const links = [
     // Se a janela crescer até o layout de desktop, o painel não pode ficar preso aberto.
     window.matchMedia('(min-width: 1080px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
+    });
+  }
+
+  // A escolha do tema é lida antes da primeira pintura pelo script inline do
+  // Base.astro; aqui só ficam o clique e o que ele guarda.
+  const themeToggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+  if (themeToggle) {
+    const root = document.documentElement;
+
+    const syncToggle = () => {
+      themeToggle.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+    };
+
+    syncToggle();
+
+    themeToggle.addEventListener('click', () => {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+
+      try {
+        localStorage.setItem('mirante-tema', root.dataset.theme);
+      } catch (error) {
+        // Armazenamento bloqueado: a troca vale só para esta visita.
+      }
+
+      syncToggle();
     });
   }
 
