@@ -95,18 +95,22 @@ const links = [
     gap: 34px;
   }
 
-  .site-header__nav a {
+  /* Só os links da lista: o botão "Faça seu orçamento" do menu no celular
+     também é um <a> dentro da navegação, e com o seletor amplo ele herdava
+     o cinza dos links sobre o fundo azul, e o hover azul-marinho sumia com
+     o texto de vez. */
+  .site-header__nav li a {
     font-size: 15px;
     font-weight: 500;
     color: #3f4a63;
   }
 
   /* Esse cinza-azulado é escuro demais para fundo escuro. */
-  :global(html[data-theme='dark']) .site-header__nav a {
+  :global(html[data-theme='dark']) .site-header__nav li a {
     color: var(--muted);
   }
 
-  .site-header__nav a:hover {
+  .site-header__nav li a:hover {
     color: var(--heading);
   }
 
@@ -218,7 +222,7 @@ const links = [
       border-top: 1px solid var(--border);
     }
 
-    .site-header__nav a {
+    .site-header__nav li a {
       display: block;
       padding: 15px 0;
       font-size: 17px;
