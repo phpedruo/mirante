@@ -17,12 +17,12 @@ import { techniques } from '../data/site';
 
 <section class="techniques" id="tecnicas">
   <div class="container techniques__inner">
-    <div class="techniques__intro">
+    <div class="techniques__intro" data-tech-intro>
       <span class="eyebrow" data-anim="up">Estampa e bordado</span>
-      <h2 class="title-md" data-anim="up">Como a sua marca vai na peça?</h2>
+      <h2 class="title-md" data-anim="up">Qual técnica você quer no seu <span class="highlight">padrão</span>?</h2>
       <p class="lead" data-anim="up">
         A técnica muda conforme o tecido e o desenho da arte — a gente indica a que segura melhor
-        na peça e aplica aqui mesmo, no galpão.
+        na peça.
       </p>
     </div>
 
@@ -39,64 +39,65 @@ import { techniques } from '../data/site';
                 <span class="tech__stitch" aria-hidden="true" />
               )}
 
-              {technique.key === 'sublimacao' ? (
-                <>
-                  <span class="tech__lettering tech__ghost" aria-hidden="true" data-tech-ghost>
-                    {technique.name}
-                  </span>
+              <div class="tech__wipe" aria-hidden="true" data-tech-wipe>
+                <div class="tech__wipe-inner" data-tech-wipe-inner>
+                  <span class="tech__lettering tech__ghost">{technique.name}</span>
+                </div>
+              </div>
 
-                  <span class="tech__vapor" aria-hidden="true">
-                    <i data-tech-vapor />
-                    <i data-tech-vapor />
-                    <i data-tech-vapor />
-                  </span>
-
-                  {/* A chapa desce, cobre a palavra e sobe — a troca acontece
-                      escondida embaixo dela, como na prensa de verdade. */}
-                  <span class="tech__press" aria-hidden="true" data-tech-press />
-                </>
-              ) : (
-                <>
-                  <div class="tech__wipe" aria-hidden="true" data-tech-wipe>
-                    <div class="tech__wipe-inner" data-tech-wipe-inner>
-                      <span class="tech__lettering tech__ghost">{technique.name}</span>
-                    </div>
-                  </div>
-
-                  {/* Trilho da ferramenta: anda junto com a cobertura, mas fora
-                      dela, para a agulha e o rodo poderem passar da borda. */}
-                  <div class="tech__rail" aria-hidden="true" data-tech-rail>
-                    {technique.key === 'bordado' ? (
-                      <svg class="tech__needle" viewBox="0 0 44 72" fill="none" data-tech-tool>
-                        <path
-                          class="tech__thread"
-                          d="M33 7c-7.5 3.4-11 9-7.4 13.6"
-                          stroke-width="2.6"
-                          stroke-linecap="round"
-                        />
-                        <path class="tech__pin" d="M10 62 31 13" stroke-width="3.4" stroke-linecap="round" />
-                        <ellipse
-                          class="tech__eye"
-                          cx="29.4"
-                          cy="17.4"
-                          rx="1.5"
-                          ry="3.1"
-                          transform="rotate(23 29.4 17.4)"
-                          stroke-width="1.3"
-                        />
-                      </svg>
-                    ) : (
-                      <svg class="tech__squeegee" viewBox="0 0 34 104" fill="none" data-tech-tool>
-                        <rect class="tech__handle" x="11" y="2" width="12" height="62" rx="6" />
-                        <path class="tech__blade" d="M3 60h28l-5 42H8z" />
-                      </svg>
-                    )}
-                  </div>
-                </>
+              {/* O vapor sobe do que já foi prensado, então vem depois da
+                  cobertura: fica por cima dela, e não é cortado na passagem. */}
+              {technique.key === 'sublimacao' && (
+                <span class="tech__vapor" aria-hidden="true">
+                  <i data-tech-vapor />
+                  <i data-tech-vapor />
+                  <i data-tech-vapor />
+                </span>
               )}
-            </div>
 
-            <p class="tech__caption">{technique.caption}</p>
+              {/* Trilho da ferramenta: anda junto com a cobertura, mas fora
+                  dela, para a agulha, o rodo e o cilindro poderem passar da
+                  borda. */}
+              <div class="tech__rail" aria-hidden="true" data-tech-rail>
+                {technique.key === 'bordado' && (
+                  <svg class="tech__needle" viewBox="0 0 44 72" fill="none" data-tech-tool>
+                    <path
+                      class="tech__thread"
+                      d="M33 7c-7.5 3.4-11 9-7.4 13.6"
+                      stroke-width="2.6"
+                      stroke-linecap="round"
+                    />
+                    <path class="tech__pin" d="M10 62 31 13" stroke-width="3.4" stroke-linecap="round" />
+                    <ellipse
+                      class="tech__eye"
+                      cx="29.4"
+                      cy="17.4"
+                      rx="1.5"
+                      ry="3.1"
+                      transform="rotate(23 29.4 17.4)"
+                      stroke-width="1.3"
+                    />
+                  </svg>
+                )}
+
+                {technique.key === 'serigrafia' && (
+                  <svg class="tech__squeegee" viewBox="0 0 34 104" fill="none" data-tech-tool>
+                    <rect class="tech__handle" x="11" y="2" width="12" height="62" rx="6" />
+                    <path class="tech__blade" d="M3 60h28l-5 42H8z" />
+                  </svg>
+                )}
+
+                {/* O cilindro da calandra: a prensa de sublimação que passa por
+                    cima do tecido, em vez da chapa que desce. É ele que
+                    justifica a passagem da esquerda para a direita. */}
+                {technique.key === 'sublimacao' && (
+                  <svg class="tech__roller" viewBox="0 0 34 104" fill="none" data-tech-tool>
+                    <rect class="tech__roller-body" x="4" y="4" width="26" height="96" rx="13" />
+                    <rect class="tech__roller-core" x="12" y="20" width="10" height="64" rx="5" />
+                  </svg>
+                )}
+              </div>
+            </div>
           </li>
         ))
       }
@@ -115,7 +116,7 @@ import { techniques } from '../data/site';
     flex-direction: column;
     gap: 14px;
     max-width: 700px;
-    margin-bottom: 36px;
+    margin-bottom: var(--intro-gap);
   }
 
   /* As três empilhadas, sempre. No desktop elas ocupam a coluna da esquerda e
@@ -197,11 +198,6 @@ import { techniques } from '../data/site';
     color: var(--border-strong);
   }
 
-  /* Na sublimação a palavra "por fazer" não fica atrás de cobertura nenhuma:
-     ela só existe enquanto a chapa não passou. */
-  [data-tech='sublimacao'] .tech__ghost {
-    opacity: 0;
-  }
 
   /* O caminho da linha, abaixo da palavra. Os tracinhos são o ponto. */
   .tech__stitch {
@@ -250,14 +246,6 @@ import { techniques } from '../data/site';
     transform: translateX(0);
   }
 
-  :global(.js-anim) [data-tech='sublimacao'] .tech__word {
-    opacity: 0;
-  }
-
-  :global(.js-anim) [data-tech='sublimacao'] .tech__ghost {
-    opacity: 1;
-  }
-
   /* ---------- Ferramentas ---------- */
 
   .tech__needle,
@@ -303,22 +291,23 @@ import { techniques } from '../data/site';
     fill: var(--orange-500);
   }
 
-  /* A chapa da prensa. Some no estado final. */
-  .tech__press {
+  /* O cilindro da calandra acompanha a altura do palco, como o rodo. */
+  .tech__roller {
     position: absolute;
-    top: 0;
-    left: 8px;
-    right: 8px;
-    height: 82%;
-    background-image: linear-gradient(180deg, var(--blue-700), var(--blue-900));
-    border-bottom: 4px solid var(--orange-500);
-    border-radius: 0 0 14px 14px;
-    transform: translateY(-125%);
+    left: 0;
+    top: 8%;
+    height: 84%;
+    width: auto;
+    transform: translateX(-50%);
   }
 
-  /* A chapa precisa se destacar do palco, que no escuro já é quase da cor dela. */
-  :global(html[data-theme='dark']) .tech__press {
-    background-image: linear-gradient(180deg, var(--blue-600), var(--blue-700));
+  .tech__roller-body {
+    fill: var(--heading);
+  }
+
+  /* O miolo quente, que é o que transfere a cor para a malha. */
+  .tech__roller-core {
+    fill: var(--orange-500);
   }
 
   .tech__vapor {
@@ -354,32 +343,22 @@ import { techniques } from '../data/site';
     left: 76%;
   }
 
-  .tech__caption {
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--muted-2);
-  }
-
   @media (min-width: 560px) {
-    .techniques__intro {
-      margin-bottom: 44px;
-    }
-
     .tech__stage {
       height: 124px;
-    }
-
-    .tech__caption {
-      font-size: 16px;
     }
   }
 
   @media (min-width: 1080px) {
+    /* A abertura fica no topo, não centrada: a lista das três é bem mais alta
+       que ela, e centrar empurrava a pergunta da seção para baixo da primeira
+       palavra — quem rolava encontrava "Bordado" antes de saber o que a seção
+       estava perguntando. */
     .techniques__inner {
       display: grid;
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
       gap: 64px;
-      align-items: center;
+      align-items: start;
     }
 
     /* A abertura vem antes no HTML e vai para a segunda coluna aqui. */

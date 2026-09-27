@@ -1,5 +1,5 @@
 ---
-import { address, company, contact } from '../data/site';
+import { address, assets, company, contact } from '../data/site';
 
 const mapsEmbed = `https://www.google.com/maps?q=${address.mapsQuery}&output=embed`;
 const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.mapsQuery}`;
@@ -10,7 +10,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
     <div class="location__content">
       <div class="location__head">
         <span class="eyebrow" data-anim="up">Onde estamos</span>
-        <h2 class="title-md" data-anim="up">Passe na loja e veja as peças de perto</h2>
+        <h2 class="title-md" data-anim="up">Visite a nossa fábrica e veja as peças de perto</h2>
         <p class="lead" data-anim="up">
           Tem amostra pronta no balcão para você sentir a malha e o acabamento antes de fechar o
           pedido.
@@ -18,6 +18,18 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
       </div>
 
       <div class="location__card" data-anim="up">
+        {assets.facade && (
+          <img
+            class="location__photo"
+            src={assets.facade}
+            alt="Fachada da fábrica da Mirante, com o letreiro azul e laranja e as portas azuis com a águia da marca"
+            loading="lazy"
+            decoding="async"
+            width="680"
+            height="463"
+          />
+        )}
+
         <div class="location__row">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"></path>
@@ -98,12 +110,25 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
   }
 
   .location__card {
+    /* O recuo interno mora numa variável porque a foto da fachada o desfaz
+       com margem negativa para encostar nas bordas do card. */
+    --card-pad: 20px;
     display: flex;
     flex-direction: column;
     gap: 22px;
-    padding: 20px;
+    padding: var(--card-pad);
+    overflow: hidden;
     background: var(--surface-2);
     border-radius: var(--radius-lg);
+  }
+
+  /* A fachada abre o card de ponta a ponta, como a foto de capa de um perfil
+     de lugar: é o que o visitante procura com os olhos quando chega na rua. */
+  .location__photo {
+    width: calc(100% + var(--card-pad) * 2);
+    max-width: none;
+    height: auto;
+    margin: calc(var(--card-pad) * -1) calc(var(--card-pad) * -1) 0;
   }
 
   .location__row {
@@ -200,7 +225,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
 
   @media (min-width: 480px) {
     .location__card {
-      padding: 26px;
+      --card-pad: 26px;
     }
 
     .location__row {
@@ -215,7 +240,7 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
 
   @media (min-width: 768px) {
     .location__card {
-      padding: 32px;
+      --card-pad: 32px;
     }
 
     .location__map {
@@ -224,13 +249,39 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
   }
 
   @media (min-width: 1080px) {
+    /* Com a fachada no card, abertura + card passaram de 800px de altura, e
+       o mapa ao lado ou boiava no meio da coluna ou, esticado, virava um
+       paredão. A abertura sobe para uma faixa própria, como nas outras
+       seções, e embaixo ficam só o card e o mapa, lado a lado e da mesma
+       altura. O `contents` é o que deixa o grid enxergar a abertura e o card
+       como itens separados sem mudar o HTML, que no celular empilha certo. */
     .location__inner {
       grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-      gap: 64px;
+      column-gap: 64px;
+      row-gap: var(--intro-gap);
+      align-items: stretch;
+    }
+
+    .location__content {
+      display: contents;
+    }
+
+    .location__head {
+      grid-column: 1 / -1;
+      max-width: 720px;
+    }
+
+    /* Na coluna estreita a foto inteira ocupava metade do card. O corte
+       baixo mantém o letreiro e as portas e tira o céu e o chão. */
+    .location__photo {
+      aspect-ratio: 2 / 1;
+      object-fit: cover;
+      object-position: center 40%;
     }
 
     .location__map {
-      height: 520px;
+      height: auto;
+      min-height: 520px;
     }
   }
 </style>

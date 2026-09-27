@@ -1,5 +1,5 @@
 ---
-import { assets, brand, contact, formAccessKey, quantities } from '../data/site';
+import { assets, brand, contact, formAccessKey, privacy, quantities } from '../data/site';
 
 if (!formAccessKey) {
   console.warn(
@@ -10,8 +10,8 @@ if (!formAccessKey) {
 const whatsappUrl = contact.whatsappUrl();
 
 const nextSteps = [
-  'Um consultor confere com você o que a sua equipe precisa.',
-  'Você recebe a proposta com a arte da peça e o orçamento.',
+  'Você manda o logo e as referências, e um consultor faz o orçamento.',
+  'Depois do orçamento, você recebe a prévia da peça para aprovar.',
   'Aprovou, a gente produz e entrega no nosso veículo.',
 ];
 ---
@@ -27,7 +27,15 @@ const nextSteps = [
           <div class:list={['contact__mascot', assets.mascot && 'contact__mascot--art']} aria-hidden="true">
             {
               assets.mascot ? (
-                <img class="contact__mascot-art" src={assets.mascot} alt="" loading="lazy" decoding="async" />
+                <img
+                  class="contact__mascot-art"
+                  src={assets.mascot}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width="420"
+                  height="479"
+                />
               ) : (
                 '[Mascote águia]'
               )
@@ -78,7 +86,7 @@ const nextSteps = [
             class="field__control field__control--area"
             name="mensagem"
             rows="3"
-            placeholder="Ex.: 80 camisas polo bordadas com o logo da empresa, para entregar até o fim do mês"
+            placeholder="Ex.: 80 camisas polo bordadas com o logo da empresa."
             required></textarea>
         </label>
 
@@ -90,7 +98,16 @@ const nextSteps = [
         </button>
 
         <p class="contact__status" data-form-status role="status" aria-live="polite"></p>
-        <p class="contact__note">Seus dados vão direto para nossa equipe comercial.</p>
+        <!-- Aviso da LGPD. Não há caixa de consentimento de propósito: o pedido de
+             orçamento é feito a pedido do próprio visitante, e o tratamento se apoia
+             em "procedimentos preliminares de contrato" (art. 7º, V), não em
+             consentimento. O que a lei pede aqui é transparência: avisar, no ponto
+             da coleta, que o envio segue a política, e deixá-la a um clique. -->
+        <p class="contact__note">
+          Ao enviar, você concorda com a nossa{' '}
+          <button type="button" class="contact__privacy" commandfor={privacy.dialogId} command="show-modal">
+            política de privacidade</button>.
+        </p>
 
         {
           // Sem a chave do Web3Forms o envio nunca chega ao painel de sucesso.
@@ -174,7 +191,7 @@ const nextSteps = [
     color: var(--orange-500);
   }
 
-  /* Abaixo de 480px o mascote e o botão do telefone não cabem lado a lado:
+  /* Abaixo de 540px o mascote e o botão do telefone não cabem lado a lado:
      o rótulo do botão é largo e não pode encolher além do texto. */
   .contact__mascot-row {
     display: flex;
@@ -187,8 +204,8 @@ const nextSteps = [
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    width: 104px;
-    height: 132px;
+    width: 132px;
+    height: 169px;
     padding: 10px;
     background: rgb(255 255 255 / 8%);
     border: 1px dashed rgb(255 255 255 / 35%);
@@ -222,13 +239,19 @@ const nextSteps = [
     min-width: 0;
   }
 
+  .contact__channels .btn {
+    min-height: 60px;
+    padding: 15px 26px;
+    font-size: 17px;
+  }
+
   .contact__channels .btn svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
   .contact__instagram {
-    font-size: 15px;
+    font-size: 17px;
     color: rgb(255 255 255 / 72%);
   }
 
@@ -330,6 +353,24 @@ const nextSteps = [
     line-height: 1.5;
     color: var(--faint);
     text-align: center;
+  }
+
+  /* É um botão, porque abre o diálogo em vez de navegar, mas lê como link. */
+  .contact__privacy {
+    padding: 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    /* Quebra inteiro para a linha de baixo, nunca no meio do nome. */
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .contact__privacy:hover {
+    color: var(--link-hover);
   }
 
   .contact__dev {
@@ -489,16 +530,22 @@ const nextSteps = [
     .contact__done {
       padding: 28px 24px;
     }
+  }
 
+  @media (min-width: 540px) {
+    /* `wrap` é a válvula da faixa entre 1080px e ~1260px, onde o card já se
+       divide em duas colunas e os dois juntos não cabem na coluna: o botão
+       desce inteiro em vez de espremer o rótulo. */
     .contact__mascot-row {
       flex-direction: row;
+      flex-wrap: wrap;
       align-items: flex-end;
       gap: 20px;
     }
 
     .contact__mascot {
-      width: 116px;
-      height: 150px;
+      width: 150px;
+      height: 192px;
     }
 
     .contact__channels {
@@ -527,8 +574,22 @@ const nextSteps = [
     }
 
     .contact__mascot {
-      width: 148px;
-      height: 190px;
+      width: 196px;
+      height: 251px;
+    }
+
+    .contact__channels .btn {
+      min-height: 64px;
+      font-size: 18px;
+    }
+
+    .contact__channels .btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .contact__instagram {
+      font-size: 18px;
     }
   }
 

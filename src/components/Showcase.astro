@@ -1,5 +1,9 @@
 ---
-import { fabrics, factoryPoints, productCategories } from '../data/site';
+import { fabrics, fabricsMore, fabricsNote, factoryPoints, productCategories } from '../data/site';
+
+// Amostras do card "e muito mais": recortes redondos das fotos que já estão
+// na grade, então não custam download a mais.
+const swatches = fabrics.flatMap((fabric) => (fabric.photo ? [fabric.photo] : [])).slice(0, 4);
 
 // A lista é duplicada para o trilho poder reiniciar sem salto visível.
 const track = [...productCategories, ...productCategories];
@@ -13,6 +17,7 @@ const track = [...productCategories, ...productCategories];
       Do piquet da polo ao brim do macacão, cada uso pede uma malha, uma gramatura e um tipo de
       personalização — e a gente indica a combinação junto com o orçamento.
     </p>
+    <p class="showcase__note" data-anim="up">{fabricsNote}</p>
   </div>
 
   <div class="container">
@@ -38,6 +43,18 @@ const track = [...productCategories, ...productCategories];
           </div>
         </li>
       ))}
+      <li class="fabric fabric--more" data-anim="point">
+        <div class="fabric__photo fabric__swatches" aria-hidden="true">
+          {swatches.map((photo) => (
+            <span class="fabric__swatch" style={`background-image: url('${photo}')`}></span>
+          ))}
+          <span class="fabric__swatch fabric__swatch--plus">+</span>
+        </div>
+        <div class="fabric__body">
+          <h3 class="fabric__name">{fabricsMore.name}</h3>
+          <p class="fabric__use">{fabricsMore.use}</p>
+        </div>
+      </li>
     </ul>
 
     <ul class="quality">
@@ -53,10 +70,10 @@ const track = [...productCategories, ...productCategories];
       ))}
     </ul>
 
-    <h3 class="showcase__sub" data-anim="up">Por categoria</h3>
+    <h3 class="showcase__sub" data-anim="up">Atendemos todos os públicos</h3>
   </div>
 
-  <div class="marquee" data-marquee="ltr">
+  <div class="marquee marquee--drag" data-marquee="ltr" data-marquee-drag>
     <ul class="marquee__track" data-marquee-track>
       {track.map((category, index) => (
         <li class="product card" aria-hidden={index >= productCategories.length ? 'true' : undefined}>
@@ -72,6 +89,18 @@ const track = [...productCategories, ...productCategories];
         </li>
       ))}
     </ul>
+
+    <!-- Só aparecem com JavaScript e com mouse: no toque quem passa é o dedo. -->
+    <button type="button" class="marquee__step marquee__step--prev" aria-label="Ver categorias anteriores" data-marquee-step="prev">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 5l-7 7 7 7"></path>
+      </svg>
+    </button>
+    <button type="button" class="marquee__step marquee__step--next" aria-label="Ver próximas categorias" data-marquee-step="next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
   </div>
 </section>
 
@@ -87,12 +116,33 @@ const track = [...productCategories, ...productCategories];
     flex-direction: column;
     gap: 16px;
     max-width: 720px;
-    margin-bottom: 40px;
+    margin-bottom: var(--intro-gap);
   }
 
-  /* Flex em vez de grid para a última fileira (são 7 tecidos) ficar centrada
-     em vez de deixar um buraco na ponta. A largura do card é calculada por
-     breakpoint, então todos ficam do mesmo tamanho. */
+  /* O padrão da matéria-prima. Uma linha, sem caixa: como bloco de texto ela
+     virava caixa de dica e o visitante pulava. O traço laranja dá o destaque
+     sem precisar de fundo nem de marcação dentro do conteúdo. */
+  .showcase__note {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .showcase__note::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 3px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* Flex em vez de grid para a última fileira ficar centrada em vez de deixar
+     um buraco na ponta, qualquer que seja o número de tecidos. A largura do
+     card é calculada por breakpoint, então todos ficam do mesmo tamanho. */
   .fabrics {
     --fabric-gap: 14px;
 
@@ -132,11 +182,55 @@ const track = [...productCategories, ...productCategories];
     color: var(--muted-2);
   }
 
-  /* Os pontos de qualidade que vinham da seção "A fábrica". */
+  /* ---- "E muito mais" ---- */
+  /* Fecha a grade no mesmo formato dos outros cards, mas no lugar da foto
+     traz um leque de amostras sobrepostas: é a variedade dita pela imagem,
+     e o "+" no fim do leque diz que ele continua. */
+  .fabric--more .fabric__name {
+    color: var(--accent);
+  }
+
+  .fabric__swatches {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-wash);
+  }
+
+  .fabric__swatch {
+    width: 58px;
+    height: 58px;
+    margin-left: -14px;
+    background-color: var(--surface-3);
+    background-position: center;
+    background-size: cover;
+    border: 3px solid var(--accent-wash);
+    border-radius: 50%;
+  }
+
+  .fabric__swatch:first-child {
+    margin-left: 0;
+  }
+
+  .fabric__swatch--plus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--orange-500);
+    color: var(--on-accent);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Os pontos de qualidade que vinham da seção "A fábrica". A distância até a
+     grade de tecidos precisa ser bem maior que a distância entre os próprios
+     pontos: com os dois saltos parecidos, as quatro linhas colavam nos cards
+     e liam como legenda deles, não como uma lista de outra natureza. */
   .quality {
     display: grid;
     gap: 14px;
-    margin-top: 28px;
+    margin-top: calc(var(--intro-gap) * 1.5);
   }
 
   .quality__item {
@@ -165,18 +259,97 @@ const track = [...productCategories, ...productCategories];
     height: 14px;
   }
 
+  /* "Atendemos todos os públicos" abre um bloco novo dentro da mesma seção,
+     então tem o maior salto interno da seção: acima dele a escada é 14px entre
+     os pontos e 1,5 × --intro-gap da grade para os pontos, e um bloco novo só
+     se anuncia se o salto dele for maior que os dois. Ainda assim fica abaixo
+     de --section-y, que é o encontro de duas seções de verdade. */
   .showcase__sub {
-    margin-top: 40px;
+    margin-top: calc(var(--intro-gap) * 2.5);
     margin-bottom: 20px;
     font-size: clamp(20px, 1rem + 1.2vw, 26px);
     font-weight: 700;
     letter-spacing: -0.01em;
   }
 
+  /* Clipa só na horizontal: `overflow: hidden` cortava a sombra dos cards a
+     8px do rodapé deles, e o corte reto atravessando a página inteira lia
+     como uma linha de emenda entre as seções. `clip` é o único valor que o
+     outro eixo aceita ao lado de `visible`, então é ele que deixa a sombra
+     transbordar para o respiro da seção. */
   .marquee {
     position: relative;
     padding-block: 8px;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  /* A esteira das categorias é conduzida pelo visitante: arrastar move o
+     trilho junto com o dedo. `pan-y` deixa a rolagem vertical da página
+     passar, então só o gesto horizontal vira arrasto. */
+  .marquee--drag {
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .marquee--drag.is-dragging {
+    cursor: grabbing;
+  }
+
+  .marquee--drag .marquee__track {
+    user-select: none;
+  }
+
+  .marquee--drag img {
+    -webkit-user-drag: none;
+  }
+
+  .marquee__step {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    box-shadow: var(--shadow-card);
+    color: var(--heading);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+      border-color 0.18s ease,
+      color 0.18s ease;
+  }
+
+  /* Só com JavaScript (sem ele não há o que empurrar) e só com mouse:
+     no toque o próprio dedo já faz o papel dos botões. */
+  @media (pointer: fine) {
+    :global(html.js) .marquee__step {
+      display: inline-flex;
+    }
+  }
+
+  .marquee__step:hover {
+    border-color: var(--heading);
+    color: var(--accent);
+  }
+
+  .marquee__step svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .marquee__step--prev {
+    left: 8px;
+  }
+
+  .marquee__step--next {
+    right: 8px;
   }
 
   .marquee__track {
@@ -261,10 +434,6 @@ const track = [...productCategories, ...productCategories];
   }
 
   @media (min-width: 1080px) {
-    .showcase__intro {
-      margin-bottom: 56px;
-    }
-
     .fabrics {
       --fabric-gap: 16px;
     }
@@ -279,11 +448,9 @@ const track = [...productCategories, ...productCategories];
 
     .quality {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-top: 40px;
     }
 
     .showcase__sub {
-      margin-top: 64px;
       margin-bottom: 24px;
     }
   }

@@ -2,7 +2,7 @@
 import '@fontsource-variable/archivo';
 import '@fontsource/archivo-black';
 import '../styles/global.css';
-import { address, brand, company, contact, launch, seo } from '../data/site';
+import { address, assets, brand, company, contact, launch, seo } from '../data/site';
 
 interface Props {
   title?: string;
@@ -16,8 +16,16 @@ const { title = seo.title, description = seo.description } = Astro.props;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
 const ogImageUrl = seo.ogImage && Astro.site ? new URL(seo.ogImage, Astro.site) : null;
 
+const absolute = (path: string) => (Astro.site ? new URL(path, Astro.site).toString() : null);
+const logoUrl = absolute('/logo-mirante.svg');
+const facadeUrl = assets.facade ? absolute(assets.facade) : null;
+
+// Os dados daqui precisam bater com o Google Business Profile — endereço,
+// telefone, horário e pino. Divergência entre os dois enfraquece a busca local.
 const localBusiness = {
   '@context': 'https://schema.org',
+  // Espelha a categoria do Google Business Profile, que hoje é "Loja de roupa".
+  // Se a categoria do perfil mudar, este tipo muda junto.
   '@type': 'ClothingStore',
   name: brand.name,
   slogan: brand.slogan,
@@ -25,16 +33,36 @@ const localBusiness = {
   telephone: `+${contact.whatsappDigits}`,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: address.street,
-    addressLocality: `${address.district}, ${address.city}`,
+    // O bairro vai na linha da rua, como no perfil do Google; a localidade é só a cidade.
+    streetAddress: `${address.street} - ${address.district}`,
+    addressLocality: address.city,
     addressRegion: address.state,
     postalCode: address.zip,
     addressCountry: 'BR',
   },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: address.geo.latitude,
+    longitude: address.geo.longitude,
+  },
+  hasMap: address.mapsProfileUrl,
   sameAs: [brand.instagramUrl],
-  ...(company.openingHours ? { openingHours: company.openingHours } : {}),
+  ...(company.openingHours
+    ? {
+        openingHoursSpecification: {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: company.openingHoursSpec.days,
+          opens: company.openingHoursSpec.opens,
+          closes: company.openingHoursSpec.closes,
+        },
+      }
+    : {}),
+  ...(company.legalName ? { legalName: company.legalName } : {}),
+  ...(company.cnpj ? { taxID: company.cnpj } : {}),
   ...(contact.email ? { email: contact.email } : {}),
   ...(canonicalUrl ? { url: canonicalUrl.toString() } : {}),
+  ...(logoUrl ? { logo: logoUrl } : {}),
+  ...(facadeUrl ? { image: facadeUrl } : {}),
 };
 ---
 
@@ -84,9 +112,11 @@ const localBusiness = {
 
       // O tema também é decidido aqui, antes de pintar: se fosse depois, quem
       // usa o modo escuro veria a página branca por um quadro. A ordem é
-      // escolha salva > preferência do sistema > claro. Sem JavaScript o
-      // atributo nunca é escrito e a página fica no claro, que é o design
-      // aprovado. A classe `js` é o que revela o botão de troca.
+      // escolha salva > claro. Não seguimos a preferência do sistema: o
+      // padrão é sempre claro, que é o design aprovado, e o visitante troca
+      // pelo botão se quiser o escuro. Sem JavaScript o atributo nunca é
+      // escrito e a página fica no claro. A classe `js` é o que revela o
+      // botão de troca.
       (function () {
         var root = document.documentElement;
         root.classList.add('js');
@@ -95,14 +125,10 @@ const localBusiness = {
         try {
           saved = localStorage.getItem('mirante-tema');
         } catch (error) {
-          // Armazenamento bloqueado: segue a preferência do sistema.
+          // Armazenamento bloqueado: segue o padrão claro.
         }
 
-        var dark = saved
-          ? saved === 'dark'
-          : window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        root.dataset.theme = dark ? 'dark' : 'light';
+        root.dataset.theme = saved === 'dark' ? 'dark' : 'light';
       })();
     </script>
   </head>

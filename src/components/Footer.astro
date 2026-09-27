@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { address, brand, company, contact } from '../data/site';
+import { address, brand, company, contact, privacy } from '../data/site';
 
 const year = new Date().getFullYear();
 
@@ -66,6 +66,9 @@ const links = [
       <span class="footer__legal">
         © {year} {legalName}. Todos os direitos reservados.
         {company.cnpj && <span class="footer__cnpj">CNPJ {company.cnpj}</span>}
+        <button type="button" class="footer__privacy" commandfor={privacy.dialogId} command="show-modal">
+          Política de privacidade
+        </button>
       </span>
       <span>{brand.slogan}</span>
     </div>
@@ -73,9 +76,9 @@ const links = [
 </footer>
 
 <style>
-  /* Faixa de outro fundo: o espaço é interno, então usa --section-y inteiro. */
+  /* Faixa de outro fundo: o espaço é interno à faixa, então usa --band-pad. */
   .footer {
-    padding-block: var(--section-y) 40px;
+    padding-block: var(--band-pad) 40px;
     background: var(--surface-2);
   }
 
@@ -150,8 +153,33 @@ const links = [
     color: var(--faint);
   }
 
-  .footer__cnpj::before {
+  .footer__cnpj::before,
+  .footer__privacy::before {
     content: ' · ';
+  }
+
+  /* O ponto separador é do texto da linha, não do link: sem isto ele herdaria
+     o sublinhado e a cor de hover. */
+  /* É um botão, porque abre o diálogo em vez de navegar, mas lê como link. */
+  .footer__privacy {
+    padding: 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .footer__privacy::before {
+    display: inline-block;
+    white-space: pre;
+    text-decoration: none;
+  }
+
+  .footer__privacy:hover {
+    color: var(--heading);
   }
 
   @media (min-width: 640px) {

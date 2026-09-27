@@ -46,14 +46,33 @@
   --shadow-hero: 0 1px 2px rgb(16 26 53 / 5%), 0 18px 44px rgb(16 26 53 / 8%);
 
   /* Ritmo
-     --section-y é o espaço que deve existir entre duas seções.
-     Seção sobre o mesmo fundo usa --section-pad (metade em cima e metade
-     embaixo), então o encontro de duas soma exatamente --section-y. Seção em
-     faixa de outro fundo (Faq, rodapé) usa --section-y inteiro, porque aí o
-     espaço é interno à faixa e a troca de cor já marca a separação. */
+     São três degraus, e a distância entre eles é o que diz ao olho o que é
+     seção nova e o que é continuação da mesma seção. Eles precisam ficar bem
+     afastados entre si: quando o salto de uma seção para a outra é parecido
+     com o salto de um bloco para o outro dentro dela, a página inteira lê
+     como uma coisa só.
+
+     --section-y é o espaço ENTRE duas seções. Seção sobre o mesmo fundo usa
+     --section-pad (metade em cima e metade embaixo), então o encontro de duas
+     soma exatamente --section-y.
+
+     --band-pad é o padding interno de uma seção em faixa de outro fundo (os
+     clientes, o FAQ, o rodapé). É maior que --section-pad porque ali o espaço
+     é interno à faixa: a troca de cor já marca a separação, e o conteúdo
+     precisa de folga para não encostar na borda da faixa.
+
+     --intro-gap é a distância do bloco de título (eyebrow + h2 + lead) até o
+     conteúdo da própria seção. É o menor dos três de propósito — é ele que
+     mantém a abertura grudada no que ela apresenta. */
   --gutter: 16px;
-  --section-y: 72px;
+  /* Largura máxima do conteúdo, em token porque não é só o container que a
+     usa. Sobe junto com a calha grande, que encolheu: as duas coisas juntas
+     é que dão a largura de linha da página. */
+  --page-max: 1560px;
+  --section-y: 96px;
   --section-pad: calc(var(--section-y) / 2);
+  --band-pad: 64px;
+  --intro-gap: 32px;
 
   --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, sans-serif;
   --font-display: 'Archivo Black', 'Archivo Variable', system-ui, sans-serif;
@@ -111,14 +130,18 @@
 @media (min-width: 768px) {
   :root {
     --gutter: 48px;
-    --section-y: 96px;
+    --section-y: 120px;
+    --band-pad: 80px;
+    --intro-gap: 36px;
   }
 }
 
 @media (min-width: 1080px) {
   :root {
-    --gutter: 80px;
-    --section-y: 120px;
+    --gutter: 64px;
+    --section-y: 144px;
+    --band-pad: 96px;
+    --intro-gap: 40px;
   }
 }
 
@@ -172,7 +195,11 @@ p {
   text-wrap: pretty;
 }
 
-ul {
+/* O <ol> entra junto: sem ele, a lista herda os 40px de recuo do navegador,
+   que num celular saem direto da largura da linha. O marcador já não aparece
+   (o <li> vira flex e deixa de ser list-item), mas o recuo fica. */
+ul,
+ol {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -203,7 +230,7 @@ svg {
 
 .container {
   width: 100%;
-  max-width: 1440px;
+  max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
@@ -237,6 +264,19 @@ svg {
   font-size: clamp(17px, 1rem + 0.3vw, 19px);
   line-height: 1.65;
   color: var(--muted);
+}
+
+/* Uma palavra em destaque dentro de um título — quase sempre o nome da marca.
+   Pede --accent, e não a laranja literal do logo, porque o papel aqui é
+   "laranja de texto": é esse token que clareia no modo escuro.
+
+   O destaque é só visual, então vai num <span>: a palavra não tem mais
+   importância que o resto da frase, e um <strong> faria o leitor de tela
+   anunciar ênfase onde não há nenhuma. O contraste do laranja sobre o branco
+   (3,5:1) atende ao mínimo de texto grande, então este destaque é para
+   título — em corpo de texto ele reprovaria. */
+.highlight {
+  color: var(--accent);
 }
 
 .btn {

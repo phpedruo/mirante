@@ -24,48 +24,108 @@ export const brand = {
  * `/logo-mirante.svg` e a versão para fundo escuro.
  */
 export const assets = {
-  /** PREENCHER: SVG do mascote águia. Usado na fala e no card de contato. */
-  mascot: '',
+  /**
+   * A águia da marca, usada na fala e no card de contato.
+   *
+   * É um render com fundo transparente, servido em 420px de largura — o dobro
+   * dos 210px em que ela aparece maior na página, para não serrilhar em tela
+   * retina. O arquivo original, maior, fica em `design/mascote-original/`,
+   * fora de `public/`, para o dia em que ela precisar aparecer em outro
+   * tamanho. Caminho vazio faz os dois lugares caírem na moldura tracejada.
+   */
+  mascot: '/mascote-mirante.webp',
+  /**
+   * A fachada do galpão, no topo do card de endereço: é o que o visitante
+   * procura com os olhos quando chega na rua. O original tem só 680px de
+   * largura, por isso a foto aparece no card, e não no espaço largo do mapa.
+   * O arquivo original fica em `design/fachada-original/`. Vazio omite a foto.
+   */
+  facade: '/fachada-mirante.webp',
 };
 
 /**
- * O outdoor do hero: as artes e fotos que passam no quadro ao lado do texto.
+ * O outdoor do hero: o que passa no quadro ao lado do texto.
  *
  * Lista vazia mostra o placeholder hachurado; com uma só imagem o quadro fica
  * parado; a passagem começa a partir de duas.
  *
- * PREENCHER: arquivos em `public/hero/`. Servem fotos de pessoas fardadas, de
- * peças prontas e as artes do Instagram. O quadro é um pouco mais largo que
- * alto e a imagem é cortada para preenchê-lo, então o assunto precisa estar
- * no centro — arte com texto colado na borda perde pedaço.
+ * São dois tipos de conteúdo, e a diferença não é enfeite: uma **foto**
+ * preenche o quadro e aceita perder as bordas no corte, que é o que foto de
+ * gente fardada pede — o assunto está no meio e sobra margem. Uma **arte** de
+ * divulgação, não: ali o texto encosta na borda, e qualquer corte come
+ * palavra. Por isso a arte aparece inteira, centrada sobre o azul da marca,
+ * com as sobras laterais viradas parte do desenho em vez de acidente.
  *
- * Os três itens abaixo são placeholders de exemplo, só para ver a passagem
- * funcionando — trocar pelos arquivos reais e apagar os de exemplo antes do
- * lançamento (`public/hero/exemplo-*.svg`).
+ * O `promo` é o espaço da fábrica para anunciar o que quiser sobre a imagem —
+ * uma campanha, uma linha nova, um recado de temporada. Vale nos dois tipos,
+ * mas numa arte de Instagram costuma sobrar, porque a peça já traz o recado
+ * dentro dela. Sem `promo`, a imagem aparece limpa.
+ *
+ * Os três de hoje não repetem o mesmo elogio: cada um pega um ponto diferente
+ * — a técnica, a matéria-prima e o atendimento —, os dois primeiros vindos dos
+ * mesmos `factoryPoints` que a seção de tecidos lista e o terceiro, do fluxo
+ * consultivo da casa, em que um consultor acompanha o pedido do começo ao fim. Passando as três, o visitante recebe três argumentos em vez de três
+ * fotos. Valem as regras de copy da página: uma linha por recado, nada de
+ * preço e nada de comparação com concorrente.
  */
-export type HeroSlide = { src: string; alt: string };
+export type HeroSlide = {
+  src: string;
+  alt: string;
+  /** Ausente vale 'foto'. */
+  kind?: 'foto' | 'arte';
+  promo?: { badge?: string; title: string; text?: string };
+};
 
+/**
+ * As três de hoje são as peças que sobraram da seleção de "Atendemos todos os
+ * públicos": recorte 1,25:1 do original em `design/produtos-originais/`, na
+ * proporção do quadro, com a peça no centro. Refazer um corte é recortar do
+ * original, nunca do `.webp`.
+ *
+ * AINDA FALTA o que o hero pede de verdade: foto de gente fardada — equipe na
+ * recepção, turma de escola, operação em campo. As três de hoje são peças
+ * soltas, sem contexto de uso, e seguram o lugar até as reais chegarem. A arte
+ * do avental Pitú, que seria o primeiro `kind: 'arte'` da lista, ficou de fora
+ * porque o arquivo tem 399px de largura e o quadro pede uns 650.
+ */
 export const heroSlides: HeroSlide[] = [
-  { src: '/hero/exemplo-1-fardamento-empresarial.svg', alt: 'Exemplo: fardamento empresarial' },
-  { src: '/hero/exemplo-2-fardamento-industrial.svg', alt: 'Exemplo: fardamento industrial' },
-  { src: '/hero/exemplo-3-camisa-polo.svg', alt: 'Exemplo: camisa polo bordada' },
+  {
+    src: '/hero/polo-bordada.webp',
+    alt: 'Camisa polo com logo bordado no peito',
+    promo: { badge: 'Bordado próprio', title: 'A sua logo na peça' },
+  },
+  {
+    src: '/hero/bata.webp',
+    alt: 'Bata azul-marinho de manga curta',
+    promo: { badge: 'Tecido escolhido', title: 'A malha que o uso pede' },
+  },
+  {
+    src: '/hero/camisa-social.webp',
+    alt: 'Camisa social escura de manga longa',
+    promo: { badge: 'Contato próximo', title: 'Um consultor do pedido à entrega' },
+  },
 ];
 
 /**
  * A faixa logo abaixo do hero. Os dígitos de `number` sobem girando quando a
  * página abre; `suffix` fica parado ao lado, e um item sem `number` é só texto.
  *
- * CONFERIR COM A FÁBRICA: os dois números vieram do cliente e nunca foram
- * checados contra o registro da empresa. "Entrega grátis" também precisa de
- * confirmação — hoje o FAQ diz que a região de entrega é combinada no WhatsApp,
- * então uma promessa sem condição aqui pode virar cobrança lá na frente.
+ * Os três são números por uma razão de leitura: o item sem `number` fica sem
+ * o dígito grande que os outros têm, e a linha inteira desanda — ele lê como
+ * sobra, não como terceiro dado. Item só de texto continua funcionando, mas
+ * não misturado com numerados.
+ *
+ * CONFERIR COM A FÁBRICA: os três vieram do cliente ou da descrição do
+ * negócio e nenhum foi checado contra o registro da empresa. O de produção
+ * própria é o que mais pede confirmação: se alguma etapa (bordado, por
+ * exemplo) sai para fora, os 100% não se sustentam.
  */
 export type HeroStat = { number?: string; suffix?: string; text: string };
 
 export const heroStats: HeroStat[] = [
-  { number: '10', suffix: '+', text: 'anos de mercado' },
+  { number: '10', suffix: '+', text: 'anos de história' },
   { number: '1000', suffix: '+', text: 'clientes atendidos' },
-  { text: 'Entrega grátis' },
+  { number: '100', suffix: '%', text: 'produção própria' },
 ];
 
 export const contact = {
@@ -94,26 +154,45 @@ export const address = {
   city: 'Paulista',
   state: 'PE',
   zip: '53409-420',
+  /** O pino do Google Business Profile, para os dados estruturados. */
+  geo: { latitude: -7.932785, longitude: -34.861176 },
+  /** Link de compartilhamento do perfil no Google Maps. */
+  mapsProfileUrl: 'https://share.google/yuhiuG1K2MRjVFtV5',
   get full() {
     return `${this.street} — ${this.district}, ${this.city} – ${this.state}, ${this.zip}`;
   },
+  /**
+   * Busca do mapa e da rota. Leva o nome da empresa na frente do endereço
+   * para o Google abrir no perfil da Mirante — com nome, fotos e avaliações —
+   * em vez de um alfinete genérico na rua.
+   */
   get mapsQuery() {
     return encodeURIComponent(
-      `${this.street}, ${this.district}, ${this.city} - ${this.state}, ${this.zip}`,
+      `${brand.name}, ${this.street}, ${this.district}, ${this.city} - ${this.state}, ${this.zip}`,
     );
   },
 };
 
 export const company = {
-  /** PREENCHER: horário de funcionamento. Ex.: 'Segunda a sexta, 8h às 17h'. */
-  openingHours: '',
   /**
-   * PREENCHER: razão social, para a linha de direitos reservados do rodapé.
-   * Ex.: 'Mirante Confecções LTDA'. Vazio usa o nome da marca no lugar.
+   * Horário de funcionamento, como aparece na página. Precisa bater com o
+   * Google Business Profile: horário divergente entre os dois é sinal de
+   * informação desatualizada para o buscador.
    */
-  legalName: '',
-  /** PREENCHER: CNPJ para o rodapé. Ex.: '00.000.000/0001-00'. Vazio omite a menção. */
-  cnpj: '',
+  openingHours: 'Segunda a sexta, das 8h às 17h',
+  /** O mesmo horário, no formato que os buscadores leem. Mudar um exige mudar o outro. */
+  openingHoursSpec: {
+    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '08:00',
+    closes: '17:00',
+  },
+  /**
+   * Razão social, para a linha de direitos reservados do rodapé, a política
+   * de privacidade e os dados estruturados. Vazio usa o nome da marca.
+   */
+  legalName: 'Mirante Comercio Varejista de Fardamentos e Camisas LTDA',
+  /** CNPJ para o rodapé e os dados estruturados. Vazio omite a menção. */
+  cnpj: '33.765.038/0001-04',
   /** Pedido mínimo. Aparece só na resposta do FAQ, não se repete pela página. */
   minimumOrder: 30,
 };
@@ -138,24 +217,20 @@ export type Technique = {
   /** Liga o card à sua animação. Trocar aqui exige trocar em animations.ts. */
   key: 'bordado' | 'serigrafia' | 'sublimacao';
   name: string;
-  caption: string;
 };
 
 export const techniques: Technique[] = [
   {
     key: 'bordado',
     name: 'Bordado',
-    caption: 'Linha aplicada no tecido, com relevo que aguenta a lavagem.',
   },
   {
     key: 'serigrafia',
     name: 'Serigrafia',
-    caption: 'Tinta puxada no rodo sobre a tela: cor firme, peça a peça.',
   },
   {
     key: 'sublimacao',
     name: 'Sublimação',
-    caption: 'O calor leva a arte para dentro da malha, sem limite de cor.',
   },
 ];
 
@@ -173,14 +248,65 @@ export type Fabric = {
   photo?: string;
 };
 
+/**
+ * O padrão da matéria-prima, em uma linha só, logo abaixo da abertura da
+ * seção de tecidos.
+ *
+ * É uma linha, e não um parágrafo, de propósito: um bloco de texto ali vira
+ * caixa de dica, que o visitante pula. A regra de copy da marca também vale —
+ * o argumento é a qualidade do que entra no galpão, nunca a comparação com
+ * quem quer que seja.
+ */
+export const fabricsNote =
+  'Trabalhamos com as melhores marcas de malha e tecido do mercado.';
+
+/**
+ * O card que fecha a grade de tecidos. A lista acima não é tudo o que a
+ * fábrica trabalha, e sem ele o visitante lê os sete como catálogo fechado.
+ * Não cita tecido nenhum de propósito: a lista ainda está por confirmar, e
+ * este card não pode prometer malha que a fábrica não tenha.
+ */
+export const fabricsMore = {
+  name: 'E muito mais',
+  use: 'Uma grande variedade de malhas e tecidos para o que a sua peça pedir.',
+};
+
 export const fabrics: Fabric[] = [
-  { name: 'Malha PV e algodão', use: 'Camiseta promocional, de evento e de campanha.' },
-  { name: 'Piquet', use: 'Camisa polo, com gola que aguenta lavagem.' },
-  { name: 'Dry fit e helanca', use: 'Corrida, jogo interno e ballet — leve e respirável.' },
-  { name: 'Brim e sarja', use: 'Fardamento pesado, macacão e avental.' },
-  { name: 'Oxford e tricoline', use: 'Camisa social, bata e recepção.' },
-  { name: 'Microfibra e gabardine', use: 'Jaleco e bata de clínica, que não amassam.' },
-  { name: 'Malha com proteção UV', use: 'Manga longa para quem trabalha no sol.' },
+  {
+    name: 'Malha PV e algodão',
+    use: 'Camiseta promocional, de evento e de campanha.',
+    photo: '/malhas/algodao.webp',
+  },
+  {
+    name: 'Piquet',
+    use: 'Camisa polo, com gola que aguenta lavagem.',
+    photo: '/malhas/piquet.webp',
+  },
+  {
+    name: 'Dry fit e helanca',
+    use: 'Corrida, jogo interno e ballet, leve e respirável.',
+    photo: '/malhas/dry-fit.webp',
+  },
+  {
+    name: 'Brim e sarja',
+    use: 'Fardamento pesado, macacão e avental.',
+    photo: '/malhas/brim.webp',
+  },
+  {
+    name: 'Oxford e tricoline',
+    use: 'Camisa social, bata e recepção.',
+    photo: '/malhas/oxford.webp',
+  },
+  {
+    name: 'Microfibra e gabardine',
+    use: 'Jaleco e bata de clínica, que não amassam.',
+    photo: '/malhas/gabardine.webp',
+  },
+  {
+    name: 'Malha com proteção UV',
+    use: 'Manga longa para quem trabalha no sol.',
+    photo: '/malhas/uv.webp',
+  },
 ];
 
 /**
@@ -198,35 +324,43 @@ export type ProductCategory = {
 export const productCategories: ProductCategory[] = [
   {
     name: 'Fardamento escolar',
-    description: 'Vestido, camisa, short e short-saia, do infantil ao adulto.',
+    description: 'Camisa, calça, vestido, short e short-saia, do infantil ao adulto.',
+    photo: '/produtos/escolar.webp',
   },
   {
     name: 'Fardamento empresarial',
     description: 'Polo bordada, camisa social e colete, para equipe e recepção.',
+    photo: '/produtos/empresarial.webp',
   },
   {
-    name: 'Fardamento industrial',
-    description: 'Macacão e conjunto pesado, com faixa refletiva.',
+    name: 'Fardamento operacional',
+    description: 'Macacão e conjunto pesado, com ou sem faixa refletiva.',
+    photo: '/produtos/industrial.webp',
   },
   {
     name: 'Saúde e laboratório',
-    description: 'Bata, jaleco e scrub, com bordado no bolso.',
+    description: 'Bata, jaleco e scrub, com ou sem bordado.',
+    photo: '/produtos/saude.webp',
   },
   {
     name: 'Alimentação',
-    description: 'Avental, dolmã e camisa de cozinha, para restaurante e bar.',
+    description: 'Avental e camisa de cozinha, para restaurante e bar.',
+    photo: '/produtos/alimentacao.webp',
   },
   {
     name: 'Esporte e eventos',
-    description: 'Jogo interno, corrida, ballet e camisa de campanha.',
+    description: 'Jogos internos, corrida, ballet e camisa de campanha.',
+    photo: '/produtos/esporte.webp',
   },
   {
     name: 'Trabalho no sol',
     description: 'Camisa UV manga longa, com proteção para o dia inteiro.',
+    photo: '/produtos/uv.webp',
   },
   {
     name: 'Brindes e bandeiras',
-    description: 'Sacola, boné, viseira, mochila saco e bandeira.',
+    description: 'Sacola, boné, ecobag, viseira, sacochila e bandeira.',
+    photo: '/produtos/brindes.webp',
   },
 ];
 
@@ -243,13 +377,24 @@ export const quantities = [
  * em vetor. Enquanto a lista estiver vazia, a seção mostra placeholders.
  */
 export type Client = { name: string; logo: string };
-export const clients: Client[] = [];
+export const clients: Client[] = [
+  { name: 'Afya', logo: '/clientes/afya.webp' },
+  { name: 'Colégio Patrícia Costa', logo: '/clientes/colegio-patricia-costa.webp' },
+  { name: 'Colégio Santa Emília', logo: '/clientes/colegio-santa-emilia.webp' },
+  { name: 'Mix Mateus', logo: '/clientes/mix-mateus.webp' },
+  { name: 'Natto', logo: '/clientes/natto.webp' },
+  { name: 'Novo Atacarejo', logo: '/clientes/novo-atacarejo.webp' },
+  { name: 'Passaporte', logo: '/clientes/passaporte.svg' },
+  { name: 'Pitú', logo: '/clientes/pitu.webp' },
+  { name: 'Solar Coca-Cola', logo: '/clientes/solar-coca-cola.webp' },
+  { name: 'UNINASSAU', logo: '/clientes/uninassau.webp' },
+];
 
 /** Pontos de qualidade da fábrica. Aparecem ao lado dos tecidos, na seção de produtos. */
 export const factoryPoints = [
   'Tecido escolhido conforme o uso da peça',
   'Costura e acabamento conferidos peça por peça',
-  'Arte aprovada por você antes de produzir',
+  'Prévia da peça aprovada por você antes de produzir',
   'Pontualidade e compromisso na entrega',
 ];
 
@@ -261,9 +406,9 @@ export const faq: FaqItem[] = [
     answer: `${company.minimumOrder} peças por pedido.`,
   },
   {
-    question: 'Preciso mandar a arte pronta?',
+    question: 'O que eu preciso enviar?',
     answer:
-      'Não. Se você já tem o logo, a gente aplica; se não tem arte fechada, montamos a proposta visual da peça para você aprovar antes da produção.',
+      'O seu logo e as referências do que você imagina. A partir delas, fazemos o orçamento e a prévia da peça para você aprovar antes da produção.',
   },
   {
     question: 'Qual o prazo de produção?',
@@ -272,7 +417,7 @@ export const faq: FaqItem[] = [
   },
   {
     question: 'Dá para misturar tamanhos no mesmo pedido?',
-    answer: 'Dá. A grade de tamanhos é fechada junto com a aprovação da arte.',
+    answer: 'Dá. A grade de tamanhos é fechada junto com a aprovação da prévia.',
   },
   {
     question: 'Vocês entregam fora de Paulista?',
@@ -285,6 +430,22 @@ export const faq: FaqItem[] = [
     answer: 'As condições são combinadas na proposta, junto com o orçamento.',
   },
 ];
+
+/**
+ * Política de privacidade (LGPD), num diálogo compacto em
+ * `PrivacyDialog.astro`, aberto pelo link abaixo do formulário e pelo rodapé.
+ *
+ * O texto descreve o que o site faz *hoje*: o formulário via Web3Forms, o
+ * mapa do Google, os links para WhatsApp e Instagram e nenhum cookie de
+ * análise ou publicidade. Qualquer terceiro novo — analytics, pixel, chat —
+ * ou campo novo no formulário exige atualizar o texto e a data abaixo.
+ */
+export const privacy = {
+  /** Id do <dialog>; os botões que abrem a política apontam para ele. */
+  dialogId: 'politica-privacidade',
+  /** Data da última revisão do texto, como aparece no diálogo. */
+  updatedAt: '26 de setembro de 2026',
+};
 
 /**
  * Controla se o site já está no ar para os buscadores.

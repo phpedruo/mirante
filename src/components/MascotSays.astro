@@ -8,7 +8,15 @@ import { assets, brand } from '../data/site';
       <div class="says__mascot" aria-hidden="true">
         {
           assets.mascot ? (
-            <img class="says__art" src={assets.mascot} alt="" loading="lazy" decoding="async" />
+            <img
+              class="says__art"
+              src={assets.mascot}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width="420"
+              height="479"
+            />
           ) : (
             <span class="says__slot">[Mascote águia]</span>
           )
@@ -17,7 +25,7 @@ import { assets, brand } from '../data/site';
 
       <div class="says__bubble">
         <p class="says__text">
-          Sabe o que o cliente vê antes de falar com a sua equipe? <strong>A farda.</strong>
+          Sabe o que o cliente vê antes de falar com a sua equipe? <strong>A farda.</strong><br>
           Empresa com visual padronizado passa mais confiança.
         </p>
         <p class="says__sign">{brand.slogan}</p>
@@ -29,7 +37,12 @@ import { assets, brand } from '../data/site';
 <style>
   .mascot-says {
     padding-block: var(--section-pad);
-    background: var(--surface);
+    /* Cinza, e não branco, por causa dos vizinhos: a fala fica entre os
+       clientes e o FAQ, que são faixas cinza, e uma tira branca de uma seção
+       só entre as duas lia como engano de montagem. Assim o meio da página
+       vira uma região cinza contínua — clientes, fala e FAQ — em vez de três
+       trocas de cor em sequência. */
+    background: var(--surface-2);
   }
 
   .says {

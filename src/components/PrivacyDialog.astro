@@ -1,0 +1,234 @@
+---
+/**
+ * Política de privacidade (LGPD), num diálogo compacto.
+ *
+ * Ela não tem página própria de propósito: fica à mão para quem quiser ler —
+ * pelo link abaixo do formulário e pelo rodapé —, sem disputar atenção com a
+ * página. O que a LGPD pede é que ela esteja acessível e clara no ponto em
+ * que o dado é coletado, e o link ao lado do botão de envio cumpre isso.
+ *
+ * É um <dialog> nativo: foco preso dentro dele, Esc fecha e o fundo escurece
+ * sem nenhuma biblioteca. Os botões que abrem e fecham usam `commandfor`, que
+ * funciona até sem JavaScript nos navegadores atuais; o script abaixo só
+ * cobre os que ainda não o conhecem.
+ *
+ * O texto descreve o que o site faz hoje. Terceiro novo (analytics, pixel,
+ * chat) ou campo novo no formulário exige atualizar o texto e a data em
+ * `privacy.updatedAt` (site.ts). Os dados da empresa vêm de `site.ts`, para
+ * a política nunca divergir do rodapé.
+ */
+import { address, brand, company, contact, privacy } from '../data/site';
+
+const controller = company.legalName || brand.name;
+
+// O texto da política não leva travessão, então o endereço é montado aqui
+// só com vírgulas, em vez de usar o `address.full` do resto da página.
+const addressLine = `${address.street}, ${address.district}, ${address.city}, ${address.state}`;
+const titleId = `${privacy.dialogId}-titulo`;
+---
+
+<dialog class="privacy" id={privacy.dialogId} aria-labelledby={titleId} closedby="any">
+  <div class="privacy__box">
+    <div class="privacy__head">
+      <div>
+        <h2 class="privacy__title" id={titleId}>Política de privacidade</h2>
+        <p class="privacy__date">Atualizada em {privacy.updatedAt}</p>
+      </div>
+      <button
+        type="button"
+        class="privacy__close"
+        commandfor={privacy.dialogId}
+        command="close"
+        aria-label="Fechar"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12"></path><path d="M18 6 6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="privacy__body">
+      <p class="privacy__intro">
+        Seus dados ficam com a gente e servem só para atender o seu pedido.
+      </p>
+      <p>
+        <strong>Quem somos:</strong> {controller}{company.cnpj && <>, CNPJ {company.cnpj}</>}, na {addressLine}.
+      </p>
+      <p>
+        <strong>O que recebemos:</strong> o que você escreve no formulário ou manda pelo WhatsApp.
+        O site também guarda informações técnicas da visita, como o navegador usado, por segurança.
+      </p>
+      <p>
+        <strong>Para que usamos:</strong> só para cuidar do seu pedido, do orçamento à entrega.
+        Não vendemos seus dados e não mandamos propaganda sem você pedir.
+      </p>
+      <p>
+        <strong>Com quem compartilhamos:</strong> só com os serviços que fazem o site funcionar. O
+        formulário chega até nós pelo Web3Forms, o mapa é do Google, e o WhatsApp e o Instagram só
+        entram na conversa quando você clica neles. Nós não usamos cookies de propaganda.
+      </p>
+      <p>
+        <strong>Por quanto tempo:</strong> só enquanto for preciso para o atendimento e pelo prazo
+        que a lei pede para notas e registros.
+      </p>
+      <p>
+        <strong>Você decide:</strong> quer ver, corrigir ou apagar seus dados? É só chamar no
+        WhatsApp <a href={contact.whatsappUrl('Olá! Tenho uma solicitação sobre os meus dados pessoais.')} target="_blank" rel="noopener">{contact.whatsappDisplay}</a>{contact.email && <> ou escrever para <a href={`mailto:${contact.email}`}>{contact.email}</a></>}. A gente responde em até 15 dias.
+      </p>
+      <p class="privacy__law">Tudo de acordo com a Lei Geral de Proteção de Dados (LGPD).</p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .privacy {
+    width: min(560px, calc(100% - var(--gutter) * 2));
+    max-height: min(640px, calc(100dvh - 48px));
+    padding: 0;
+    background: var(--card);
+    border: 0;
+    border-radius: var(--radius-md);
+    box-shadow: 0 24px 64px rgb(16 26 53 / 22%);
+    color: var(--ink);
+  }
+
+  .privacy::backdrop {
+    background: rgb(4 14 43 / 55%);
+  }
+
+  :global(html[data-theme='dark']) .privacy {
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 64px rgb(0 0 0 / 60%);
+  }
+
+  /* Com o diálogo aberto a página de trás não rola junto com o texto. */
+  :global(html:has(dialog.privacy[open])) {
+    overflow: hidden;
+  }
+
+  /* O cabeçalho fica parado e só o texto rola: o botão de fechar nunca
+     sai de vista. */
+  .privacy__box {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+  }
+
+  .privacy__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 22px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .privacy__title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--heading);
+  }
+
+  .privacy__date {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--faint);
+  }
+
+  .privacy__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin: -6px -8px 0 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .privacy__close:hover {
+    background: var(--surface-2);
+    color: var(--heading);
+  }
+
+  .privacy__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .privacy__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 22px 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .privacy__body p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--muted-2);
+  }
+
+  .privacy__body .privacy__intro {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .privacy__body .privacy__law {
+    font-size: 13px;
+    color: var(--faint);
+  }
+
+  .privacy__body strong {
+    font-weight: 600;
+    color: var(--heading);
+  }
+
+  .privacy__body a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (min-width: 560px) {
+    .privacy__head {
+      padding: 26px 28px 16px;
+    }
+
+    .privacy__body {
+      padding: 20px 28px 28px;
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.privacy');
+
+  if (dialog) {
+    // Navegadores que ainda não conhecem `commandfor`/`command`: os mesmos
+    // botões, ligados à mão.
+    if (!('command' in HTMLButtonElement.prototype)) {
+      document.querySelectorAll<HTMLButtonElement>(`[commandfor="${dialog.id}"]`).forEach((button) => {
+        button.addEventListener('click', () => {
+          if (button.getAttribute('command') === 'close') dialog.close();
+          else dialog.showModal();
+        });
+      });
+    }
+
+    // Clique no fundo fecha. O `closedby="any"` já faz isso onde é
+    // suportado; aqui vale para os demais. O clique só cai no próprio
+    // <dialog> quando é fora da caixa, que ocupa todo o seu interior.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

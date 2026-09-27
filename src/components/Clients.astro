@@ -15,10 +15,9 @@ const track = [...items, ...items];
 <section class="clients" id="clientes">
   <div class="container clients__intro">
     <span class="eyebrow" data-anim="up">Quem veste Mirante</span>
-    <h2 class="title-md" data-anim="up">Marcas que já saíram fardadas daqui</h2>
+    <h2 class="title-md" data-anim="up">Marcas que confiam na qualidade <span class="highlight">Mirante</span></h2>
     <p class="lead" data-anim="up">
-      Escolas, indústrias, restaurantes e comércios que confiaram a peça da equipe à nossa
-      produção.
+      Escolas, indústrias, restaurantes e comércios que vestem Mirante.
     </p>
   </div>
 
@@ -38,9 +37,13 @@ const track = [...items, ...items];
 </section>
 
 <style>
+  /* A esteira de clientes é a faixa que quebra a sequência de seções brancas
+     do meio da página: hero, técnicas e produtos vêm todos sobre --surface, e
+     sem uma troca de cor aqui o olho perde onde uma acaba e a outra começa.
+     Por ser faixa, o espaço interno é --band-pad, como no FAQ e no rodapé. */
   .clients {
-    padding-block: var(--section-pad);
-    background: var(--surface);
+    padding-block: var(--band-pad);
+    background: var(--surface-2);
     overflow: hidden;
   }
 
@@ -49,13 +52,16 @@ const track = [...items, ...items];
     flex-direction: column;
     gap: 16px;
     max-width: 700px;
-    margin-bottom: 40px;
+    margin-bottom: var(--intro-gap);
   }
 
+  /* Ver Showcase.astro: clipe só horizontal, para a sombra das placas não ser
+     cortada por uma linha reta no rodapé da esteira. */
   .marquee {
     position: relative;
     padding-block: 6px;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   .marquee__track {
@@ -72,8 +78,19 @@ const track = [...items, ...items];
     width: 168px;
     height: 96px;
     padding: 18px;
-    background: var(--surface-2);
+    /* Sobre a faixa, a placa precisa ser a camada de cima: --card é branco no
+       claro e clareia no escuro, então o logo fica sempre sobre um fundo
+       limpo, que é como logo de cliente deve aparecer. */
+    background: var(--card);
     border-radius: 18px;
+  }
+
+  /* No escuro a placa continua clara. Logo de cliente é desenhada para fundo
+     claro: sobre a placa escura, as letras azul-marinho da CPC sumiam, e a
+     trama de pontos embutida no arquivo dela virava um retângulo pontilhado.
+     O tom é um pouco abaixo do branco para não ofuscar na faixa escura. */
+  :global(html[data-theme='dark']) .clients__plate {
+    background: #e9edf5;
   }
 
   .clients__plate img {
@@ -97,12 +114,6 @@ const track = [...items, ...items];
     .clients__plate {
       width: 216px;
       height: 120px;
-    }
-  }
-
-  @media (min-width: 1080px) {
-    .clients__intro {
-      margin-bottom: 44px;
     }
   }
 </style>
