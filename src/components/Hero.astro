@@ -142,9 +142,12 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   }
 
   /* A marca abre a página em tamanho grande. Só a altura é definida; a
-     largura sai da proporção do vetor, então o lockup nunca distorce. */
+     largura sai da proporção do vetor, então o lockup nunca distorce.
+     O piso de 100px é o que vale no celular: com 80px a logo ocupava só
+     60% da tela e ficava tímida perto do título; com 100px ela abre a
+     página com presença e os dois botões continuam na primeira tela. */
   .hero__brand {
-    --logo-height: clamp(80px, 15vw, 140px);
+    --logo-height: clamp(100px, 15vw, 140px);
 
     display: flex;
     align-items: center;
