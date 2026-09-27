@@ -1,17 +1,19 @@
 ---
 import Logo from './Logo.astro';
 
+// Os links levam `/` na frente para funcionar também fora da página inicial,
+// como na 404 — ali, `#produtos` sozinho apontaria para a própria página de erro.
 const links = [
-  { href: '#produtos', label: 'Produtos' },
-  { href: '#clientes', label: 'Quem veste Mirante' },
-  { href: '#duvidas', label: 'Dúvidas' },
-  { href: '#localizacao', label: 'Localização' },
+  { href: '/#produtos', label: 'Produtos' },
+  { href: '/#clientes', label: 'Quem veste Mirante' },
+  { href: '/#duvidas', label: 'Dúvidas' },
+  { href: '/#localizacao', label: 'Localização' },
 ];
 ---
 
 <header class="site-header" data-header>
   <div class="container site-header__inner">
-    <a href="#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
+    <a href="/#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
       <Logo />
     </a>
 
@@ -21,7 +23,7 @@ const links = [
           <li><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
-      <a href="#contato" class="btn btn--primary site-header__cta-mobile">Faça seu orçamento</a>
+      <a href="/#contato" class="btn btn--primary site-header__cta-mobile">Faça seu orçamento</a>
     </nav>
 
     <div class="site-header__actions">
@@ -39,7 +41,7 @@ const links = [
         </svg>
       </button>
 
-      <a href="#contato" class="btn btn--primary site-header__cta">Faça seu orçamento</a>
+      <a href="/#contato" class="btn btn--primary site-header__cta">Faça seu orçamento</a>
       <button
         type="button"
         class="site-header__toggle"

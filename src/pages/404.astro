@@ -1,0 +1,159 @@
+---
+/**
+ * Página de erro para endereço que não existe.
+ *
+ * Os serviços de hospedagem servem o `404.html` gerado daqui com o status
+ * 404, que é o que diz ao Google para não indexar a URL. O sitemap também a
+ * deixa de fora sozinho. A página não tenta vender: devolve o visitante para
+ * o início ou para o WhatsApp, que é para onde a página inicial o levaria.
+ *
+ * Quem dá a notícia é o mascote, em balão, como na fala da página inicial.
+ * A piada é o próprio nome da marca: do mirante se vê longe, e nem assim a
+ * página apareceu. A águia fica à direita porque a pose dela aponta para a
+ * esquerda, na direção dos botões — e ela não pode ser espelhada para trocar
+ * de lado, senão o "MIRANTE" da camisa sai invertido.
+ */
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PrivacyDialog from '../components/PrivacyDialog.astro';
+import { assets, brand, contact } from '../data/site';
+---
+
+<Base
+  title={`Página não encontrada | ${brand.shortName}`}
+  description="O endereço que você procurou não existe no site da Mirante Camisas e Fardamentos."
+>
+  <Header />
+  <main class="not-found">
+    <div class="container not-found__inner">
+      <div class="not-found__text">
+        <span class="eyebrow">Erro 404</span>
+        <h1 class="title-md">Essa página não existe</h1>
+        <p class="lead">
+          O endereço pode ter mudado ou sido digitado errado. Fardamento para a sua empresa?{' '}
+          <strong class="not-found__slogan">{brand.slogan}</strong>
+        </p>
+        <div class="not-found__actions">
+          <a href="/" class="btn btn--primary">Voltar para o início</a>
+          <a href={contact.whatsappUrl()} class="btn btn--ghost" target="_blank" rel="noopener">
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+
+      {
+        assets.mascot && (
+          <div class="not-found__speech">
+            <p class="not-found__bubble">
+              Daqui de cima eu enxergo longe, mas essa página eu não achei!
+            </p>
+            <img
+              class="not-found__mascot"
+              src={assets.mascot}
+              alt=""
+              decoding="async"
+              width="420"
+              height="479"
+            />
+          </div>
+        )
+      }
+    </div>
+  </main>
+  <Footer />
+  <PrivacyDialog />
+</Base>
+
+<style>
+  /* Mesma folga do hero no topo: a página abre colada no cabeçalho sticky. */
+  .not-found {
+    padding-block: calc(var(--section-pad) + var(--intro-gap)) var(--section-pad);
+    background: var(--surface);
+  }
+
+  /* No celular a águia vem primeiro: é ela quem dá a notícia, e o texto
+     logo abaixo explica e oferece a saída. */
+  .not-found__inner {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--intro-gap);
+  }
+
+  .not-found__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    max-width: 560px;
+  }
+
+  .not-found h1 {
+    color: var(--heading);
+  }
+
+  .not-found__slogan {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .not-found__speech {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  /* Mesmo balão da fala da página inicial: tom laranja suave e o bico feito
+     de um quadrado girado, aqui apontando para baixo, para a águia. */
+  .not-found__bubble {
+    position: relative;
+    max-width: 340px;
+    padding: 20px 22px;
+    background: var(--accent-wash);
+    border-radius: var(--radius-lg);
+    font-size: clamp(17px, 1rem + 0.5vw, 21px);
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--heading);
+  }
+
+  .not-found__bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    background: var(--accent-wash);
+    border-radius: 3px;
+    transform: rotate(45deg);
+  }
+
+  .not-found__mascot {
+    width: 130px;
+    height: auto;
+  }
+
+  @media (min-width: 900px) {
+    .not-found__inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 64px;
+    }
+
+    .not-found__mascot {
+      width: 190px;
+    }
+  }
+</style>

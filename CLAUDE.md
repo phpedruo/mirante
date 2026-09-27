@@ -85,7 +85,7 @@ WhatsApp: (81) 9.8104-0516 — este é o número escolhido para o site; as artes
 
 ## Arquitetura
 
-Site estático em Astro, uma página só (`src/pages/index.astro`), montada por componentes em `src/components/`. Sem framework de UI e sem ilha hidratada: os poucos comportamentos interativos são scripts próprios de cada componente.
+Site estático em Astro, uma página só (`src/pages/index.astro`), montada por componentes em `src/components/`, mais a página de erro (`src/pages/404.astro`), onde o mascote dá a notícia em balão. A 404 reaproveita o cabeçalho e o rodapé, e é por isso que os links deles levam `/` na frente (`/#produtos`): numa URL inexistente, `#produtos` sozinho apontaria para a própria página de erro. Sem framework de UI e sem ilha hidratada: os poucos comportamentos interativos são scripts próprios de cada componente.
 
 Dois pontos concentram as decisões e é por eles que se deve começar:
 

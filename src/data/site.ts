@@ -311,8 +311,7 @@ export const fabrics: Fabric[] = [
 
 /**
  * As linhas de produto, agrupadas por categoria de fardamento — é assim que
- * elas aparecem nos cards da esteira. A contagem desta lista também alimenta
- * um dos números da faixa de destaques.
+ * elas aparecem nos cards da esteira.
  */
 export type ProductCategory = {
   name: string;
@@ -463,7 +462,12 @@ export const launch = {
 };
 
 export const seo = {
-  title: 'Mirante Camisas e Fardamentos | Fábrica de uniformes em Paulista – PE',
+  /**
+   * Palavra-chave e cidade na frente, porque o Google corta o título por
+   * volta dos 60 caracteres. "Uniforme" fica na descrição: em Pernambuco se
+   * busca mais "fardamento", e os dois termos continuam cobertos.
+   */
+  title: 'Fábrica de Fardamentos em Paulista – PE | Mirante',
   description:
     'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes em Paulista – PE. Produção própria, do corte à entrega.',
   /**

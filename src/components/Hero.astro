@@ -19,7 +19,10 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
       </div>
 
       <div class="hero__headline">
-        <h1 class="title-lg" data-anim="hero">Padrão e qualidade<br />para o seu fardamento</h1>
+        <h1 class="title-lg" data-anim="hero">
+          <span class="eyebrow hero__kicker">Fábrica de fardamentos em Paulista – PE</span>{' '}
+          Padrão e qualidade<br />para o seu fardamento
+        </h1>
         <p class="hero__slogan" data-anim="hero">{brand.slogan}</p>
       </div>
 
@@ -166,6 +169,14 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
     gap: 16px;
   }
 
+  /* A linha de cima do título diz o que a Mirante é e onde fica. Ela mora
+     dentro do <h1>, e não num parágrafo acima, porque é o título da página
+     que o Google lê para entender o assunto — e ali faltava a cidade. */
+  .hero__kicker {
+    margin-bottom: 14px;
+    letter-spacing: 0.12em;
+  }
+
   .hero__slogan {
     font-family: var(--font-display);
     font-size: clamp(22px, 1.1rem + 2vw, 30px);
@@ -310,8 +321,8 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   }
 
   /* ---- Rodapé do hero ---------------------------------------------- */
-  /* Linha de base comum: "Entrega grátis" não tem número para casar a altura,
-     e sem isto ele flutuaria acima dos outros dois. */
+  /* Linha de base comum: um item sem número, se voltar a existir, fica na
+     mesma linha dos numerados em vez de flutuar acima deles. */
   .hero__stats {
     display: flex;
     flex-wrap: wrap;

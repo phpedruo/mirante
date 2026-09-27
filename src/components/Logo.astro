@@ -7,6 +7,10 @@
  * outro conforme o tema — trocar `src` no clique exigiria JavaScript e
  * deixaria a marca piscar.
  *
+ * A versão escura leva `loading="lazy"`: imagem com `display: none` não é
+ * baixada quando é lazy, então quem fica no claro, que é quase todo mundo,
+ * não paga os 19 KB dela. Ela só desce quando o tema escuro a mostra.
+ *
  * O tamanho vem de `--logo-height`, que qualquer ancestral pode redefinir: o
  * cabeçalho e o rodapé ficam com o padrão e o hero aumenta a marca inteira.
  * A largura é sempre `auto`, então a proporção nunca se perde.
@@ -37,6 +41,7 @@ const { class: className } = Astro.props;
     width="2151"
     height="786"
     decoding="async"
+    loading="lazy"
   />
 </span>
 

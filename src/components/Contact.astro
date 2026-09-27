@@ -9,6 +9,12 @@ if (!formAccessKey) {
 
 const whatsappUrl = contact.whatsappUrl();
 
+// O envio é o mesmo com e sem JavaScript: os campos ocultos abaixo levam a
+// chave e o assunto, e o script só troca a navegação por um fetch. Sem chave
+// não há `action`, e o método POST garante que nome e telefone nunca vão
+// parar na URL — num GET, eles ficariam no endereço e nos logs do servidor.
+const formEndpoint = 'https://api.web3forms.com/submit';
+
 const nextSteps = [
   'Você manda o logo e as referências, e um consultor faz o orçamento.',
   'Depois do orçamento, você recebe a prévia da peça para aprovar.',
@@ -55,7 +61,21 @@ const nextSteps = [
         </div>
       </div>
 
-      <form class="contact__form" data-form data-access-key={formAccessKey} novalidate>
+      <form
+        class="contact__form"
+        method="post"
+        action={formAccessKey ? formEndpoint : undefined}
+        data-form
+        data-access-key={formAccessKey}
+        novalidate
+      >
+        {formAccessKey && (
+          <>
+            <input type="hidden" name="access_key" value={formAccessKey} />
+            <input type="hidden" name="subject" value="Novo pedido de orçamento pelo site" />
+            <input type="hidden" name="from_name" value="Site Mirante" />
+          </>
+        )}
         <div class="contact__grid">
           <label class="field">
             <span class="field__label">Seu nome</span>
@@ -677,15 +697,11 @@ const nextSteps = [
     say('Enviando...', 'ok');
 
     try {
-      const response = await fetch('https://api.web3forms.com/submit', {
+      // Chave, assunto e remetente já vêm nos campos ocultos do formulário.
+      const response = await fetch(form.action, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          access_key: accessKey,
-          subject: 'Novo pedido de orçamento pelo site',
-          from_name: 'Site Mirante',
-        }),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
