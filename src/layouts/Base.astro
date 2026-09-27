@@ -101,7 +101,10 @@ const localBusiness = {
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl.toString()} />}
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- A águia sobre fundo branco: solta, ela sumia em aba escura. O original
+         (a cabeça da águia, rasterizada em 195×68) fica em design/favicon-original/. -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
     <script is:inline>
       // Marca que o JS está ativo antes da primeira pintura, para evitar que os
