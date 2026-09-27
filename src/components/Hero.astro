@@ -114,11 +114,13 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 </section>
 
 <style>
-  /* O hero abre a página logo abaixo do cabeçalho, que é sticky e fica colado
-     nele: por isso um degrau a mais de folga no topo, e o --section-pad normal
-     embaixo, que é o que forma o encontro com a seção seguinte. */
+  /* No celular a logo abre a página sozinha, centrada, e o espaço acima dela
+     é igual ao espaço abaixo: com 80px em cima e 42px embaixo, a marca lia
+     como caída para o texto, e não como a abertura da página. Os dois lados
+     usam o --section-pad. Embaixo, ele é a margem da marca somada ao gap dos
+     blocos do hero, por isso o gap vira variável. */
   .hero {
-    padding-block: calc(var(--section-pad) + var(--intro-gap)) var(--section-pad);
+    padding-block: var(--section-pad);
     background: var(--surface);
     /* No celular o outdoor sangra a calha por margem negativa; o clipe é o
        que impede essa sobra de virar rolagem horizontal. */
@@ -132,9 +134,11 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   }
 
   .hero__content {
+    --hero-gap: 26px;
+
     display: flex;
     flex-direction: column;
-    gap: 26px;
+    gap: var(--hero-gap);
   }
 
   /* A marca abre a página em tamanho grande. Só a altura é definida; a
@@ -144,14 +148,14 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 
     display: flex;
     align-items: center;
-    /* No celular a marca abre a página sozinha: centralizada e com meio
-       degrau de folga a mais até o título. Encostada à esquerda e no mesmo
-       gap dos outros blocos, o lockup deitado lia como mais uma linha de
-       texto, e não como a abertura da página. A partir de 768px ela volta
-       para a prumada do título, que é onde a coluna já é larga o bastante
-       para a marca centralizada ficar boiando. */
+    /* No celular a marca abre a página sozinha: centralizada e com o mesmo
+       espaço acima e abaixo dela. Encostada à esquerda e no mesmo gap dos
+       outros blocos, o lockup deitado lia como mais uma linha de texto, e
+       não como a abertura da página. A partir de 768px ela volta para a
+       prumada do título, que é onde a coluna já é larga o bastante para a
+       marca centralizada ficar boiando. */
     justify-content: center;
-    margin-bottom: calc(var(--intro-gap) / 2);
+    margin-bottom: calc(var(--section-pad) - var(--hero-gap));
   }
 
   /* "e muito mais" fecha a lista de produtos: a enumeração é longa e mesmo
@@ -400,6 +404,13 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   }
 
   @media (min-width: 768px) {
+    /* Com a marca ao lado do título, o hero abre logo abaixo do cabeçalho
+       sticky: um degrau a mais de folga no topo, e o --section-pad normal
+       embaixo, que forma o encontro com a seção seguinte. */
+    .hero {
+      padding-top: calc(var(--section-pad) + var(--intro-gap));
+    }
+
     .hero__brand {
       justify-content: flex-start;
       margin-bottom: 0;
