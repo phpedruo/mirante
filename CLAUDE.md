@@ -120,6 +120,14 @@ Convenções que atravessam os componentes:
   rodapé, o que quebra a sequência de brancos do meio da página. Seção que virar faixa precisa que
   seus cards internos subam de camada (`--card`), senão eles somem dentro do próprio fundo — foi
   por isso que as placas de logo dos clientes deixaram de ser `--surface-2`.
+- **Frestas.** As seções brancas (hero, técnicas, tecidos, localização, contato e a 404) levam a
+  classe `.frestas` (`global.css`): listras diagonais finas em laranja, num `::before` atrás do
+  conteúdo, que nascem num canto e se dissolvem antes do meio por uma máscara radial — o centro,
+  onde está o texto, fica sempre limpo. O canto alterna de uma seção para a seguinte
+  (`.frestas` em cima à direita, `.frestas--left` no meio da esquerda). A cor é o token
+  `--fresta`, mais fraco no modo escuro. **As faixas cinza não levam frestas**: elas já se
+  distinguem pela cor, e a textura nelas apagaria essa diferença. Seção branca nova recebe a
+  classe e continua a alternância.
 - **O outdoor do hero** (`heroSlides` em `site.ts`) empilha o conteúdo no mesmo quadro e troca
   puxando o atual para fora enquanto o próximo entra. As duas metades precisam da mesma duração
   e da mesma ease: é isso que faz as bordas se encontrarem exatamente, sem abrir um vão do
