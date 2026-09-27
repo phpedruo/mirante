@@ -403,12 +403,18 @@ function setupOutdoor() {
   showPromo(slides[0]);
   wait();
 
-  outdoor.addEventListener('pointerenter', () => {
+  // Pausar em cima é coisa de mouse. O dedo também dispara pointerenter ao
+  // tocar ou ao começar a rolar sobre o banner, mas o pointerleave nem sempre
+  // vem depois, principalmente quando o toque vira rolagem, e o banner ficava
+  // preso parado até um novo toque nele. No toque ele simplesmente não pausa.
+  outdoor.addEventListener('pointerenter', (event) => {
+    if (event.pointerType !== 'mouse') return;
     hovering = true;
     waiting?.pause();
   });
 
-  outdoor.addEventListener('pointerleave', () => {
+  outdoor.addEventListener('pointerleave', (event) => {
+    if (event.pointerType !== 'mouse') return;
     hovering = false;
     waiting?.resume();
   });

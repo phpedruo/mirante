@@ -138,7 +138,9 @@ Convenções que atravessam os componentes:
   movimento, o texto fica ilegível justamente na hora em que pede leitura.
   A régua laranja no rodapé do quadro **é o próprio relógio da passagem**, não um enfeite
   sincronizado por fora: é o fim do tween dela que chama a troca, e é por isso que pausar no
-  hover para as duas coisas juntas. Ela nasce escondida e só aparece quando a passagem começa
+  hover para as duas coisas juntas. A pausa vale **só para mouse**: no toque, o `pointerenter` dispara
+  ao tocar ou rolar sobre o banner e o `pointerleave` nem sempre vem, o que deixava o outdoor
+  preso parado no celular. Ela nasce escondida e só aparece quando a passagem começa
   de fato. Lista vazia mostra o placeholder hachurado, uma imagem só deixa o quadro parado, e
   sem JavaScript (ou com "reduzir movimento") ele fica na primeira imagem.
 
