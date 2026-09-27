@@ -1,0 +1,15 @@
+// Deploy na Cloudflare (Workers com arquivos estáticos).
+//
+// O site é todo estático: o `npm run build` gera a pasta `dist/` e a
+// Cloudflare só serve o que está nela, sem código rodando no servidor.
+// O `name` precisa ser igual ao nome do projeto no painel da Cloudflare.
+{
+  "name": "mirante",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // Endereço inexistente recebe o 404.html com status 404 de verdade,
+    // que é o que diz ao Google para não indexar a URL.
+    "not_found_handling": "404-page"
+  }
+}
