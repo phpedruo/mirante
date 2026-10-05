@@ -80,7 +80,11 @@ const localBusiness = {
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- viewport-fit=cover: no iPhone com notch, a página ocupa a tela inteira, em
+         volta do recorte, em vez de o navegador cobrir as sobras com faixas
+         lisas. O que mantém o conteúdo fora do notch é a área segura,
+         descontada no cabeçalho e na --gutter (global.css). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -96,6 +100,8 @@ const localBusiness = {
 
     {canonicalUrl && <link rel="canonical" href={canonicalUrl.toString()} />}
 
+    <!-- O azul do cabeçalho (--blue-900). O navegador pinta com ela a barra de
+         status e a de endereço, então as duas cores mudam juntas. -->
     <meta name="theme-color" content="#0a2c85" />
 
     <meta property="og:type" content="website" />

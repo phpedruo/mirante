@@ -67,7 +67,18 @@
      --intro-gap é a distância do bloco de título (eyebrow + h2 + lead) até o
      conteúdo da própria seção. É o menor dos três de propósito — é ele que
      mantém a abertura grudada no que ela apresenta. */
-  --gutter: 16px;
+  /* A calha é a distância do conteúdo até a borda da tela. Com o celular
+     deitado o notch fica de lado, e a área segura dali passa da calha; vale
+     então o maior dos dois. O fundo das seções continua até a borda, por trás
+     do notch, e só o conteúdo se afasta dele. Em pé, ou sem notch, a área
+     segura é zero e sobra a calha. Os degraus de tela mudam a --gutter-min;
+     a --gutter é sempre esta conta. */
+  --gutter-min: 16px;
+  --gutter: max(
+    var(--gutter-min),
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
   /* Largura máxima do conteúdo, em token porque não é só o container que a
      usa. Sobe junto com a calha grande, que encolheu: as duas coisas juntas
      é que dão a largura de linha da página. */
@@ -129,13 +140,13 @@
 
 @media (min-width: 480px) {
   :root {
-    --gutter: 20px;
+    --gutter-min: 20px;
   }
 }
 
 @media (min-width: 768px) {
   :root {
-    --gutter: 48px;
+    --gutter-min: 48px;
     --section-y: 120px;
     --band-pad: 80px;
     --intro-gap: 36px;
@@ -144,7 +155,7 @@
 
 @media (min-width: 1080px) {
   :root {
-    --gutter: 64px;
+    --gutter-min: 64px;
     --section-y: 144px;
     --band-pad: 96px;
     --intro-gap: 40px;
@@ -159,8 +170,9 @@
 
 html {
   scroll-behavior: smooth;
-  /* Compensa o cabeçalho fixo ao pular para uma âncora. */
-  scroll-padding-top: 88px;
+  /* Compensa o cabeçalho fixo ao pular para uma âncora, contando a área do
+     notch, que ele também ocupa. */
+  scroll-padding-top: calc(88px + env(safe-area-inset-top, 0px));
   -webkit-text-size-adjust: 100%;
 }
 
@@ -297,9 +309,13 @@ svg {
   padding: 13px 28px;
   border: 1px solid transparent;
   border-radius: var(--pill);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
+  /* A fonte do slogan. Ela tem um peso só, e o 400 é o dele: pedindo mais, o
+     navegador engrossaria a letra por conta própria e borraria o desenho.
+     Ela também é mais larga que a Archivo: os 15px são o que mantém "Fale
+     agora com um consultor" numa linha só num celular de 360px. */
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 400;
   line-height: 1.25;
   text-align: center;
   cursor: pointer;
@@ -328,7 +344,6 @@ svg {
 .btn--accent {
   background: var(--orange-500);
   color: var(--on-accent);
-  font-weight: 700;
 }
 
 .btn--accent:hover {

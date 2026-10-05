@@ -14,7 +14,7 @@ const links = [
 <header class="site-header" data-header>
   <div class="container site-header__inner">
     <a href="/#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
-      <Logo />
+      <Logo aguia />
     </a>
 
     <nav class="site-header__nav" id="nav-principal" aria-label="Navegação principal">
@@ -23,7 +23,7 @@ const links = [
           <li><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
-      <a href="/#contato" class="btn btn--primary site-header__cta-mobile">Faça seu orçamento</a>
+      <a href="/#contato" class="btn btn--accent site-header__cta-mobile">Faça seu orçamento</a>
     </nav>
 
     <div class="site-header__actions">
@@ -41,7 +41,7 @@ const links = [
         </svg>
       </button>
 
-      <a href="/#contato" class="btn btn--primary site-header__cta">Faça seu orçamento</a>
+      <a href="/#contato" class="btn btn--accent site-header__cta">Faça seu orçamento</a>
       <button
         type="button"
         class="site-header__toggle"
@@ -59,12 +59,21 @@ const links = [
 </header>
 
 <style>
+  /* A faixa é azul nos dois temas, no azul literal do logo, e não no
+     --brand-fill, que clareia no escuro: ela tem que ser a mesma cor da
+     theme-color do <head>, que o navegador usa para pintar a barra de status
+     e a de endereço, e que não acompanha o tema. Com as duas diferentes, o
+     topo da tela abriria com duas faixas de azul. */
   .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    /* Com viewport-fit=cover (Base.astro), a página começa atrás do notch e
+       da barra de status: o azul preenche essa área e o conteúdo desce o
+       tanto da área segura, para não ficar embaixo deles. Sem notch, ela é
+       zero e nada muda. */
+    padding-top: env(safe-area-inset-top, 0px);
+    background: var(--blue-900);
     transition: box-shadow 0.2s ease;
   }
 
@@ -85,6 +94,15 @@ const links = [
     min-height: 68px;
   }
 
+  /* Flex para a águia não ficar sobre uma linha de texto: como inline, ela
+     ganhava embaixo a folga das letras que descem da linha e subia 5px na
+     faixa. */
+  .site-header__brand {
+    --logo-height: 40px;
+
+    display: flex;
+  }
+
   .site-header__brand:hover {
     color: inherit;
   }
@@ -95,23 +113,24 @@ const links = [
     gap: 34px;
   }
 
-  /* Só os links da lista: o botão "Faça seu orçamento" do menu no celular
-     também é um <a> dentro da navegação, e com o seletor amplo ele herdava
-     o cinza dos links sobre o fundo azul, e o hover azul-marinho sumia com
-     o texto de vez. */
+  /* Na fonte do slogan: na Archivo comum, os links ficavam apagados na faixa.
+     O seletor pega só os links da lista: o botão "Faça seu orçamento" do menu
+     no celular também é um <a> dentro da navegação, e com o seletor amplo ele
+     herdaria a cor e o sublinhado dos links. */
   .site-header__nav li a {
+    font-family: var(--font-display);
     font-size: 15px;
-    font-weight: 500;
-    color: #3f4a63;
-  }
-
-  /* Esse cinza-azulado é escuro demais para fundo escuro. */
-  :global(html[data-theme='dark']) .site-header__nav li a {
-    color: var(--muted);
+    color: #fff;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 8px;
+    transition: text-decoration-color 0.18s ease;
   }
 
   .site-header__nav li a:hover {
-    color: var(--heading);
+    color: #fff;
+    text-decoration-color: var(--orange-500);
   }
 
   .site-header__actions {
@@ -120,27 +139,39 @@ const links = [
     gap: 12px;
   }
 
-  .theme-toggle {
-    display: none;
+  /* Os dois botões de ícone, o do tema e o do menu: sobre o azul, contorno
+     claro e ícone branco. */
+  .theme-toggle,
+  .site-header__toggle {
     align-items: center;
     justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 35%);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+  }
+
+  /* Só com mouse: no toque o hover gruda no botão depois do toque, e o do
+     menu ficava aceso depois de fechado. */
+  @media (hover: hover) {
+    .theme-toggle:hover,
+    .site-header__toggle:hover {
+      border-color: #fff;
+      background: rgb(255 255 255 / 10%);
+    }
+  }
+
+  .theme-toggle {
+    display: none;
     width: 46px;
     height: 46px;
-    padding: 0;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--heading);
-    cursor: pointer;
-    transition: border-color 0.18s ease;
   }
 
   :global(html.js) .theme-toggle {
     display: inline-flex;
-  }
-
-  .theme-toggle:hover {
-    border-color: var(--heading);
   }
 
   .theme-toggle__icon {
@@ -164,7 +195,6 @@ const links = [
   .site-header__cta {
     min-height: 46px;
     padding-inline: 26px;
-    font-size: 15px;
   }
 
   .site-header__cta-mobile {
@@ -173,16 +203,8 @@ const links = [
 
   .site-header__toggle {
     display: none;
-    align-items: center;
-    justify-content: center;
     width: 48px;
     height: 48px;
-    padding: 0;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--heading);
-    cursor: pointer;
   }
 
   .site-header__toggle svg {
@@ -191,6 +213,7 @@ const links = [
   }
 
   @media (max-width: 1079px) {
+    /* O painel do menu continua a faixa azul, separado dela só por um fio. */
     .site-header__nav {
       position: absolute;
       inset-inline: 0;
@@ -199,8 +222,8 @@ const links = [
       flex-direction: column;
       gap: 8px;
       padding: 20px var(--gutter) 28px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      background: var(--blue-900);
+      border-top: 1px solid rgb(255 255 255 / 14%);
       box-shadow: 0 16px 32px rgb(16 26 53 / 10%);
     }
 
@@ -219,7 +242,7 @@ const links = [
     }
 
     .site-header__nav li + li {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgb(255 255 255 / 14%);
     }
 
     .site-header__nav li a {
@@ -252,6 +275,10 @@ const links = [
     .site-header__inner {
       min-height: 76px;
     }
+
+    .site-header__brand {
+      --logo-height: 46px;
+    }
   }
 </style>
 
@@ -261,17 +288,37 @@ const links = [
   const nav = document.getElementById('nav-principal');
 
   if (toggle && nav) {
+    const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
     const setOpen = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
       nav.toggleAttribute('data-open', open);
     };
 
     toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      setOpen(!isOpen());
     });
 
     nav.addEventListener('click', (event) => {
       if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    // Tocar fora do painel fecha o menu. É `pointerdown`, e não `click`: o
+    // Safari do iPhone nem sempre entrega ao documento o clique de um toque
+    // em área sem nada clicável. O botão do menu fica fora da conta, porque
+    // ele já alterna sozinho: contado como "fora", o toque fecharia o painel
+    // só para o clique do botão reabrir em seguida.
+    document.addEventListener('pointerdown', (event) => {
+      const target = event.target as Node;
+      if (isOpen() && !nav.contains(target) && !toggle.contains(target)) setOpen(false);
+    });
+
+    // Esc fecha também, e devolve o foco ao botão, de onde o teclado veio.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        toggle.focus();
+      }
     });
 
     // Se a janela crescer até o layout de desktop, o painel não pode ficar preso aberto.

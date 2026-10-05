@@ -83,7 +83,12 @@ const titleId = `${privacy.dialogId}-titulo`;
 <style>
   .privacy {
     width: min(560px, calc(100% - var(--gutter) * 2));
-    max-height: min(640px, calc(100dvh - 48px));
+    /* A folga desconta o notch e a barra de início do iPhone, para o diálogo
+       alto não passar por baixo deles. */
+    max-height: min(
+      640px,
+      calc(100dvh - 48px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
+    );
     padding: 0;
     background: var(--card);
     border: 0;

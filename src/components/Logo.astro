@@ -11,38 +11,60 @@
  * baixada quando é lazy, então quem fica no claro, que é quase todo mundo,
  * não paga os 19 KB dela. Ela só desce quando o tema escuro a mostra.
  *
+ * Com `aguia`, sai só o símbolo, recortado da versão escura: águia branca,
+ * bico e olho laranja. É a marca do cabeçalho, que é azul nos dois temas —
+ * sobre ele a águia azul da arte original sumiria, e o nome não faz falta,
+ * porque o hero logo abaixo abre com o lockup inteiro.
+ *
  * O tamanho vem de `--logo-height`, que qualquer ancestral pode redefinir: o
- * cabeçalho e o rodapé ficam com o padrão e o hero aumenta a marca inteira.
+ * rodapé fica com o padrão e o hero e o cabeçalho escolhem o seu.
  * A largura é sempre `auto`, então a proporção nunca se perde.
  */
 import { brand } from '../data/site';
 
 interface Props {
   class?: string;
+  aguia?: boolean;
 }
 
-const { class: className } = Astro.props;
+const { class: className, aguia = false } = Astro.props;
 ---
 
 <span class:list={['logo', className]}>
-  <img
-    class="logo__art logo__art--light"
-    src="/logo-mirante.svg"
-    alt={brand.name}
-    width="2151"
-    height="786"
-    decoding="async"
-    fetchpriority="high"
-  />
-  <img
-    class="logo__art logo__art--dark"
-    src="/logo-mirante-dark.svg"
-    alt={brand.name}
-    width="2151"
-    height="786"
-    decoding="async"
-    loading="lazy"
-  />
+  {
+    aguia ? (
+      <img
+        class="logo__art"
+        src="/logo-mirante-aguia.svg"
+        alt={brand.name}
+        width="931"
+        height="589"
+        decoding="async"
+        fetchpriority="high"
+      />
+    ) : (
+      <>
+        <img
+          class="logo__art logo__art--light"
+          src="/logo-mirante.svg"
+          alt={brand.name}
+          width="2151"
+          height="786"
+          decoding="async"
+          fetchpriority="high"
+        />
+        <img
+          class="logo__art logo__art--dark"
+          src="/logo-mirante-dark.svg"
+          alt={brand.name}
+          width="2151"
+          height="786"
+          decoding="async"
+          loading="lazy"
+        />
+      </>
+    )
+  }
 </span>
 
 <style>

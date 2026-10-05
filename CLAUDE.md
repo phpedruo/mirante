@@ -77,9 +77,13 @@ onde aponta: o texto da camisa sairia invertido.
 A logo é o lockup oficial em vetor, servido de `public/` por `Logo.astro` — cabeçalho, hero e
 rodapé usam o mesmo componente, e o tamanho vem de `--logo-height`, que o ancestral redefine.
 São dois arquivos porque o azul do logo sumiria no escuro: `logo-mirante-dark.svg` é a mesma
-arte com o azul trocado por branco, e o CSS mostra um ou outro.
+arte com o azul trocado por branco, e o CSS mostra um ou outro. **O cabeçalho mostra só a
+águia** (`<Logo aguia />`, servida de `logo-mirante-aguia.svg`): a faixa dele é azul, onde a
+águia azul sumiria, então ela é recortada da versão escura — branca, com bico e olho laranja —
+e é a mesma nos dois temas. O nome fica de fora a pedido do cliente: o hero, logo abaixo, abre
+com o lockup inteiro.
 
-Tipografia: **Archivo** (variável) para tudo, **Archivo Black** só para o slogan e o nome na marca. As duas são auto-hospedadas via Fontsource — não voltar para o CDN do Google Fonts, que adiciona uma origem externa no caminho crítico.
+Tipografia: **Archivo** (variável) para tudo, **Archivo Black** para o slogan, o nome na marca, os links do cabeçalho e os botões (`.btn`) — esses dois últimos a pedido do cliente, que achava o cabeçalho apagado. A Archivo Black tem um peso só, o 400: pedindo mais, o navegador engrossa a letra por conta própria. Ela também é mais larga, e é por isso que o botão padrão tem 15px — com 16px, "Fale agora com um consultor" quebrava em duas linhas num celular de 360px. As duas são auto-hospedadas via Fontsource — não voltar para o CDN do Google Fonts, que adiciona uma origem externa no caminho crítico.
 
 Nome: Mirante Camisas e Fardamentos. Slogan: "Chama que a Mirante faz!".
 Endereço: Av. Antônio Cabral de Souza, 2806 — Maranguape II, Paulista – PE, 53409-420.
@@ -173,6 +177,20 @@ Convenções que atravessam os componentes:
   próprio `<style>` com `:global(html[data-theme='dark'])` como ancestral, e não cria token
   novo. **Não existe `@media (prefers-color-scheme)` no CSS** — nem no script: quem manda é o
   atributo, e só o botão o muda.
+- **Cabeçalho azul.** A faixa é `--blue-900` nos dois temas — o azul literal, de propósito, e
+  não o `--brand-fill`, que clareia no escuro —, porque ela precisa ter a cor da `theme-color`
+  do `<head>`, que o navegador usa na barra de status e na de endereço e que não muda com o
+  tema. **Mudar uma exige mudar a outra.** Sobre o azul, o botão de orçamento é o laranja
+  (`btn--accent`) e os botões de ícone têm contorno branco. O menu do celular fecha ao tocar
+  fora do painel (`pointerdown`, porque o Safari do iPhone nem sempre entrega o `click` de um
+  toque em área sem nada clicável) e no Esc.
+- **Notch.** A página usa `viewport-fit=cover` (`Base.astro`): no iPhone com notch ela ocupa a
+  tela inteira, em volta do recorte. O que tira o conteúdo de baixo dele é a área segura
+  (`env(safe-area-inset-*)`): o cabeçalho a leva no `padding-top`, com o azul preenchendo em
+  volta do notch, e a `--gutter` é o maior entre a `--gutter-min` — o degrau de cada largura de
+  tela — e a área segura dos lados, que só existe com o celular deitado. Os degraus mudam a
+  `--gutter-min`, nunca a `--gutter`. **Elemento novo encostado numa borda da tela desconta a
+  área segura dessa borda** — é o que o diálogo de privacidade faz na altura.
 - **As três técnicas** (`Techniques.astro`) usam sempre o mesmo truque: o palco nasce com a palavra pronta e uma cobertura da cor do palco por cima; a cobertura desliza para a direita enquanto o conteúdo dentro dela desliza para a esquerda na mesma duração e mesma ease, o que deixa a palavra "por fazer" parada e faz só a boca da cobertura avançar. É por isso que as duas metades do par (`data-tech-wipe` e `data-tech-wipe-inner`) nunca podem receber durações ou eases diferentes.
   **As três usam esse mesmo par, sem exceção** — a palavra sempre se pinta da esquerda para a
   direita, e o que muda entre elas é só a ferramenta que passa no trilho: a agulha do bordado, o
@@ -281,7 +299,7 @@ Medir depois do lançamento: Search Console (impressões, cliques, posição mé
 
 O mockup aprovado é a prancha "Versão refinada — UX 2026" do canvas em `design/` (arquivos `.dc.html`, montados com a skill `design`). As outras duas pranchas são a versão anterior, mantidas para comparação.
 
-A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o hero abre com a logo grande no lugar do selo de texto e o espaço ao lado virou um outdoor, que passa as artes e fotos da fábrica; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
+A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto e o espaço ao lado virou um outdoor, que passa as artes e fotos da fábrica; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
 
 ## Agent skills
 
