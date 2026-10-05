@@ -15,6 +15,8 @@ O Astro 7 exige Node 22.12 ou mais recente; o `.nvmrc` fixa o 22 para os serviç
 
 Não há suíte de testes. A verificação é `npm run build` (que falha em erro de template ou de tipo) mais conferência visual no navegador.
 
+A CSP (ver Segurança) não vale no `npm run dev`: o que ela bloqueia só aparece no `npm run preview`, como erro "Refused to…" no console. O `preview` também não aplica o `public/_headers`; para ver os cabeçalhos como a Cloudflare serve, `npx wrangler dev` depois do build.
+
 ## O negócio
 
 A Mirante é uma **fábrica** de fardamentos e camisas em Paulista – PE, com produção interna em galpão próprio: corte, costura e estampa. Personaliza por sublimação, serigrafia, bordado e aplique, e entrega no próprio veículo.
@@ -158,8 +160,9 @@ Convenções que atravessam os componentes:
   nasce certo em vez de travar no zero — **mudar o número de casas exige mudar os dois lugares**.
   A largura tabular não é enfeite: sem ela cada dígito ocupa um espaço diferente e o número
   treme na horizontal enquanto gira.
-- **Modo escuro.** O tema mora em `data-theme` no `<html>`, escrito pelo script inline do
-  `Base.astro` **antes da primeira pintura** (senão a página pisca branca). A ordem é escolha
+- **Modo escuro.** O tema mora em `data-theme` no `<html>`, escrito pelo script inline que o
+  `Base.astro` põe no `<head>` (`src/scripts/theme-init.js`) **antes da primeira pintura**
+  (senão a página pisca branca). A ordem é escolha
   salva em `localStorage['mirante-tema']` > claro. A **preferência do sistema não é consultada**:
   o cliente pediu que o site sempre abra no claro, que é o design aprovado, mesmo para quem usa
   o navegador no escuro — o escuro só aparece se o visitante apertar o botão. Sem JavaScript o
@@ -195,13 +198,45 @@ O texto descreve o que o site faz **hoje**, e é compromisso público:
 - **Qualquer terceiro novo** — analytics, pixel, chat, fonte de CDN — ou **campo novo no
   formulário** exige atualizar o texto do diálogo e a data em `privacy.updatedAt` (`site.ts`) no
   mesmo commit. Hoje ele afirma que o site não usa cookies de publicidade nem de análise; a
-  decisão sobre analytics, lá no checklist de lançamento, passa por aqui.
+  decisão sobre analytics, lá no checklist de lançamento, passa por aqui. Terceiro novo também
+  precisa ter a origem liberada na CSP (ver Segurança), senão o navegador o bloqueia.
 - **O formulário não tem caixa de consentimento, de propósito.** O pedido de orçamento parte do
   próprio visitante e se apoia em "procedimentos preliminares de contrato" (art. 7º, V). O que a
   lei pede ali é transparência: a linha abaixo do botão, com o link para a política.
 - **O mapa do Google é o único terceiro que carrega sem ação do visitante**, e a política o
   declara. Carregar só ao clicar foi proposto e **recusado pelo cliente**: o mapa já pronto é
   mais adequado para a página. Não reabrir a questão sem pedido dele.
+
+## Segurança
+
+O site é estático, sem login, banco ou servidor próprio: o que se protege é a página em si e as
+contas que a publicam. Senha, sessão, SQL e CORS não têm onde se aplicar aqui.
+
+- **CSP** (`security.csp` em `astro.config.mjs`). O Astro escreve em cada página uma `<meta>`
+  com o hash de cada script e de cada `<style>` do build, e o navegador recusa o que não estiver
+  lá. Além do próprio site, só estão liberados o Web3Forms (envio do formulário) e o
+  `www.google.com` (o iframe do mapa). **Terceiro novo precisa entrar na lista**, no mesmo commit
+  em que entra no texto da política de privacidade: esquecido, ele falha só no console, sem
+  nenhum erro na tela.
+- **Script `is:inline` não ganha hash sozinho.** O do tema (`theme-init.js`) é importado como
+  texto pelo `Base.astro`, que registra o hash com `Astro.csp.insertScriptHash` — script inline
+  novo segue o mesmo caminho. Handler inline (`onclick="…"`) é sempre bloqueado: o evento vai no
+  script do componente. O atributo `style` é liberado (`style-src-attr`), porque os rolos de
+  dígitos do hero, as amostras de tecido e o próprio ScrollTrigger dependem dele.
+- **Cabeçalhos** em `public/_headers`, que a Cloudflare aplica a toda resposta, inclusive à 404:
+  HSTS, `frame-ancestors 'none'` (nenhum outro site pode embutir a página num iframe), `nosniff`,
+  `Referrer-Policy`, `Permissions-Policy` e COOP. O HSTS fica **sem `includeSubDomains`** de
+  propósito: ele valeria para qualquer subdomínio da empresa, não só para o site. A Cloudflare de
+  hoje é só a hospedagem de demonstração (ver Pendências): se a definitiva for outra e não ler
+  o `_headers`, os mesmos cabeçalhos vão para a configuração dela.
+- **Formulário.** Os campos têm `maxlength`, e o WhatsApp exige de 10 a 13 dígitos (DDD, com ou
+  sem o +55). Isso orienta a digitação, mas não protege nada: o envio vai direto para o
+  Web3Forms, e quem valida de verdade é ele. Contra robô, por enquanto, só o campo isca
+  `botcheck`; se aparecer spam, o próximo passo é o captcha do Web3Forms, que entra como
+  terceiro novo (CSP e política).
+- **Dependências.** Rodar `npm audit` antes de publicar. O Dependabot fica para o lançamento
+  (ver o checklist): enquanto o site é só demonstração, um PR por mês daria mais trabalho do que
+  proteção — das dependências, só o GSAP chega ao navegador do visitante; o resto roda no build.
 
 ## Restrições
 
@@ -212,6 +247,7 @@ O texto descreve o que o site faz **hoje**, e é compromisso público:
 ## Pendências
 
 - **Chave do Web3Forms** (`formAccessKey` em `site.ts`): sem ela o formulário orienta o visitante a usar o WhatsApp em vez de enviar. O build emite um aviso enquanto estiver vazia.
+- **Hospedagem e domínio.** Nenhum dos dois foi decidido. O site está na Cloudflare (Workers com arquivos estáticos, `wrangler.jsonc`), no plano gratuito, **só para apresentar o projeto ao cliente** — não é a hospedagem definitiva. O que depende dela se confere quando for escolhida: os cabeçalhos do `public/_headers`, o HTTPS forçado e a guarda dos registros de acesso que a política de privacidade promete (ver LGPD, abaixo).
 - **Dados a preencher** em `site.ts`: e-mail comercial, prazo de produção, região de entrega e condições de pagamento. Horário, CNPJ e razão social já estão preenchidos.
 - **Alinhamento com o Google Business Profile.** O perfil já existe, e o site espelha dele o endereço, o telefone, o horário (`openingHours` e `openingHoursSpec`, que precisam mudar juntos) e o pino (`address.geo`). **Qualquer mudança num lado precisa ir para o outro**: dado divergente entre site e perfil enfraquece a busca local. O mapa e a rota da seção de localização buscam pelo nome da empresa mais o endereço, para abrir no perfil e não num alfinete de rua. O tipo `ClothingStore` dos dados estruturados em `Base.astro` espelha a categoria atual do perfil ("Loja de roupa"); se a categoria mudar, o tipo muda junto. A foto da fachada (`assets.facade`) abre o card de endereço; o original de 680px fica em `design/fachada-original/`.
 - **Fotos dos tecidos** (`photo` em cada item de `fabrics`): os sete cards já têm imagem, em `public/malhas/<slug>.webp`. Os originais ficam em `design/malhas-originais/`, junto com as alternativas que não entraram (PV cinza e laranja, piquet branco). Os `.webp` são faixas 2,5:1 de até 760px de largura, em qualidade 80, com ~290 KB somados; a do UV sai com só 500px, porque o original é pequeno. As cores foram escolhidas para nenhum card repetir a do vizinho. **Falta confirmar a origem:** são fotos de rolo de tecido no estilo de catálogo de fornecedor. Se vierem de fornecedor, e não da fábrica, tudo bem mostrar o tecido, mas a página não pode apresentá-las como fotos da própria fábrica. A foto do card UV é de poliamida, então confirmar que é essa a malha UV da fábrica.
@@ -229,13 +265,15 @@ O texto descreve o que o site faz **hoje**, e é compromisso público:
 
 O site está deliberadamente configurado para **não ser indexado** enquanto não for lançado — evita que uma URL de teste ou domínio provisório fique indexada e depois compita com o domínio final. No dia do lançamento, nesta ordem:
 
-1. Comprar/apontar o domínio e preencher `site: 'https://...'` em `astro.config.mjs`.
+1. Escolher a hospedagem definitiva (ver Pendências), comprar/apontar o domínio e preencher `site: 'https://...'` em `astro.config.mjs`.
 2. Descomentar o import e a integração do `@astrojs/sitemap` no mesmo arquivo (já instalado).
 3. Mudar `launch.isLive` para `true` em `src/data/site.ts`. Isso, sozinho, muda o `<meta name="robots">` de todas as páginas e o `robots.txt` de "bloquear tudo" para "liberar tudo" — nenhum outro arquivo precisa mudar.
 4. Rodar `npm run build` e conferir em `dist/robots.txt` que saiu `Allow: /` e uma linha `Sitemap:`.
-5. Cadastrar o domínio no **Google Search Console** (verificação por DNS ou meta tag) e enviar a URL do sitemap gerado (`/sitemap-index.xml`).
-6. **Google Business Profile** — para um negócio físico local, ele pesa tanto quanto o site em resultados de busca e é o que alimenta o Google Maps. O perfil já existe, mas **não foi reivindicado** pela empresa (mostra "É proprietário desta empresa?"); a verificação leva dias, então começa antes do lançamento. Depois de verificado: trocar o botão "Site", que hoje aponta para o Instagram, pelo domínio novo; rever a categoria principal, que está como "Loja de roupa"; escrever a descrição no tom da página; e adicionar o Instagram. O nome do perfil fica como está — palavra-chave no nome viola as regras do Google.
-7. Preencher `seo.ogImage` com uma imagem 1200×630 para o link ficar bonito ao ser compartilhado no WhatsApp/Instagram.
+5. Forçar HTTPS na hospedagem — na Cloudflare, **Always Use HTTPS** (SSL/TLS → Edge Certificates): o HSTS do `public/_headers` só passa a valer depois da primeira visita em HTTPS, e é esse redirecionamento que garante a primeira. Se a hospedagem não ler o `_headers`, os cabeçalhos vão antes para a configuração dela. Conferir com `curl -I https://<domínio>` que os cabeçalhos de segurança saíram.
+6. Cadastrar o domínio no **Google Search Console** (verificação por DNS ou meta tag) e enviar a URL do sitemap gerado (`/sitemap-index.xml`).
+7. **Google Business Profile** — para um negócio físico local, ele pesa tanto quanto o site em resultados de busca e é o que alimenta o Google Maps. O perfil já existe, mas **não foi reivindicado** pela empresa (mostra "É proprietário desta empresa?"); a verificação leva dias, então começa antes do lançamento. Depois de verificado: trocar o botão "Site", que hoje aponta para o Instagram, pelo domínio novo; rever a categoria principal, que está como "Loja de roupa"; escrever a descrição no tom da página; e adicionar o Instagram. O nome do perfil fica como está — palavra-chave no nome viola as regras do Google.
+8. Preencher `seo.ogImage` com uma imagem 1200×630 para o link ficar bonito ao ser compartilhado no WhatsApp/Instagram.
+9. Criar o `.github/dependabot.yml` (ecossistema npm, uma vez por mês, versões menores e correções agrupadas num PR só) para o GitHub abrir os PRs de atualização. Os alertas de vulnerabilidade não dependem dele: ligam-se na aba Security do repositório.
 
 Medir depois do lançamento: Search Console (impressões, cliques, posição média, cobertura de indexação) é gratuito e não pesa no site. Para analytics de comportamento, qualquer opção teria que entrar como script de terceiro — isso é uma decisão pendente, a ser tomada quando o lançamento estiver mais próximo, pesando o custo de performance de cada ferramenta.
 

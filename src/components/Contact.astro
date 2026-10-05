@@ -79,18 +79,30 @@ const nextSteps = [
         <div class="contact__grid">
           <label class="field">
             <span class="field__label">Seu nome</span>
-            <input class="field__control" type="text" name="nome" autocomplete="name" placeholder="Nome completo" required />
+            <input class="field__control" type="text" name="nome" autocomplete="name" placeholder="Nome completo" maxlength="120" required />
           </label>
           <label class="field">
             <span class="field__label">Empresa ou escola</span>
-            <input class="field__control" type="text" name="empresa" autocomplete="organization" placeholder="Nome da instituição" />
+            <input class="field__control" type="text" name="empresa" autocomplete="organization" placeholder="Nome da instituição" maxlength="120" />
           </label>
         </div>
 
         <div class="contact__grid">
           <label class="field">
             <span class="field__label">WhatsApp</span>
-            <input class="field__control" type="tel" name="whatsapp" autocomplete="tel" placeholder="(00) 00000-0000" required />
+            <!-- De 10 a 13 dígitos (DDD, com ou sem o +55), com espaço, parêntese,
+                 ponto ou traço no meio. O `title` completa a mensagem de erro do navegador. -->
+            <input
+              class="field__control"
+              type="tel"
+              name="whatsapp"
+              autocomplete="tel"
+              placeholder="(00) 00000-0000"
+              maxlength="25"
+              pattern="[\s\(\)\+\.\-]*(?:\d[\s\(\)\+\.\-]*){10,13}"
+              title="Número com DDD, como (81) 99999-9999."
+              required
+            />
           </label>
           <label class="field">
             <span class="field__label">Quantidade</span>
@@ -107,6 +119,7 @@ const nextSteps = [
             name="mensagem"
             rows="3"
             placeholder="Ex.: 80 camisas polo bordadas com o logo da empresa."
+            maxlength="2000"
             required></textarea>
         </label>
 
