@@ -6,7 +6,21 @@ import { faq } from '../data/site';
   <div class="container faq__inner">
     <div class="faq__intro">
       <span class="eyebrow" data-anim="up">Dúvidas frequentes</span>
-      <h2 class="title-md" data-anim="up">O que a gente mais responde no WhatsApp</h2>
+      <h2 class="title-md" data-anim="up">O que mais respondemos dos nossos clientes</h2>
+
+      {/* Preenche o vazio da coluna da esquerda, que fica ao lado da lista
+          comprida. Só no desktop: no celular as colunas se empilham e ele
+          só afastaria a lista do título. É enfeite, e sai do leitor de tela. */}
+      <svg class="faq__mark" data-anim="up" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="11.5" class="faq__mark-disc"></circle>
+        <path
+          class="faq__mark-glyph"
+          d="M9.1 9.3a3 3 0 0 1 5.8 1c0 2-2.9 2.5-2.9 4.3"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <path class="faq__mark-glyph" d="M12 17.8h.01" stroke-width="2.4" stroke-linecap="round"></path>
+      </svg>
     </div>
 
     <!-- Sem JavaScript todas as respostas ficam visíveis; o script fecha as demais. -->
@@ -62,6 +76,18 @@ import { faq } from '../data/site';
     display: flex;
     flex-direction: column;
     gap: 14px;
+  }
+
+  .faq__mark {
+    display: none;
+  }
+
+  .faq__mark-disc {
+    fill: var(--accent-wash);
+  }
+
+  .faq__mark-glyph {
+    stroke: var(--accent);
   }
 
   .faq__list {
@@ -159,6 +185,13 @@ import { faq } from '../data/site';
     .faq__inner {
       grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
       gap: 80px;
+    }
+
+    .faq__mark {
+      display: block;
+      width: min(260px, 80%);
+      height: auto;
+      margin-top: 28px;
     }
   }
 </style>
