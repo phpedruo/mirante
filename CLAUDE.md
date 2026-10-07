@@ -126,7 +126,12 @@ Convenções que atravessam os componentes:
   rodapé, o que quebra a sequência de brancos do meio da página. Seção que virar faixa precisa que
   seus cards internos subam de camada (`--card`), senão eles somem dentro do próprio fundo — foi
   por isso que as placas de logo dos clientes deixaram de ser `--surface-2`.
-- **Frestas.** As seções brancas (hero, técnicas, tecidos, localização, contato e a 404) levam a
+- **O contato é uma faixa azul** que vai até a borda direita da tela e termina à esquerda num
+  arco grande (`--band-round`, que cresce com a largura da tela e nunca chega no texto) — como
+  a faixa vermelha do "Açougue 5 Estrelas" no site da Masterboi. O conteúdo continua na prumada
+  das outras seções, por um `.container` dentro da faixa, e o formulário é o card branco por
+  cima dela. A faixa fica numa seção branca, então sobra o `--section-pad` em volta.
+- **Frestas.** As seções brancas (hero, técnicas, tecidos, localização e a 404) levam a
   classe `.frestas` (`global.css`): listras diagonais finas em laranja, num `::before` atrás do
   conteúdo, que nascem num canto e se dissolvem antes do meio por uma máscara radial — o centro,
   onde está o texto, fica sempre limpo. O canto alterna de uma seção para a seguinte
@@ -307,7 +312,7 @@ Medir depois do lançamento: Search Console (impressões, cliques, posição mé
 
 O mockup aprovado é a prancha "Versão refinada — UX 2026" do canvas em `design/` (arquivos `.dc.html`, montados com a skill `design`). As outras duas pranchas são a versão anterior, mantidas para comparação.
 
-A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto, e as fotos da fábrica, que antes passavam num quadro ao lado do texto, viraram o fundo dele, de ponta a ponta e esmaecidas — a referência aí é o hero da Masterboi (masterboi.com.br), escolhida para a página ocupar a tela inteira; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
+A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto, e as fotos da fábrica, que antes passavam num quadro ao lado do texto, viraram o fundo dele, de ponta a ponta e esmaecidas — a referência aí é o hero da Masterboi (masterboi.com.br), escolhida para a página ocupar a tela inteira; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Depois, seguindo a Masterboi para a página ocupar a tela, o card azul do contato virou uma faixa que vai até a borda da tela. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
 
 ## Agent skills
 

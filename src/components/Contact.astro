@@ -22,9 +22,13 @@ const nextSteps = [
 ];
 ---
 
-<section class="contact frestas" id="contato">
-  <div class="container">
-    <div class="contact__card" data-anim="scale">
+<section class="contact" id="contato">
+  {/* A faixa azul vai até a borda direita da tela e termina à esquerda num
+      arco grande — como a faixa vermelha do "Açougue 5 Estrelas" no site da
+      Masterboi, que é a referência de ocupar a tela. O conteúdo continua na
+      prumada das outras seções, pelo .container de dentro. */}
+  <div class="contact__band" data-anim="up">
+    <div class="container contact__inner">
       <div class="contact__pitch">
         <h2 class="contact__title">Opa! Vi que você precisa de fardamento...</h2>
         <p class="contact__slogan">{brand.slogan}</p>
@@ -195,12 +199,22 @@ const nextSteps = [
     background: var(--surface);
   }
 
-  .contact__card {
+  /* O arco da esquerda acompanha a largura da tela: grande no desktop, para
+     ler como a ponta da faixa, e pequeno no celular, onde um arco grande
+     comeria o canto do texto. A faixa é de outro fundo, então o espaço
+     interno é o --band-pad. Ela não leva frestas: quase toda a seção é azul,
+     e as listras só sobrariam num fio de branco em volta. */
+  .contact__band {
+    --band-round: 28px;
+
+    padding-block: var(--band-pad);
+    background: var(--brand-fill);
+    border-radius: var(--band-round) 0 0 var(--band-round);
+  }
+
+  .contact__inner {
     display: grid;
     gap: 32px;
-    padding: 26px 18px;
-    background: var(--brand-fill);
-    border-radius: var(--radius-lg);
   }
 
   .contact__pitch {
@@ -210,7 +224,7 @@ const nextSteps = [
   }
 
   .contact__title {
-    font-size: clamp(24px, 1.3rem + 2vw, 40px);
+    font-size: clamp(28px, 1.3rem + 2.6vw, 52px);
     font-weight: 700;
     line-height: 1.12;
     color: #fff;
@@ -218,10 +232,14 @@ const nextSteps = [
 
   .contact__slogan {
     font-family: var(--font-display);
-    font-size: clamp(24px, 1.3rem + 2vw, 40px);
+    font-size: clamp(26px, 1.2rem + 2.2vw, 44px);
     line-height: 1.05;
     letter-spacing: -0.02em;
     color: var(--orange-500);
+    /* Entre 1080 e ~1300px a coluna não cabe o slogan inteiro: equilibrado,
+       ele quebra em "Chama que a / Mirante faz!", em vez de deixar o "faz!"
+       sozinho na segunda linha. */
+    text-wrap: balance;
   }
 
   /* Abaixo de 540px o mascote e o botão do telefone não cabem lado a lado:
@@ -419,7 +437,7 @@ const nextSteps = [
   }
 
   /* ---- Painel de agradecimento ------------------------------------ *
-     Ocupa o mesmo lugar do formulário dentro do card azul, com o mesmo
+     Ocupa o mesmo lugar do formulário dentro da faixa azul, com o mesmo
      fundo e o mesmo raio, para a seção não mudar de cara no envio. */
   .contact__done {
     display: flex;
@@ -552,10 +570,6 @@ const nextSteps = [
   }
 
   @media (min-width: 480px) {
-    .contact__card {
-      padding: 36px 24px;
-    }
-
     .contact__form {
       padding: 24px;
     }
@@ -566,7 +580,7 @@ const nextSteps = [
   }
 
   @media (min-width: 540px) {
-    /* `wrap` é a válvula da faixa entre 1080px e ~1260px, onde o card já se
+    /* `wrap` é a válvula da faixa entre 1080px e ~1260px, onde o contato já se
        divide em duas colunas e os dois juntos não cabem na coluna: o botão
        desce inteiro em vez de espremer o rótulo. */
     .contact__mascot-row {
@@ -593,8 +607,8 @@ const nextSteps = [
   }
 
   @media (min-width: 768px) {
-    .contact__card {
-      padding: 48px 40px;
+    .contact__band {
+      --band-round: clamp(64px, 12vw, 220px);
     }
 
     .contact__form {
@@ -627,11 +641,9 @@ const nextSteps = [
   }
 
   @media (min-width: 1080px) {
-    .contact__card {
+    .contact__inner {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 72px;
-      padding: 72px;
-      border-radius: var(--radius-xl);
     }
 
     .contact__pitch {
