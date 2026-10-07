@@ -39,7 +39,8 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
             <span class="location__label">Endereço</span>
             <address class="location__value">
               {address.street}<br />
-              {address.district}, {address.city} – {address.state}, {address.zip}
+              {address.district}, {address.city} – {address.state},{' '}
+              <span class="location__zip">{address.zip}</span>
             </address>
           </div>
         </div>
@@ -86,9 +87,14 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
 </section>
 
 <style>
+  /* A seção é a régua do mapa: com ela como container, `100cqw` é a largura
+     da seção — a da tela sem a barra de rolagem. Com `100vw`, que conta a
+     barra, o mapa passaria 17px por baixo dela no Windows e abriria rolagem
+     lateral. */
   .location {
     padding-block: var(--section-pad);
     background: var(--surface);
+    container-type: inline-size;
   }
 
   .location__inner {
@@ -170,6 +176,12 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
     color: var(--ink);
   }
 
+  /* O CEP desce inteiro para a linha de baixo: no celular ele quebrava no
+     hífen, com "53409-" numa linha e "420" na outra. */
+  .location__zip {
+    white-space: nowrap;
+  }
+
   .location__phone {
     color: var(--ink);
     font-weight: 600;
@@ -191,11 +203,14 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
     height: 16px;
   }
 
+  /* O mapa ocupa a tela até a borda, como a foto das "Nossas Unidades" no
+     site da Masterboi. No celular e no tablet ele sangra as duas bordas, sem
+     canto: a calha que sobraria de cada lado só apertava o mapa. */
   .location__map {
     position: relative;
     height: 320px;
+    margin-inline: calc(var(--gutter) * -1);
     background: var(--surface-3);
-    border-radius: var(--radius-lg);
     overflow: hidden;
   }
 
@@ -279,9 +294,16 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
       object-position: center 40%;
     }
 
+    /* No desktop ele sai da prumada só pela direita, até a borda da tela: a
+       margem negativa é a sobra da página (o que passa da largura máxima,
+       dividido por dois) mais a calha. Os cantos da esquerda continuam
+       arredondados, e os da direita somem na borda. */
     .location__map {
       height: auto;
       min-height: 520px;
+      margin-left: 0;
+      margin-right: calc((100cqw - min(100cqw, var(--page-max))) / -2 - var(--gutter));
+      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
     }
   }
 </style>
