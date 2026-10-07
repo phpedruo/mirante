@@ -272,8 +272,10 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     color: var(--accent);
   }
 
+  /* Acompanha o corpo do .lead, que cresceu com os títulos: em 520px, "e muito
+     mais" passava a quebrar no meio. */
   .hero__text {
-    max-width: 520px;
+    max-width: 580px;
   }
 
   /* Abaixo de 600px os dois não cabem lado a lado, e o segundo — mais largo —

@@ -259,27 +259,31 @@ svg {
 
 .eyebrow {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
+/* Os títulos cresceram com a página de ponta a ponta (a referência é o site da
+   Masterboi): com a tela ocupada, título tímido some. Os de seção ficam em
+   52px, e não nos ~56px de lá, porque os de lá são duas palavras e os daqui
+   são frases — maiores que isso, eles quebravam em três ou quatro linhas. */
 .title-lg {
-  font-size: clamp(30px, 1.25rem + 3.4vw, 58px);
+  font-size: clamp(32px, 1.25rem + 3.6vw, 64px);
   font-weight: 700;
   letter-spacing: -0.028em;
   line-height: 1.06;
 }
 
 .title-md {
-  font-size: clamp(28px, 1.4rem + 2.2vw, 42px);
+  font-size: clamp(30px, 1.3rem + 2.6vw, 52px);
   font-weight: 700;
 }
 
 .lead {
-  font-size: clamp(17px, 1rem + 0.3vw, 19px);
+  font-size: clamp(17px, 1rem + 0.4vw, 20px);
   line-height: 1.65;
   color: var(--muted);
 }
