@@ -2,10 +2,13 @@
 import Logo from './Logo.astro';
 
 // Os links levam `/` na frente para funcionar também fora da página inicial,
-// como na 404 — ali, `#produtos` sozinho apontaria para a própria página de erro.
+// como na 404 — ali, `#tecidos` sozinho apontaria para a própria página de erro.
+// "Segmentos" leva ao meio da seção de tecidos, onde começa a esteira das
+// categorias.
 const links = [
-  { href: '/#produtos', label: 'Produtos' },
-  { href: '/#clientes', label: 'Quem veste Mirante' },
+  { href: '/#tecidos', label: 'Tecidos' },
+  { href: '/#segmentos', label: 'Segmentos' },
+  { href: '/#clientes', label: 'Confiança de grandes' },
   { href: '/#duvidas', label: 'Dúvidas' },
   { href: '/#localizacao', label: 'Localização' },
 ];
@@ -212,7 +215,11 @@ const links = [
     height: 22px;
   }
 
-  @media (max-width: 1079px) {
+  /* Com cinco links na fonte do slogan, que é larga, a barra deitada só cabe
+     a partir de 1200px: em 1080, "Confiança de grandes" e o botão de
+     orçamento quebravam em duas linhas. Abaixo disso, o menu vira o painel do
+     botão — o resto do layout de desktop continua começando em 1080. */
+  @media (max-width: 1199px) {
     /* O painel do menu continua a faixa azul, separado dela só por um fio. */
     .site-header__nav {
       position: absolute;
@@ -321,8 +328,8 @@ const links = [
       }
     });
 
-    // Se a janela crescer até o layout de desktop, o painel não pode ficar preso aberto.
-    window.matchMedia('(min-width: 1080px)').addEventListener('change', (event) => {
+    // Se a janela crescer até a barra deitada, o painel não pode ficar preso aberto.
+    window.matchMedia('(min-width: 1200px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
     });
   }

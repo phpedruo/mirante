@@ -9,7 +9,7 @@ const swatches = fabrics.flatMap((fabric) => (fabric.photo ? [fabric.photo] : []
 const track = [...productCategories, ...productCategories];
 ---
 
-<section class="showcase frestas" id="produtos">
+<section class="showcase frestas" id="tecidos">
   <div class="container showcase__intro">
     <span class="eyebrow" data-anim="up">Tecidos e malhas</span>
     <h2 class="title-md" data-anim="up">Qual tecido a sua peça pede?</h2>
@@ -70,7 +70,7 @@ const track = [...productCategories, ...productCategories];
       ))}
     </ul>
 
-    <h3 class="showcase__sub" data-anim="up">Atendemos todos os públicos</h3>
+    <h3 class="showcase__sub" id="segmentos" data-anim="up">Segmentos</h3>
   </div>
 
   <div class="marquee marquee--drag" data-marquee="ltr" data-marquee-drag>
@@ -259,7 +259,7 @@ const track = [...productCategories, ...productCategories];
     height: 14px;
   }
 
-  /* "Atendemos todos os públicos" abre um bloco novo dentro da mesma seção,
+  /* "Segmentos" abre um bloco novo dentro da mesma seção,
      então tem o maior salto interno da seção: acima dele a escada é 14px entre
      os pontos e 1,5 × --intro-gap da grade para os pontos, e um bloco novo só
      se anuncia se o salto dele for maior que os dois. Ainda assim fica abaixo

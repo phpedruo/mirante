@@ -77,8 +77,8 @@ export type HeroSlide = {
 };
 
 /**
- * As três de hoje são as peças que sobraram da seleção de "Atendemos todos os
- * públicos", recortadas em 1,25:1 do original em `design/produtos-originais/`
+ * As três de hoje são as peças que sobraram da seleção de "Segmentos",
+ * recortadas em 1,25:1 do original em `design/produtos-originais/`
  * para o quadro que o hero tinha ao lado do texto. Como fundo elas viram
  * textura: peça solta, ampliada e cortada no meio. Refazer um corte é recortar
  * do original, nunca do `.webp`.
