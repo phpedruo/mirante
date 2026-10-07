@@ -145,7 +145,9 @@ Convenções que atravessam os componentes:
   legível sem véu. No claro ele ainda leva uma **máscara** que tira a força da imagem onde há
   texto — a coluna da esquerda no desktop, tudo abaixo da logo no celular —, porque sobre o
   cinza de uma foto escura o laranja do slogan caía para ~2,2:1; com a máscara ele fica acima
-  de 3:1. No escuro a máscara não existe: texto claro sobre foto escurecida já tem contraste.
+  de 3:1. No escuro a máscara não existe: texto claro sobre foto escurecida já tem contraste. Nos
+  dois temas, o pé do fundo se dissolve nos últimos 160px (máscara no invólucro), para a imagem
+  não terminar numa linha dura contra a seção seguinte.
   A imagem é cortada para preencher o fundo, que é bem mais largo que alto, então ele pede
   **foto larga e grande, sem texto**: arte de Instagram não serve, o corte come as bordas e o
   texto dela vira ruído atrás do título. O fundo é decoração (`aria-hidden`, `alt` vazio).

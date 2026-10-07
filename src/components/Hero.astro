@@ -150,12 +150,18 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
      (`.frestas`, com `isolation`), e as frestas estão em -1, então o fundo
      em -2 passa por trás delas. A ordem é fundo da seção → imagens → frestas
      → conteúdo. */
+  /* O pé do fundo se dissolve na seção seguinte: cortada reto, a imagem
+     terminava numa linha dura contra o branco das técnicas. Vale nos dois
+     temas, e é por isso que mora aqui, e não na máscara do .outdoor, que o
+     escuro desliga. */
   .hero__backdrop {
     position: absolute;
     inset: 0;
     z-index: -2;
     overflow: hidden;
     pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 160px), transparent);
+    mask-image: linear-gradient(180deg, #000 calc(100% - 160px), transparent);
   }
 
   /* A opacidade baixa é o que deixa o texto por cima legível sem véu nem
