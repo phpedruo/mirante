@@ -121,19 +121,37 @@ const links = [
      no celular também é um <a> dentro da navegação, e com o seletor amplo ele
      herdaria a cor e o sublinhado dos links. */
   .site-header__nav li a {
+    position: relative;
     font-family: var(--font-display);
     font-size: 15px;
     color: #fff;
-    text-decoration-line: underline;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 8px;
-    transition: text-decoration-color 0.18s ease;
   }
 
-  .site-header__nav li a:hover {
+  /* O sublinhado é uma linha própria, e não um text-decoration, porque ele
+     precisa ter direção: no hover ela nasce encolhida na esquerda e cresce
+     até o fim do link, e ao sair volta para a esquerda. Só `transform`. */
+  .site-header__nav li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    background: var(--orange-500);
+    border-radius: 1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.28s ease;
+  }
+
+  .site-header__nav li a:hover,
+  .site-header__nav li a:focus-visible {
     color: #fff;
-    text-decoration-color: var(--orange-500);
+  }
+
+  .site-header__nav li a:hover::after,
+  .site-header__nav li a:focus-visible::after {
+    transform: scaleX(1);
   }
 
   .site-header__actions {
@@ -256,6 +274,12 @@ const links = [
       display: block;
       padding: 15px 0;
       font-size: 17px;
+    }
+
+    /* No painel o link tem folga em cima e embaixo: a linha sobe para dentro
+       dela, em vez de cair sobre o fio que separa os itens. */
+    .site-header__nav li a::after {
+      bottom: 9px;
     }
 
     .site-header__cta-mobile {
