@@ -9,9 +9,37 @@ const whatsappUrl = contact.whatsappUrl(
 // Dois ciclos de 0 a 9: o rolo dá uma volta inteira antes de parar no dígito,
 // que é o que dá a sensação de caça-níquel. O repouso é o segundo ciclo.
 const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
+
+// A legenda só existe se tiver o que mostrar: o recado de alguma imagem, ou a
+// régua do tempo, que só conta quando há passagem (duas imagens ou mais).
+const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.promo);
 ---
 
 <section class="hero frestas" id="topo">
+  {
+    /* O fundo da seção: as imagens passam de ponta a ponta, esmaecidas, atrás
+       das frestas e do texto, como o vídeo no hero do site da Masterboi. Ele
+       é decoração — o recado de cada imagem mora na legenda, onde dá para
+       ler —, e por isso sai inteiro da árvore de acessibilidade. */
+    heroSlides.length > 0 && (
+      <div class="hero__backdrop" data-anim="hero-backdrop" aria-hidden="true">
+        <div class="outdoor" data-outdoor>
+          {heroSlides.map((slide, index) => (
+            <div class="outdoor__slide" data-outdoor-slide>
+              <img
+                class="outdoor__img"
+                src={slide.src}
+                alt=""
+                decoding="async"
+                fetchpriority={index === 0 ? 'high' : undefined}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   <div class="container hero__inner">
     <div class="hero__content">
       <div class="hero__brand" data-anim="hero">
@@ -48,40 +76,32 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
       </div>
     </div>
 
-    <div class="hero__media" data-anim="hero-media">
-      {
-        heroSlides.length > 0 ? (
-          <div class="outdoor" data-outdoor>
-            {heroSlides.map((slide, index) => (
-              <div class="outdoor__slide" data-outdoor-slide data-kind={slide.kind ?? 'foto'}>
-                <img
-                  class="outdoor__img"
-                  src={slide.src}
-                  alt={slide.alt}
-                  decoding="async"
-                  fetchpriority={index === 0 ? 'high' : undefined}
-                />
-                {slide.promo && (
-                  <div class="promo" data-outdoor-promo>
-                    {slide.promo.badge && <span class="promo__badge">{slide.promo.badge}</span>}
-                    <p class="promo__title">{slide.promo.title}</p>
-                    {slide.promo.text && <p class="promo__text">{slide.promo.text}</p>}
-                  </div>
-                )}
+    {
+      /* A legenda do fundo: o recado da imagem da vez e a régua do tempo. Os
+         recados ficam empilhados na mesma célula, então a altura é a do maior
+         e a página não pula a cada troca. Um recado por imagem, na mesma
+         ordem — vazio quando a imagem não tem —, porque é pela posição que a
+         passagem acha o recado da imagem que entrou. */
+      hasLegend && (
+        <div class="hero__legend" data-anim="hero" aria-hidden="true">
+          <div class="hero__promos">
+            {heroSlides.map((slide) => (
+              <div class="promo" data-outdoor-promo>
+                {slide.promo?.badge && <span class="promo__badge">{slide.promo.badge}</span>}
+                {slide.promo && <p class="promo__title">{slide.promo.title}</p>}
+                {slide.promo?.text && <p class="promo__text">{slide.promo.text}</p>}
               </div>
             ))}
-
-            {/* Enche enquanto a arte da vez espera a sua hora. Só aparece com
-                JavaScript: sem ele não há troca, e uma régua parada mentiria. */}
-            <div class="outdoor__timer" aria-hidden="true">
-              <span class="outdoor__timer-fill" data-outdoor-timer></span>
-            </div>
           </div>
-        ) : (
-          <div class="photo-slot hero__photo">[Outdoor — artes e fotos]</div>
-        )
-      }
-    </div>
+
+          {/* Enche enquanto a imagem da vez espera a sua hora. Só aparece com
+              JavaScript: sem ele não há troca, e uma régua parada mentiria. */}
+          <div class="outdoor__timer">
+            <span class="outdoor__timer-fill" data-outdoor-timer></span>
+          </div>
+        </div>
+      )
+    }
 
     <ul class="hero__stats" data-anim="hero">
       {heroStats.map((stat) => (
@@ -122,9 +142,69 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   .hero {
     padding-block: var(--section-pad);
     background: var(--surface);
-    /* No celular o outdoor sangra a calha por margem negativa; o clipe é o
-       que impede essa sobra de virar rolagem horizontal. */
-    overflow-x: clip;
+  }
+
+  /* ---- Fundo ------------------------------------------------------- *
+     As imagens ocupam a seção inteira, de borda a borda da tela, e ficam na
+     camada mais baixa: a seção já é um contexto de empilhamento próprio
+     (`.frestas`, com `isolation`), e as frestas estão em -1, então o fundo
+     em -2 passa por trás delas. A ordem é fundo da seção → imagens → frestas
+     → conteúdo. */
+  .hero__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* A opacidade baixa é o que deixa o texto por cima legível sem véu nem
+     sombra: a imagem vira textura, e o título e os botões continuam com o
+     contraste do fundo da página. Ela mora aqui, e não no invólucro, porque o
+     invólucro é quem a entrada do GSAP leva de 0 a 1 — se fosse nele, a
+     animação apagaria o esmaecimento ao terminar.
+
+     No claro, 20% ainda é demais atrás do texto: sobre o cinza que uma foto
+     escura vira, o laranja do slogan cai para ~2,2:1, abaixo dos 3:1 que
+     texto grande pede (sobre o branco puro ele já fica em 3,5:1). A máscara
+     tira a força da imagem só onde há texto — fica com 30% dela, ou ~6% no
+     total — e a devolve inteira onde não há. No celular o texto ocupa a
+     largura toda, então a imagem fica forte em cima, atrás da logo, e
+     esmaece a partir da linha de cima do título. */
+  .outdoor {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    -webkit-mask-image: linear-gradient(180deg, #000 0, #000 110px, rgb(0 0 0 / 30%) 210px);
+    mask-image: linear-gradient(180deg, #000 0, #000 110px, rgb(0 0 0 / 30%) 210px);
+  }
+
+  /* No escuro a mesma dose acende demais — as áreas claras das fotos viram
+     uma névoa cinza sobre o fundo —, e a máscara sobra: texto claro sobre a
+     foto escurecida já tem contraste de sobra. */
+  :global(html[data-theme='dark']) .outdoor {
+    opacity: 0.14;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .outdoor__slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Sem JavaScript, ou com "reduzir movimento", o fundo para na primeira
+     imagem em vez de mostrar todas empilhadas. */
+  .outdoor__slide + .outdoor__slide {
+    opacity: 0;
+  }
+
+  /* O fundo é bem mais largo que alto, então a imagem é cortada para
+     preenchê-lo: o que fica é a faixa do meio dela. */
+  .outdoor__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .hero__inner {
@@ -212,74 +292,37 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
     height: 18px;
   }
 
-  .hero__photo {
-    height: 300px;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-hero);
-  }
-
-  /* ---- Outdoor ----------------------------------------------------- *
-     As imagens ficam empilhadas no mesmo quadro; a coreografia em
-     animations.ts puxa a atual para fora enquanto a próxima entra.
-
-     No celular o quadro sangra até as duas bordas da tela, sem canto; no
-     desktop ele fica na prumada do conteúdo, com os quatro cantos
-     arredondados. Nos dois casos não há sombra: sombra é o que diz "isto
-     está flutuando acima do fundo", e é o que fazia a imagem ler como cartão
-     colado sobre a página. */
-  .outdoor {
-    position: relative;
-    height: 300px;
-    margin-inline: calc(var(--gutter) * -1);
-    overflow: hidden;
-    background: var(--surface-2);
-  }
-
-  .outdoor__slide {
-    position: absolute;
-    inset: 0;
-  }
-
-  /* Sem JavaScript, ou com "reduzir movimento", o quadro para na primeira
-     imagem em vez de mostrar todas empilhadas. */
-  .outdoor__slide + .outdoor__slide {
-    opacity: 0;
-  }
-
-  .outdoor__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Arte de divulgação aparece inteira: o texto dela encosta na borda, e
-     preencher o quadro comeria palavra. As sobras laterais ganham o azul da
-     marca, o que faz a arte parecer montada ali de propósito em vez de
-     sobrando num quadro grande demais. */
-  .outdoor__slide[data-kind='arte'] {
-    background: linear-gradient(160deg, var(--blue-700), var(--blue-900));
-  }
-
-  .outdoor__slide[data-kind='arte'] .outdoor__img {
-    object-fit: contain;
-  }
-
-  /* ---- Recado promocional sobre a imagem ---- */
-  /* O véu escuro existe para o texto: sobre foto clara, branco em cima de
-     branco some. Ele é mais dedicado embaixo, onde o texto fica, e se
-     dissolve antes da metade para não escurecer a peça. */
-  .promo {
-    position: absolute;
-    inset: auto 0 0 0;
+  /* ---- Legenda do fundo -------------------------------------------- *
+     O recado de cada imagem saiu de cima dela quando ela virou fundo: na
+     opacidade do fundo ele ficaria ilegível. Aqui ele tem a cor de texto da
+     página, e no celular vem logo abaixo dos botões. */
+  .hero__legend {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 28px var(--gutter) 26px;
-    background: linear-gradient(to top, rgb(4 14 43 / 82%), rgb(4 14 43 / 0%));
-    color: #fff;
+    gap: 14px;
   }
 
+  .hero__promos {
+    display: grid;
+  }
+
+  .promo {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Sem JavaScript, ou com "reduzir movimento", o fundo fica na primeira
+     imagem, e a legenda mostra só o recado dela. */
+  .promo + .promo {
+    opacity: 0;
+  }
+
+  /* Texto escuro sobre a laranja da marca: branco sobre esse laranja não
+     chega ao contraste mínimo. */
   .promo__badge {
     padding: 5px 12px;
     background: var(--orange-500);
@@ -288,19 +331,21 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    color: var(--on-accent);
   }
 
   .promo__title {
-    font-size: clamp(20px, 1rem + 1.4vw, 28px);
+    font-size: clamp(19px, 1rem + 0.8vw, 24px);
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.01em;
+    color: var(--heading);
   }
 
   .promo__text {
     font-size: 15px;
     line-height: 1.5;
-    opacity: 0.88;
+    color: var(--muted);
   }
 
   /* ---- Régua do tempo ---- */
@@ -309,10 +354,11 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
      a contar, e uma régua parada no zero prometeria um movimento que não
      vem. Quem a revela é o animations.ts. */
   .outdoor__timer {
-    position: absolute;
-    inset: auto 0 0 0;
+    width: min(100%, 240px);
     height: 3px;
-    background: rgb(255 255 255 / 28%);
+    overflow: hidden;
+    background: var(--border);
+    border-radius: 2px;
     visibility: hidden;
   }
 
@@ -321,8 +367,7 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
     height: 100%;
     background: var(--orange-500);
     /* Nasce vazia e cresce por transform, nunca por largura: largura refaz o
-       layout a cada quadro. O GSAP só aparece com JS, então sem ele a régua
-       fica zerada e invisível. */
+       layout a cada quadro. */
     transform: scaleX(0);
     transform-origin: left center;
   }
@@ -414,14 +459,16 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
       padding-top: calc(var(--section-pad) + var(--intro-gap));
     }
 
+    /* Com mais folga no topo e a logo maior, o título desce, e o ponto em que
+       a imagem esmaece desce junto. */
+    .outdoor {
+      -webkit-mask-image: linear-gradient(180deg, #000 0, #000 170px, rgb(0 0 0 / 30%) 260px);
+      mask-image: linear-gradient(180deg, #000 0, #000 170px, rgb(0 0 0 / 30%) 260px);
+    }
+
     .hero__brand {
       justify-content: flex-start;
       margin-bottom: 0;
-    }
-
-    .hero__photo,
-    .outdoor {
-      height: 420px;
     }
 
     .hero__stats {
@@ -430,28 +477,50 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
   }
 
   @media (min-width: 1080px) {
+    /* A primeira tela é toda do hero, como na Masterboi: com o fundo de ponta
+       a ponta, a seção seguinte aparecendo no pé da tela cortava o quadro ao
+       meio. A conta desconta o cabeçalho sticky (76px no desktop) e a área
+       segura do topo, que ele também ocupa. Em tela baixa o conteúdo é maior
+       que isso e a altura volta a ser a dele. */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100svh - 76px - env(safe-area-inset-top, 0px));
+    }
+
+    /* O texto fica na coluna da esquerda e a da direita é do fundo, com a
+       legenda no pé dela, na altura dos botões. A sobra de altura vai para a
+       primeira linha, então os números ficam sempre no rodapé da tela. */
     .hero__inner {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 72px;
+      flex: 1;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      grid-template-rows: 1fr auto;
+      column-gap: 72px;
+      row-gap: 48px;
+    }
+
+    /* Lado a lado, o texto fica todo na coluna da esquerda: a imagem esmaece
+       daquele lado e chega inteira na metade direita, onde só há a legenda. */
+    .outdoor {
+      -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 30%) 0%, rgb(0 0 0 / 30%) 42%, #000 72%);
+      mask-image: linear-gradient(90deg, rgb(0 0 0 / 30%) 0%, rgb(0 0 0 / 30%) 42%, #000 72%);
     }
 
     .hero__content {
       gap: 30px;
     }
 
-    .hero__photo,
-    .outdoor {
-      height: 520px;
+    .hero__legend {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: end;
+      justify-self: end;
+      align-items: flex-end;
+      text-align: right;
     }
 
-    /* No desktop o quadro termina na borda do conteúdo, na mesma prumada de
-       todas as outras seções: sangrando até a borda da tela ele ficava fora
-       do alinhamento da página, jogado para a direita. Como ele não encosta
-       mais na borda da tela, os quatro cantos são arredondados: com o lado
-       direito reto e solto no meio da página, o quadro lia como torto. */
-    .outdoor {
-      margin-inline: 0;
-      border-radius: var(--radius-lg);
+    .promo {
+      align-items: flex-end;
     }
 
     /* A faixa é o rodapé do hero inteiro, não da coluna de texto: a régua
@@ -459,6 +528,7 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
        vez de ficarem amontoados num canto. */
     .hero__stats {
       grid-column: 1 / -1;
+      grid-row: 2;
       justify-content: space-between;
       gap: 20px 48px;
       padding-top: 30px;

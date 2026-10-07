@@ -44,64 +44,60 @@ export const assets = {
 };
 
 /**
- * O outdoor do hero: o que passa no quadro ao lado do texto.
+ * O fundo do hero: as imagens que passam de ponta a ponta da seção, atrás do
+ * texto e esmaecidas, como o vídeo no hero do site da Masterboi.
  *
- * Lista vazia mostra o placeholder hachurado; com uma só imagem o quadro fica
- * parado; a passagem começa a partir de duas.
+ * Lista vazia deixa o hero sem fundo; com uma só imagem ele fica parado nela;
+ * a passagem começa a partir de duas.
  *
- * São dois tipos de conteúdo, e a diferença não é enfeite: uma **foto**
- * preenche o quadro e aceita perder as bordas no corte, que é o que foto de
- * gente fardada pede — o assunto está no meio e sobra margem. Uma **arte** de
- * divulgação, não: ali o texto encosta na borda, e qualquer corte come
- * palavra. Por isso a arte aparece inteira, centrada sobre o azul da marca,
- * com as sobras laterais viradas parte do desenho em vez de acidente.
+ * O fundo é bem mais largo que alto no computador (perto de 2:1) e em pé no
+ * celular, e a imagem é cortada para preenchê-lo: o que sobra é a faixa do
+ * meio dela. Por isso ele pede foto — de preferência larga e grande, 1920px ou
+ * mais, com o assunto no centro: gente fardada, a equipe, o galpão. Arte de
+ * divulgação com texto não serve: o corte come as bordas, e na opacidade do
+ * fundo o texto dela vira ruído atrás do título.
  *
- * O `promo` é o espaço da fábrica para anunciar o que quiser sobre a imagem —
- * uma campanha, uma linha nova, um recado de temporada. Vale nos dois tipos,
- * mas numa arte de Instagram costuma sobrar, porque a peça já traz o recado
- * dentro dela. Sem `promo`, a imagem aparece limpa.
+ * A imagem é decoração e fica fora do leitor de tela, então não leva texto
+ * alternativo. Quem fala é o `promo`: o espaço da fábrica para anunciar o que
+ * quiser junto com a imagem — uma campanha, uma linha nova, um recado de
+ * temporada. Ele aparece nítido na legenda do hero e troca junto com a imagem.
+ * Sem `promo`, a imagem passa calada.
  *
- * Os três de hoje não repetem o mesmo elogio: cada um pega um ponto diferente
- * — a técnica, a matéria-prima e o atendimento —, os dois primeiros vindos dos
- * mesmos `factoryPoints` que a seção de tecidos lista e o terceiro, do fluxo
- * consultivo da casa, em que um consultor acompanha o pedido do começo ao fim. Passando as três, o visitante recebe três argumentos em vez de três
- * fotos. Valem as regras de copy da página: uma linha por recado, nada de
- * preço e nada de comparação com concorrente.
+ * Os três recados de hoje não repetem o mesmo elogio: cada um pega um ponto
+ * diferente — a técnica, a matéria-prima e o atendimento —, os dois primeiros
+ * vindos dos mesmos `factoryPoints` que a seção de tecidos lista e o terceiro,
+ * do fluxo consultivo da casa, em que um consultor acompanha o pedido do
+ * começo ao fim. Passando os três, o visitante recebe três argumentos em vez
+ * de três fotos. Valem as regras de copy da página: uma linha por recado, nada
+ * de preço e nada de comparação com concorrente.
  */
 export type HeroSlide = {
   src: string;
-  alt: string;
-  /** Ausente vale 'foto'. */
-  kind?: 'foto' | 'arte';
   promo?: { badge?: string; title: string; text?: string };
 };
 
 /**
  * As três de hoje são as peças que sobraram da seleção de "Atendemos todos os
- * públicos": recorte 1,25:1 do original em `design/produtos-originais/`, na
- * proporção do quadro, com a peça no centro. Refazer um corte é recortar do
- * original, nunca do `.webp`.
+ * públicos", recortadas em 1,25:1 do original em `design/produtos-originais/`
+ * para o quadro que o hero tinha ao lado do texto. Como fundo elas viram
+ * textura: peça solta, ampliada e cortada no meio. Refazer um corte é recortar
+ * do original, nunca do `.webp`.
  *
- * AINDA FALTA o que o hero pede de verdade: foto de gente fardada — equipe na
- * recepção, turma de escola, operação em campo. As três de hoje são peças
- * soltas, sem contexto de uso, e seguram o lugar até as reais chegarem. A arte
- * do avental Pitú, que seria o primeiro `kind: 'arte'` da lista, ficou de fora
- * porque o arquivo tem 399px de largura e o quadro pede uns 650.
+ * AINDA FALTA o que o fundo pede de verdade: foto de gente fardada — equipe na
+ * recepção, turma de escola, operação em campo —, larga e grande o bastante
+ * para cobrir a tela sem ser ampliada.
  */
 export const heroSlides: HeroSlide[] = [
   {
     src: '/hero/polo-bordada.webp',
-    alt: 'Camisa polo com logo bordado no peito',
     promo: { badge: 'Bordado próprio', title: 'A sua logo na peça' },
   },
   {
     src: '/hero/bata.webp',
-    alt: 'Bata azul-marinho de manga curta',
     promo: { badge: 'Tecido escolhido', title: 'A malha que o uso pede' },
   },
   {
     src: '/hero/camisa-social.webp',
-    alt: 'Camisa social escura de manga longa',
     promo: { badge: 'Contato próximo', title: 'Um consultor do pedido à entrega' },
   },
 ];

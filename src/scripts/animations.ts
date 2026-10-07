@@ -318,25 +318,34 @@ function setupTechniques() {
 }
 
 /* ------------------------------------------------------------------ *
- * Outdoor do hero
- * A arte da vez é puxada para fora enquanto a próxima entra no lugar,
+ * Fundo do hero
+ * A imagem da vez é puxada para fora enquanto a próxima entra no lugar,
  * as duas ao mesmo tempo — é isso que dá a sensação de troca de cartaz.
+ * O recado de cada imagem mora na legenda, fora do fundo esmaecido, e
+ * troca junto com ela.
  * ------------------------------------------------------------------ */
 function setupOutdoor() {
   const outdoor = document.querySelector<HTMLElement>('[data-outdoor]');
   if (!outdoor) return;
 
   const slides = gsap.utils.toArray<HTMLElement>('[data-outdoor-slide]', outdoor);
-  const timer = outdoor.querySelector<HTMLElement>('[data-outdoor-timer]');
 
-  // O recado promocional de cada imagem sobe depois que ela assenta: entrar
-  // junto com a imagem em movimento deixa o texto ilegível justamente no
-  // momento em que ele pede leitura.
-  const promoOf = (slide: HTMLElement) =>
-    gsap.utils.toArray<HTMLElement>(':scope > [data-outdoor-promo] > *', slide);
+  // Com uma imagem só não há troca: o fundo fica parado nela, a legenda já
+  // mostra o recado dela pelo CSS, e a régua do tempo não tem o que contar.
+  if (slides.length < 2) return;
 
-  const showPromo = (slide: HTMLElement) => {
-    const parts = promoOf(slide);
+  const timer = document.querySelector<HTMLElement>('[data-outdoor-timer]');
+
+  // Um recado por imagem, na mesma ordem — vazio quando a imagem não tem —,
+  // então o recado da imagem da vez é o da mesma posição.
+  const promos = gsap.utils.toArray<HTMLElement>('[data-outdoor-promo]');
+  const partsOf = (index: number) => Array.from(promos[index]?.children ?? []);
+
+  // O recado sobe depois que a imagem assenta: entrar junto com ela em
+  // movimento deixa o texto ilegível justamente no momento em que ele pede
+  // leitura. E sai assim que a imagem dele começa a sair.
+  const showPromo = (index: number) => {
+    const parts = partsOf(index);
     if (parts.length === 0) return;
     gsap.fromTo(
       parts,
@@ -345,35 +354,40 @@ function setupOutdoor() {
     );
   };
 
-  // Com uma imagem só não há troca: o quadro fica parado nela, e a régua do
-  // tempo não tem o que contar.
-  if (slides.length < 2) {
-    slides.forEach(showPromo);
-    return;
-  }
+  const hidePromo = (index: number) => {
+    const parts = partsOf(index);
+    if (parts.length === 0) return;
+    gsap.to(parts, { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in' });
+  };
 
-  if (timer) gsap.set(timer.parentElement, { autoAlpha: 1 });
+  if (timer?.parentElement) gsap.set(timer.parentElement, { autoAlpha: 1 });
 
   // O CSS esconde as imagens seguintes para o caso de não haver JS. Aqui elas
   // voltam a aparecer e passam a ser posicionadas pelo eixo X.
   gsap.set(slides, { opacity: 1, xPercent: 100 });
   gsap.set(slides[0], { xPercent: 0 });
-  slides.forEach((slide) => gsap.set(promoOf(slide), { opacity: 0 }));
+
+  // Na legenda o CSS também só mostra o primeiro recado. Daqui em diante quem
+  // decide é a passagem: o primeiro fica à vista, e os outros esperam a vez.
+  if (promos.length > 0) gsap.set(promos, { opacity: 1 });
+  promos.forEach((_, index) => {
+    const parts = partsOf(index);
+    if (index > 0 && parts.length > 0) gsap.set(parts, { opacity: 0 });
+  });
 
   const DWELL = 4.5;
 
   let current = 0;
-  let hovering = false;
-  let waiting: gsap.core.Tween | gsap.core.Timeline | undefined;
 
   const advance = () => {
     const next = (current + 1) % slides.length;
+    hidePromo(current);
 
     gsap
       .timeline({
         defaults: { duration: 0.9, ease: 'power3.inOut' },
         onComplete: () => {
-          showPromo(slides[next]);
+          showPromo(next);
           wait();
         },
       })
@@ -384,40 +398,25 @@ function setupOutdoor() {
   };
 
   // A espera e a régua são a mesma coisa: em vez de um relógio de um lado e
-  // uma barra do outro, que sairiam do ritmo assim que o ponteiro pausasse um
-  // e não o outro, é a própria régua que conta o tempo e chama a troca no fim.
+  // uma barra do outro, é a própria régua que conta o tempo e chama a troca
+  // no fim, então as duas nunca saem do ritmo uma da outra.
+  //
+  // Não há pausa no hover: o fundo ocupa o hero inteiro, e o ponteiro passa a
+  // maior parte do tempo em cima dele — pausar ali congelaria a passagem
+  // justamente para quem está lendo o hero.
   function wait() {
-    waiting = timer
-      ? gsap.fromTo(
-          timer,
-          { scaleX: 0 },
-          { scaleX: 1, duration: DWELL, ease: 'none', onComplete: advance },
-        )
-      : gsap.delayedCall(DWELL, advance);
-
-    // A espera nasce parada se o ponteiro já estava em cima quando a troca
-    // anterior terminou; senão a imagem escaparia justo de quem parou para ver.
-    if (hovering) waiting.pause();
+    if (timer) {
+      gsap.fromTo(
+        timer,
+        { scaleX: 0 },
+        { scaleX: 1, duration: DWELL, ease: 'none', onComplete: advance },
+      );
+    } else {
+      gsap.delayedCall(DWELL, advance);
+    }
   }
 
-  showPromo(slides[0]);
   wait();
-
-  // Pausar em cima é coisa de mouse. O dedo também dispara pointerenter ao
-  // tocar ou ao começar a rolar sobre o banner, mas o pointerleave nem sempre
-  // vem depois, principalmente quando o toque vira rolagem, e o banner ficava
-  // preso parado até um novo toque nele. No toque ele simplesmente não pausa.
-  outdoor.addEventListener('pointerenter', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    hovering = true;
-    waiting?.pause();
-  });
-
-  outdoor.addEventListener('pointerleave', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    hovering = false;
-    waiting?.resume();
-  });
 }
 
 /* ------------------------------------------------------------------ *
@@ -429,7 +428,7 @@ function setupReveals() {
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     // Hero: entra assim que a página abre.
     const heroItems = gsap.utils.toArray<HTMLElement>('[data-anim="hero"]');
-    const heroMedia = document.querySelector<HTMLElement>('[data-anim="hero-media"]');
+    const backdrop = document.querySelector<HTMLElement>('[data-anim="hero-backdrop"]');
 
     const intro = gsap.timeline({ defaults: { ease: 'power2.out', duration: 0.7 } });
 
@@ -437,13 +436,17 @@ function setupReveals() {
       intro.fromTo(heroItems, { opacity: 0, y: 22 }, { opacity: 1, y: 0, stagger: 0.08 });
     }
 
-    if (heroMedia) {
-      intro.fromTo(
-        heroMedia,
-        { opacity: 0, scale: 0.96 },
-        { opacity: 1, scale: 1, duration: 0.9 },
-        0.15,
-      );
+    // O fundo acende devagar e assenta de um leve zoom. Ele ocupa a seção
+    // inteira, então diminuir a partir de um pouco maior nunca descobre a
+    // borda — crescer a partir de um pouco menor mostraria a moldura da seção
+    // em volta dele durante a entrada.
+    if (backdrop) {
+      intro.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power1.out' }, 0);
+
+      const layer = backdrop.querySelector<HTMLElement>('[data-outdoor]');
+      if (layer) {
+        intro.fromTo(layer, { scale: 1.06 }, { scale: 1, duration: 1.8, ease: 'power2.out' }, 0);
+      }
     }
 
     // Os rolos dos números da faixa. Cada um parte do zero e sobe uma volta

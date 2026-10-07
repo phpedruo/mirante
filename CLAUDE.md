@@ -134,29 +134,32 @@ Convenções que atravessam os componentes:
   `--fresta`, mais fraco no modo escuro. **As faixas cinza não levam frestas**: elas já se
   distinguem pela cor, e a textura nelas apagaria essa diferença. Seção branca nova recebe a
   classe e continua a alternância.
-- **O outdoor do hero** (`heroSlides` em `site.ts`) empilha o conteúdo no mesmo quadro e troca
-  puxando o atual para fora enquanto o próximo entra. As duas metades precisam da mesma duração
-  e da mesma ease: é isso que faz as bordas se encontrarem exatamente, sem abrir um vão do
-  fundo no meio do quadro. **No celular o quadro sangra até as duas bordas da tela**, sem
-  canto, por margem negativa da calha — é por causa dela que o hero leva `overflow-x: clip`,
-  senão a sobra vira rolagem horizontal. **No desktop ele fica na prumada do conteúdo**, com os
-  quatro cantos arredondados: sangrando para a direita ele saía do alinhamento das outras
-  seções, e com o lado direito reto mas já dentro da página ele lia como torto. Em nenhum dos
-  dois há sombra — com sombra a imagem lia como cartão colado sobre a página.
-  São **dois tipos de conteúdo**, e a diferença é de corte: `kind: 'foto'` preenche o quadro e
-  aceita perder as bordas, que é o que foto de gente fardada pede; `kind: 'arte'` aparece
-  inteira sobre o azul da marca, porque em peça de Instagram o texto encosta na borda e
-  qualquer corte come palavra. Cada item aceita ainda um `promo` opcional — selo, título e
-  linha de apoio sobre um véu escuro —, que é o espaço da fábrica para anunciar campanha sem
-  mexer em componente. O recado sobe **depois** que a imagem assenta: entrando junto com ela em
-  movimento, o texto fica ilegível justamente na hora em que pede leitura.
-  A régua laranja no rodapé do quadro **é o próprio relógio da passagem**, não um enfeite
-  sincronizado por fora: é o fim do tween dela que chama a troca, e é por isso que pausar no
-  hover para as duas coisas juntas. A pausa vale **só para mouse**: no toque, o `pointerenter` dispara
-  ao tocar ou rolar sobre o banner e o `pointerleave` nem sempre vem, o que deixava o outdoor
-  preso parado no celular. Ela nasce escondida e só aparece quando a passagem começa
-  de fato. Lista vazia mostra o placeholder hachurado, uma imagem só deixa o quadro parado, e
-  sem JavaScript (ou com "reduzir movimento") ele fica na primeira imagem.
+- **O fundo do hero** (`heroSlides` em `site.ts`) é a imagem da seção inteira, de ponta a ponta
+  da tela, atrás do texto — como o vídeo no hero da Masterboi (masterboi.com.br), que é a
+  referência de "ocupar todo o espaço". As imagens ficam empilhadas numa camada atrás das
+  frestas: a seção é isolada (`.frestas`), as frestas estão em `z-index: -1` e o fundo em `-2`.
+  A troca puxa a atual para fora enquanto a próxima entra, e as duas metades precisam da mesma
+  duração e da mesma ease: é isso que faz as bordas se encontrarem exatamente, sem abrir um vão
+  no meio do fundo.
+  **O fundo é esmaecido** (20% no claro, 14% no escuro) para o texto por cima continuar
+  legível sem véu. No claro ele ainda leva uma **máscara** que tira a força da imagem onde há
+  texto — a coluna da esquerda no desktop, tudo abaixo da logo no celular —, porque sobre o
+  cinza de uma foto escura o laranja do slogan caía para ~2,2:1; com a máscara ele fica acima
+  de 3:1. No escuro a máscara não existe: texto claro sobre foto escurecida já tem contraste.
+  A imagem é cortada para preencher o fundo, que é bem mais largo que alto, então ele pede
+  **foto larga e grande, sem texto**: arte de Instagram não serve, o corte come as bordas e o
+  texto dela vira ruído atrás do título. O fundo é decoração (`aria-hidden`, `alt` vazio).
+  **O recado de cada imagem (`promo`) mora na legenda**, nítido, no pé da coluna direita no
+  desktop e abaixo dos botões no celular — sobre o fundo esmaecido ele seria ilegível. É um
+  recado por imagem, na mesma ordem, vazio quando a imagem não tem, porque é pela posição que a
+  passagem acha o da vez; ele sai quando a imagem começa a sair e sobe **depois** que a próxima
+  assenta. A régua laranja embaixo dele **é o próprio relógio da passagem**, não um enfeite
+  sincronizado por fora: é o fim do tween dela que chama a troca. Ela nasce escondida e só
+  aparece quando a passagem começa de fato. **Não há pausa no hover**: o fundo cobre o hero
+  inteiro, e pausar sob o ponteiro congelaria a passagem justamente para quem está lendo.
+  No desktop o hero ocupa a primeira tela (`100svh` menos os 76px do cabeçalho), com os números
+  no pé dela. Lista vazia deixa o hero sem fundo, uma imagem só deixa o fundo parado, e sem
+  JavaScript (ou com "reduzir movimento") ele fica na primeira imagem, com o recado dela.
 
 - **Os números da faixa abaixo do hero** giram como um caça-níquel: cada dígito é um rolo de
   vinte casas (0 a 9 duas vezes) que sobe uma volta inteira antes de parar na sua. A posição de
@@ -269,12 +272,12 @@ contas que a publicam. Senha, sessão, SQL e CORS não têm onde se aplicar aqui
 - **Dados a preencher** em `site.ts`: e-mail comercial, prazo de produção, região de entrega e condições de pagamento. Horário, CNPJ e razão social já estão preenchidos.
 - **Alinhamento com o Google Business Profile.** O perfil já existe, e o site espelha dele o endereço, o telefone, o horário (`openingHours` e `openingHoursSpec`, que precisam mudar juntos) e o pino (`address.geo`). **Qualquer mudança num lado precisa ir para o outro**: dado divergente entre site e perfil enfraquece a busca local. O mapa e a rota da seção de localização buscam pelo nome da empresa mais o endereço, para abrir no perfil e não num alfinete de rua. O tipo `ClothingStore` dos dados estruturados em `Base.astro` espelha a categoria atual do perfil ("Loja de roupa"); se a categoria mudar, o tipo muda junto. A foto da fachada (`assets.facade`) abre o card de endereço; o original de 680px fica em `design/fachada-original/`.
 - **Fotos dos tecidos** (`photo` em cada item de `fabrics`): os sete cards já têm imagem, em `public/malhas/<slug>.webp`. Os originais ficam em `design/malhas-originais/`, junto com as alternativas que não entraram (PV cinza e laranja, piquet branco). Os `.webp` são faixas 2,5:1 de até 760px de largura, em qualidade 80, com ~290 KB somados; a do UV sai com só 500px, porque o original é pequeno. As cores foram escolhidas para nenhum card repetir a do vizinho. **Falta confirmar a origem:** são fotos de rolo de tecido no estilo de catálogo de fornecedor. Se vierem de fornecedor, e não da fábrica, tudo bem mostrar o tecido, mas a página não pode apresentá-las como fotos da própria fábrica. A foto do card UV é de poliamida, então confirmar que é essa a malha UV da fábrica.
-- **Artes do outdoor** (`heroSlides` em `site.ts`): o quadro já roda com três peças reais — polo bordada, bata e camisa social, em `public/hero/`. São o que sobrou da seleção de "Por categoria", recortadas do original em `design/produtos-originais/` na proporção 1,25:1 do quadro, qualidade 80, ~70 KB somadas; não foram ampliadas, então a camisa social entrega só 1,2x a densidade do quadro. **Ainda falta o principal:** foto de gente fardada, que é o que o hero pede — as três de hoje são peças soltas, sem contexto de uso. Servem também as artes do Instagram. A do avental Pitú, que seria a mais adequada por trazer logo e slogan, ficou de fora porque o arquivo tem 399px de largura e o quadro pede uns 650. O quadro corta a imagem para preenchê-la, então arte com texto colado na borda perde pedaço, e refazer um corte é recortar do original, nunca do `.webp`. Lista vazia volta a mostrar o placeholder hachurado.
+- **Imagens do fundo do hero** (`heroSlides` em `site.ts`): hoje passam três peças reais — polo bordada, bata e camisa social, em `public/hero/`. São o que sobrou da seleção de "Por categoria", recortadas em 1,25:1 do original em `design/produtos-originais/` para o quadro que o hero tinha antes ao lado do texto (qualidade 80, ~70 KB somadas). Como fundo de ponta a ponta elas viram textura: peça solta, ampliada até ~2,4x numa tela de 1920px e cortada no meio — passa porque está esmaecida. **Ainda falta o principal:** foto de gente fardada, larga (1920px ou mais, perto de 2:1) e com o assunto no centro, para o fundo não precisar ampliar. Arte de Instagram não serve para o fundo (ver Arquitetura). Refazer um corte é recortar do original, nunca do `.webp`. Lista vazia deixa o hero sem fundo.
 - **Números da faixa do hero** (`heroStats` em `site.ts`): "10+ anos", "1000+ clientes" e "100% produção própria" vieram do cliente ou da descrição do negócio, e nenhum foi conferido contra o registro da empresa. O dos 100% é o mais delicado: se alguma etapa sai para fora — bordado terceirizado, por exemplo —, ele não se sustenta. Confirmar os três antes do lançamento.
 - **Lista de tecidos** (`fabrics` em `site.ts`): a grade fecha com o card "E muito mais" (`fabricsMore`), que diz que a variedade não para ali sem citar tecido nenhum — ele não pode prometer malha que a fábrica não tenha. A lista atual é uma proposta baseada no que uma confecção de fardamento costuma trabalhar. **Confirmar com a fábrica** quais tecidos ela de fato usa e como prefere chamá-los antes do lançamento.
 - **Fotos reais** da fábrica e dos produtos. São o ativo mais importante da página, e o resto da página ainda está no placeholder hachurado. Nunca substituir por banco de imagens genérico passado como se fosse da empresa. **"Por categoria" já está pronta**: as oito fotos vieram do cliente e estão em `public/produtos/<slug>.webp`, apontadas por `photo` em `productCategories`. Os arquivos originais ficam em `design/produtos-originais/` — fora de `public/`, para não irem no build. Os `.webp` são recorte 584×448 (o dobro do card, para tela retina) em qualidade 80, ~110 KB somados; o corte foi escolhido peça a peça para o rosto sair do quadro e a peça ocupar o centro. Refazer um corte é recortar do original, não do `.webp`.
 - **Favicon.** Resolvido com a cabeça da águia que a fábrica mandou (`design/favicon-original/icon-mirante.svg`): apesar da extensão, o arquivo é um PNG de 195×68 embutido num SVG, não vetor. Dele saem `public/favicon.ico` (16, 32 e 48px) e `public/apple-touch-icon.png` (180px, quadrado cheio, porque o iOS arredonda sozinho e pinta de preto o que for transparente). A águia vai sobre fundo branco porque, solta, sumia em aba escura. A águia tem só ~80px de largura no original, então o ícone de 180px sai ampliado e um pouco suave; **se chegar o símbolo em vetor de verdade**, regerar os dois a partir dele.
-- **Logos de clientes** (`clients` em `site.ts`): a esteira já mostra dez marcas, e **nenhuma autorização foi confirmada**. Confirmar cada uma com a fábrica antes do lançamento; a que não for autorizada sai da lista. Vale o mesmo para a marca Agrotorta, que aparece no peito da polo do primeiro slide do outdoor (`public/hero/polo-bordada.webp`).
+- **Logos de clientes** (`clients` em `site.ts`): a esteira já mostra dez marcas, e **nenhuma autorização foi confirmada**. Confirmar cada uma com a fábrica antes do lançamento; a que não for autorizada sai da lista. Vale o mesmo para a marca Agrotorta, que aparece no peito da polo da primeira imagem do fundo do hero (`public/hero/polo-bordada.webp`).
 - **LGPD, antes do lançamento.** (1) A política promete guardar os registros de acesso por seis meses, como exige o Marco Civil: conferir se a hospedagem escolhida guarda os logs por esse prazo — plano gratuito costuma guardar menos. (2) O canal de dados pessoais hoje é só o WhatsApp; o e-mail comercial, quando preenchido, entra sozinho na política. (3) O texto foi escrito sem revisão jurídica — se o cliente tiver advogado, vale a leitura dele.
 - **Imagem de Open Graph** (`seo.ogImage` em `site.ts`): 1200×630, usada quando o link é compartilhado. Vazia hoje, então a tag nem é gerada.
 - **Performance das animações** — revisão adiada a pedido do cliente, mas os gargalos já estão mapeados: o FAQ chama `ScrollTrigger.refresh()` no `onComplete` de *cada* painel (até 6 recálculos globais por clique, mais 6 no carregamento); o fechamento inicial usa `gsap.to` com duração 0 onde bastaria `gsap.set`; o `ScrollTrigger` que acelera as esteiras não tem `trigger`/`start`/`end`, então `getVelocity()` e o `setTimeout` rodam a cada tick de scroll mesmo com as esteiras fora da tela; os dois trilhos carregam `will-change: transform` permanente e nunca param; e o accordion anima `height`, contra a regra de animar só `transform` e `opacity`. Opção maior: as entradas são todas `once: true` e caberiam num `IntersectionObserver`, o que tiraria o ScrollTrigger (~12KB gz) do bundle.
@@ -299,7 +302,7 @@ Medir depois do lançamento: Search Console (impressões, cliques, posição mé
 
 O mockup aprovado é a prancha "Versão refinada — UX 2026" do canvas em `design/` (arquivos `.dc.html`, montados com a skill `design`). As outras duas pranchas são a versão anterior, mantidas para comparação.
 
-A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto e o espaço ao lado virou um outdoor, que passa as artes e fotos da fábrica; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
+A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto, e as fotos da fábrica, que antes passavam num quadro ao lado do texto, viraram o fundo dele, de ponta a ponta e esmaecidas — a referência aí é o hero da Masterboi (masterboi.com.br), escolhida para a página ocupar a tela inteira; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
 
 ## Agent skills
 
