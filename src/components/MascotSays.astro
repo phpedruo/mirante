@@ -4,8 +4,11 @@ import { assets, brand } from '../data/site';
 
 <section class="mascot-says">
   <div class="container">
-    <div class="says" data-anim="scale">
-      <div class="says__mascot" aria-hidden="true">
+    {/* A águia apresenta com a asa estendida para a esquerda e não pode ser
+        espelhada (o "MIRANTE" da camisa sairia invertido), então ela fica à
+        direita, apresentando a fala. No celular ela vem antes, em cima. */}
+    <div class="says" data-anim="up">
+      <div class="says__stage" aria-hidden="true">
         {
           assets.mascot ? (
             <img
@@ -14,8 +17,8 @@ import { assets, brand } from '../data/site';
               alt=""
               loading="lazy"
               decoding="async"
-              width="420"
-              height="479"
+              width="546"
+              height="623"
             />
           ) : (
             <span class="says__slot">[Mascote águia]</span>
@@ -35,6 +38,9 @@ import { assets, brand } from '../data/site';
 </section>
 
 <style>
+  /* A seção é a régua do palco: com ela como container, `100cqw` é a largura
+     da tela sem a barra de rolagem, e é com ela que o semicírculo da águia
+     chega exatamente na borda direita. O clipe lateral é só garantia. */
   .mascot-says {
     padding-block: var(--section-pad);
     /* Cinza, e não branco, por causa dos vizinhos: a fala fica entre os
@@ -43,35 +49,55 @@ import { assets, brand } from '../data/site';
        vira uma região cinza contínua — clientes, fala e FAQ — em vez de três
        trocas de cor em sequência. */
     background: var(--surface-2);
+    container-type: inline-size;
+    overflow-x: clip;
   }
 
   .says {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    gap: 28px;
     align-items: center;
-    gap: 18px;
   }
 
-  .says__mascot {
+  /* ---- O palco da águia ---------------------------------------------- *
+     Um semicírculo branco que sai da borda direita da tela, como o círculo
+     atrás do robô no "Canal de Ética" do site da Masterboi. Ele é mais baixo
+     que a águia e fica no pé dela, então a cabeça escapa por cima — é o que
+     tira a águia de dentro de uma moldura e a põe na frente da página. */
+  .says__stage {
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    width: 124px;
-    flex-shrink: 0;
   }
 
+  .says__stage::before {
+    content: '';
+    position: absolute;
+    left: 8%;
+    right: calc((100cqw - min(100cqw, var(--page-max))) / -2 - var(--gutter));
+    bottom: 0;
+    height: 74%;
+    background: var(--card);
+    border-radius: 999px 0 0 999px;
+  }
+
+  /* O arquivo tem 546px de largura (é o original inteiro), então até 400px a
+     águia ainda tem folga em tela comum. */
   .says__art {
-    width: 100%;
+    position: relative;
+    width: min(240px, 68%);
     height: auto;
   }
 
-  /* Moldura provisória, igual à do card de contato, até o vetor chegar. */
+  /* Moldura provisória, igual à do card de contato, até a arte chegar. */
   .says__slot {
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    width: 100%;
-    height: 158px;
+    width: 180px;
+    height: 220px;
     padding: 10px;
     background: var(--accent-wash);
     border: 1px dashed var(--orange-500);
@@ -84,15 +110,16 @@ import { assets, brand } from '../data/site';
     text-align: center;
   }
 
+  /* ---- A fala -------------------------------------------------------- */
   .says__bubble {
     position: relative;
-    padding: 24px 20px;
+    padding: 26px 22px;
     background: var(--accent-wash);
     border-radius: var(--radius-lg);
   }
 
   /* O bico é um quadrado girado, do mesmo tom do balão. No empilhado ele
-     aponta para cima, para o mascote que ficou acima. */
+     aponta para cima, para a águia que ficou acima. */
   .says__bubble::before {
     content: '';
     position: absolute;
@@ -107,9 +134,9 @@ import { assets, brand } from '../data/site';
   }
 
   .says__text {
-    font-size: clamp(18px, 1rem + 1vw, 26px);
+    font-size: clamp(20px, 1rem + 1.4vw, 32px);
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.35;
     color: var(--heading);
   }
 
@@ -118,38 +145,41 @@ import { assets, brand } from '../data/site';
   }
 
   .says__sign {
-    margin-top: 14px;
+    margin-top: 16px;
     font-family: var(--font-display);
-    font-size: clamp(16px, 0.9rem + 0.6vw, 22px);
+    font-size: clamp(18px, 0.9rem + 1vw, 28px);
     line-height: 1.1;
     letter-spacing: -0.015em;
     color: var(--accent);
   }
 
-  @media (min-width: 560px) {
+  /* Lado a lado: a fala na esquerda e a águia na direita, apresentando. O
+     HTML continua com a águia antes, que é a ordem certa no celular. */
+  @media (min-width: 768px) {
     .says {
-      flex-direction: row;
-      align-items: center;
-      gap: 26px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      grid-template-areas: 'fala palco';
+      gap: 40px;
     }
 
-    .says__mascot {
-      width: 150px;
-    }
-
-    .says__slot {
-      height: 190px;
+    .says__stage {
+      grid-area: palco;
     }
 
     .says__bubble {
-      flex: 1;
-      padding: 28px 28px;
+      grid-area: fala;
+      padding: 36px 36px;
     }
 
-    /* Lado a lado, o bico gira para apontar para o mascote. */
+    .says__art {
+      width: min(330px, 86%);
+    }
+
+    /* O bico gira para a direita, onde a águia está. */
     .says__bubble::before {
       top: 50%;
-      left: -8px;
+      left: auto;
+      right: -8px;
       margin-top: -10px;
       margin-left: 0;
     }
@@ -157,23 +187,19 @@ import { assets, brand } from '../data/site';
 
   @media (min-width: 1080px) {
     .says {
-      gap: 40px;
+      gap: 64px;
     }
 
-    .says__mascot {
-      width: 210px;
-    }
-
-    .says__slot {
-      height: 260px;
+    .says__art {
+      width: 400px;
     }
 
     .says__bubble {
-      padding: 44px 48px;
+      padding: 52px 56px;
     }
 
     .says__bubble::before {
-      left: -11px;
+      right: -11px;
       width: 26px;
       height: 26px;
       margin-top: -13px;

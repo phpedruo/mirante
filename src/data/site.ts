@@ -27,11 +27,11 @@ export const assets = {
   /**
    * A águia da marca, usada na fala e no card de contato.
    *
-   * É um render com fundo transparente, servido em 420px de largura — o dobro
-   * dos 210px em que ela aparece maior na página, para não serrilhar em tela
-   * retina. O arquivo original, maior, fica em `design/mascote-original/`,
-   * fora de `public/`, para o dia em que ela precisar aparecer em outro
-   * tamanho. Caminho vazio faz os dois lugares caírem na moldura tracejada.
+   * É um render com fundo transparente, servido em 546px de largura, que é o
+   * original inteiro (`design/mascote-original/`, fora de `public/`): na fala
+   * do mascote ela aparece com até 400px. Se chegar uma arte maior, regerar o
+   * `.webp` a partir dela. Caminho vazio faz os lugares que a usam caírem na
+   * moldura tracejada.
    */
   mascot: '/mascote-mirante.webp',
   /**

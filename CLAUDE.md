@@ -68,9 +68,10 @@ clarear no escuro, e fundo de botão, que precisa continuar escuro. Um token só
 ir para os dois lados. **Escrever `var(--blue-900)` num texto quebra o modo escuro.**
 
 O mascote é a águia de camisa laranja, um render com fundo transparente em
-`public/mascote-mirante.webp`, apontado por `assets.mascot`. Aparece na fala em balão e no card
-de contato, e é servido em 420px — o dobro dos 210px em que aparece maior — com o original
-guardado em `design/mascote-original/`. **A águia veste a camisa da marca, com "MIRANTE"
+`public/mascote-mirante.webp`, apontado por `assets.mascot`. Aparece na fala em balão, no
+contato e na 404, e é servido em 546px, que é o original inteiro (`design/mascote-original/`):
+na fala ela chega a 400px, então em tela retina fica um pouco abaixo do dobro. Se chegar uma
+arte maior, regerar o `.webp` a partir dela. **A águia veste a camisa da marca, com "MIRANTE"
 escrito no peito, então ela nunca pode ser espelhada** (`scaleX(-1)`) para mudar o lado para
 onde aponta: o texto da camisa sairia invertido.
 
@@ -130,6 +131,12 @@ Convenções que atravessam os componentes:
   rodapé, o que quebra a sequência de brancos do meio da página. Seção que virar faixa precisa que
   seus cards internos subam de camada (`--card`), senão eles somem dentro do próprio fundo — foi
   por isso que as placas de logo dos clientes deixaram de ser `--surface-2`.
+- **A fala do mascote** põe a águia grande (até 400px) à direita, sobre um semicírculo da cor de
+  card que sai da borda direita da tela — como o círculo atrás do robô no "Canal de Ética" da
+  Masterboi. O semicírculo é mais baixo que ela, então a cabeça escapa por cima. Ela fica à
+  direita porque aponta com a asa para a esquerda, para a fala, e não pode ser espelhada; no
+  celular ela vem em cima e o balão embaixo. O semicírculo chega à borda medido em `100cqw`,
+  como o mapa.
 - **O contato é uma faixa azul** que vai até a borda direita da tela e termina à esquerda num
   arco grande (`--band-round`, que cresce com a largura da tela e nunca chega no texto) — como
   a faixa vermelha do "Açougue 5 Estrelas" no site da Masterboi. O conteúdo continua na prumada
@@ -316,7 +323,7 @@ Medir depois do lançamento: Search Console (impressões, cliques, posição mé
 
 O mockup aprovado é a prancha "Versão refinada — UX 2026" do canvas em `design/` (arquivos `.dc.html`, montados com a skill `design`). As outras duas pranchas são a versão anterior, mantidas para comparação.
 
-A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto, e as fotos da fábrica, que antes passavam num quadro ao lado do texto, viraram o fundo dele, de ponta a ponta e esmaecidas — a referência aí é o hero da Masterboi (masterboi.com.br), escolhida para a página ocupar a tela inteira; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Depois, seguindo a Masterboi para a página ocupar a tela, o card azul do contato virou uma faixa que vai até a borda da tela, e o mapa da localização passou a encostar na borda também. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
+A implementação **já passou da prancha** em algumas seções, por pedidos do cliente posteriores ao mockup: o cabeçalho virou uma faixa azul só com a águia, com links e botões na fonte do slogan; o hero abre com a logo grande no lugar do selo de texto, e as fotos da fábrica, que antes passavam num quadro ao lado do texto, viraram o fundo dele, de ponta a ponta e esmaecidas — a referência aí é o hero da Masterboi (masterboi.com.br), escolhida para a página ocupar a tela inteira; a faixa de adjetivos abaixo do hero virou números, saiu de vez para dar lugar à seção das três técnicas — Bordado, Serigrafia e Sublimação, cada palavra com uma animação que imita o gesto da própria estamparia — e depois voltou menor, como rodapé do próprio hero, com os números girando ao abrir a página; a antiga "É avental? É bata?" virou a seção de tecidos e malhas, cada tecido com a sua imagem, com os produtos agrupados por categoria depois; a seção "A fábrica" foi removida e seus pontos de qualidade se mudaram para a seção de tecidos; o recado sobre visual padronizado virou fala do mascote, em balão; e o formulário troca de lugar com um painel de agradecimento depois do envio. Depois, seguindo a Masterboi para a página ocupar a tela, o card azul do contato virou uma faixa que vai até a borda da tela, o mapa da localização passou a encostar na borda também, e a fala do mascote ganhou a águia grande sobre um semicírculo que sai da borda. Onde a prancha e a página divergirem, **a página é a referência mais nova** — as pranchas não foram regeradas.
 
 ## Agent skills
 
