@@ -63,13 +63,13 @@ export const assets = {
  * temporada. Ele aparece nítido na legenda do hero e troca junto com a imagem.
  * Sem `promo`, a imagem passa calada.
  *
- * Os três recados de hoje não repetem o mesmo elogio: cada um pega um ponto
- * diferente — a técnica, a matéria-prima e o atendimento —, os dois primeiros
- * vindos dos mesmos `factoryPoints` que a seção de tecidos lista e o terceiro,
- * do fluxo consultivo da casa, em que um consultor acompanha o pedido do
- * começo ao fim. Passando os três, o visitante recebe três argumentos em vez
- * de três fotos. Valem as regras de copy da página: uma linha por recado, nada
- * de preço e nada de comparação com concorrente.
+ * O recado NÃO comenta a imagem que está passando: foto e recado trocam
+ * juntos, mas cada um fala a sua coisa. A foto é só o fundo; o recado é sempre
+ * informação positiva sobre a empresa — a entrega, a fábrica, a qualidade —, e
+ * a linha de apoio pode ser a chamada para o contato. É por isso que não há
+ * selo: ele era o que amarrava o texto à peça da foto. Valem as regras de copy
+ * da página: uma linha por recado, nada de preço e nada de comparação com
+ * concorrente.
  */
 export type HeroSlide = {
   src: string;
@@ -90,15 +90,17 @@ export type HeroSlide = {
 export const heroSlides: HeroSlide[] = [
   {
     src: '/hero/polo-bordada.webp',
-    promo: { badge: 'Bordado próprio', title: 'A sua logo na peça' },
+    // "Entrega rápida" veio do pedido de ajuste do banner; confirmar o que ela
+    // promete, porque o FAQ diz que o prazo é combinado junto com o orçamento.
+    promo: { title: 'Entrega rápida', text: 'Fale agora com um consultor' },
   },
   {
     src: '/hero/bata.webp',
-    promo: { badge: 'Tecido escolhido', title: 'A malha que o uso pede' },
+    promo: { title: 'Fábrica própria', text: 'Corte, costura e estampa no nosso galpão' },
   },
   {
     src: '/hero/camisa-social.webp',
-    promo: { badge: 'Contato próximo', title: 'Um consultor do pedido à entrega' },
+    promo: { title: 'Qualidade conferida', text: 'Costura e acabamento, peça por peça' },
   },
 ];
 
@@ -135,7 +137,7 @@ export const heroStats: HeroStat[] = [
  * A seção "Quem somos", logo abaixo do hero.
  *
  * CONFERIR COM A FÁBRICA — é pauta da reunião com o cliente:
- *  - "Líderes em fardamento na cidade de Paulista", o título (que mora no
+ *  - "Líderes em fardamento na cidade do Paulista", o título (que mora no
  *    componente), é afirmação de liderança. Pede um critério que a sustente
  *    (volume, tempo de mercado, número de clientes), senão vira publicidade
  *    que a empresa não consegue comprovar.
@@ -146,7 +148,10 @@ export const heroStats: HeroStat[] = [
  *    hoje, e do que a cidade foi.
  *
  * O que a cidade foi vem de fonte aberta: a Companhia de Tecidos Paulista é de
- * 1891, e as chaminés da fábrica são o símbolo de Paulista.
+ * 1891.
+ *
+ * A cidade leva artigo na prosa — "no Paulista", "do Paulista" —, e o endereço
+ * e os dados estruturados mantêm o nome formal, "Paulista – PE".
  */
 export type AboutValue = {
   /** Qual dos ícones de `About.astro` acompanha o valor. */
@@ -158,11 +163,11 @@ export type AboutValue = {
 export const about = {
   /** Os parágrafos de abertura, um `.lead` cada. */
   paragraphs: [
-    `A Mirante é uma fábrica de fardamentos e camisas de Paulista. Há mais de ${milestones.years} anos o corte, a costura e a estampa de cada peça acontecem no nosso galpão, e a entrega sai no nosso próprio veículo. São mais de ${milestones.clients.toLocaleString('pt-BR')} clientes atendidos, de escolas e indústrias a restaurantes e comércios.`,
-    'Paulista cresceu em volta da Companhia de Tecidos, fundada em 1891, e as chaminés da antiga fábrica seguem como símbolo da cidade. A Mirante tem orgulho de vestir uma cidade que tem o tecido na sua história.',
+    `A Mirante é uma fábrica de fardamentos e camisas do Paulista. Há mais de ${milestones.years} anos o corte, a costura e a estampa de cada peça acontecem no nosso galpão, e a entrega sai no nosso próprio veículo. São mais de ${milestones.clients.toLocaleString('pt-BR')} clientes atendidos, de escolas e indústrias a restaurantes e comércios.`,
+    'O Paulista cresceu em volta da Companhia de Tecidos, fundada em 1891, e até hoje tem o tecido na sua história. A Mirante tem orgulho de vestir a cidade.',
   ],
   vision:
-    'Ser a primeira lembrança de quem precisa de fardamento em Paulista, com peça bem-feita, entrega no prazo combinado e atendimento de perto.',
+    'Ser a primeira lembrança de quem precisa de fardamento no Paulista, com peça bem-feita, entrega no prazo combinado e atendimento de perto.',
   values: [
     {
       icon: 'quality',
@@ -186,19 +191,20 @@ export const about = {
     },
   ] as AboutValue[],
   /**
-   * A imagem da seção. Hoje é uma ilustração das chaminés (`public/sobre/`),
-   * porque não existe foto delas com licença livre que sirva — as da Wikimedia
-   * Commons são vistas aéreas, com fios de energia no meio e a chaminé
-   * minúscula no canto. Quando chegar uma foto de verdade, própria ou
-   * autorizada, é só trocar o `src` e a legenda. Foto de terceiros com
-   * licença livre exige o crédito em `credit`. Vazio mostra o placeholder.
+   * A foto da seção: a igreja de tijolinhos e a praça do Paulista, enviada
+   * junto com o pedido da seção. O original (`design/sobre-original/`) tem só
+   * 494×389px, então no desktop ela aparece ampliada em ~1,4x e sai um pouco
+   * macia; uma versão com 1200px de largura ou mais resolve. A origem e a
+   * autorização de uso ainda não foram confirmadas (ver Pendências no
+   * CLAUDE.md). Foto de terceiro com licença livre exige o crédito em
+   * `credit`. Vazio em `src` mostra o placeholder.
    */
   photo: {
-    src: '/sobre/chamines.svg',
-    alt: 'Ilustração das chaminés da antiga Companhia de Tecidos Paulista ao pôr do sol',
-    width: 1000,
-    height: 1100,
-    caption: 'As chaminés da antiga Companhia de Tecidos, símbolo de Paulista (ilustração).',
+    src: '/sobre/paulista.webp',
+    alt: 'A igreja de tijolinhos com torre alta e a praça ao redor, no Paulista',
+    width: 494,
+    height: 389,
+    caption: 'A cidade do Paulista, em Pernambuco.',
     credit: '',
   },
 };
@@ -494,7 +500,7 @@ export const faq: FaqItem[] = [
     answer: 'Dá. A grade de tamanhos é fechada junto com a aprovação da prévia.',
   },
   {
-    question: 'Vocês entregam fora de Paulista?',
+    question: 'Vocês entregam fora do Paulista?',
     // PREENCHER: até onde a van atende e como funciona fora dessa área.
     answer: 'A entrega sai no nosso próprio veículo. Confirme a região com a nossa equipe pelo WhatsApp.',
   },
@@ -542,9 +548,9 @@ export const seo = {
    * volta dos 60 caracteres. "Uniforme" fica na descrição: em Pernambuco se
    * busca mais "fardamento", e os dois termos continuam cobertos.
    */
-  title: 'Fábrica de Fardamentos em Paulista – PE | Mirante',
+  title: 'Fábrica de Fardamentos no Paulista – PE | Mirante',
   description:
-    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes em Paulista – PE. Produção própria, do corte à entrega.',
+    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes no Paulista – PE. Produção própria, do corte à entrega.',
   /**
    * PREENCHER: caminho de uma imagem 1200×630 (JPG ou PNG) em `public/`, usada
    * quando o link do site é compartilhado no WhatsApp, Instagram etc. Vazio

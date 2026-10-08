@@ -44,6 +44,14 @@ Três regras vindas de correções do cliente:
   traço em `--accent`. Bloco com fundo, título e parágrafo lê como caixa de dica ou seção nova, e
   o visitante pula. Foi por isso que o padrão de matéria-prima da seção de tecidos (`fabricsNote`)
   encolheu de um bloco para uma linha.
+- **A cidade leva artigo: "no Paulista", "do Paulista", "fora do Paulista".** Vale para a prosa
+  — títulos, textos, FAQ, rodapé, título da página. O endereço, a rota do mapa e os dados
+  estruturados mantêm o nome formal, "Paulista – PE".
+- **O recado do banner do hero não fala da imagem que está passando.** Foto e recado trocam
+  juntos, mas cada um diz a sua coisa: a foto é fundo, e o recado é sempre informação positiva
+  sobre a empresa — "Entrega rápida", "Fábrica própria", "Qualidade conferida" —, com a chamada
+  para o contato na linha de apoio quando couber. Por isso o recado não leva selo: ele era o que
+  amarrava o texto à peça da foto.
 
 O pedido mínimo é de 30 peças, mas não deve se repetir pela página — aparece só na resposta do FAQ.
 
@@ -132,10 +140,10 @@ Convenções que atravessam os componentes:
 - **O "Quem somos"** (`About.astro`) fica entre o hero e as técnicas, numa faixa cinza: imagem à
   esquerda, texto à direita e os quatro valores em cards por baixo dos dois. O conteúdo mora em
   `about` (`site.ts`), e os números do texto ("mais de 10 anos", "mais de 1.000 clientes") saem
-  do mesmo `milestones` da faixa do hero — conferir um é conferir os dois. A imagem hoje é uma
-  ilustração das chaminés da antiga Companhia de Tecidos Paulista (`public/sobre/chamines.svg`),
-  à espera de foto; a legenda avisa que é ilustração e deixa de avisar quando a foto entrar. Ela
-  fica na prumada do conteúdo, com os cantos arredondados, como o mapa.
+  do mesmo `milestones` da faixa do hero — conferir um é conferir os dois. A imagem é uma foto
+  do Paulista (`public/sobre/paulista.webp`, original em `design/sobre-original/`), na prumada
+  do conteúdo e com os cantos arredondados, como o mapa. Ela é cortada para preencher o quadro
+  (`object-fit: cover`), então o assunto precisa ficar no centro dela.
 - **A fala do mascote** põe a águia grande (até 400px) à direita, sobre um semicírculo azul da
   marca (`--brand-fill`) que sai da borda direita da tela — como o círculo atrás do robô no
   "Canal de Ética" da Masterboi. Na cor de card ele sumia no tema claro, branco sobre cinza muito
@@ -174,7 +182,8 @@ Convenções que atravessam os componentes:
   A imagem é cortada para preencher o fundo, que é bem mais largo que alto, então ele pede
   **foto larga e grande, sem texto**: arte de Instagram não serve, o corte come as bordas e o
   texto dela vira ruído atrás do título. O fundo é decoração (`aria-hidden`, `alt` vazio).
-  **O recado de cada imagem (`promo`) mora na legenda**, nítido, no pé da coluna direita no
+  **O recado de cada imagem (`promo`) mora na legenda** — e não fala da imagem, ver "Tom da
+  copy" —, nítido, no pé da coluna direita no
   desktop e abaixo dos botões no celular — sobre o fundo esmaecido ele seria ilegível. É um
   recado por imagem, na mesma ordem, vazio quando a imagem não tem, porque é pela posição que a
   passagem acha o da vez; ele sai quando a imagem começa a sair e sobe **depois** que a próxima
@@ -302,7 +311,8 @@ contas que a publicam. Senha, sessão, SQL e CORS não têm onde se aplicar aqui
 - **Fotos dos tecidos** (`photo` em cada item de `fabrics`): os sete cards já têm imagem, em `public/malhas/<slug>.webp`. Os originais ficam em `design/malhas-originais/`, junto com as alternativas que não entraram (PV cinza e laranja, piquet branco). Os `.webp` são faixas 2,5:1 de até 760px de largura, em qualidade 80, com ~290 KB somados; a do UV sai com só 500px, porque o original é pequeno. As cores foram escolhidas para nenhum card repetir a do vizinho. **Falta confirmar a origem:** são fotos de rolo de tecido no estilo de catálogo de fornecedor. Se vierem de fornecedor, e não da fábrica, tudo bem mostrar o tecido, mas a página não pode apresentá-las como fotos da própria fábrica. A foto do card UV é de poliamida, então confirmar que é essa a malha UV da fábrica.
 - **Imagens do fundo do hero** (`heroSlides` em `site.ts`): hoje passam três peças reais — polo bordada, bata e camisa social, em `public/hero/`. São o que sobrou da seleção de "Segmentos", recortadas em 1,25:1 do original em `design/produtos-originais/` para o quadro que o hero tinha antes ao lado do texto (qualidade 80, ~70 KB somadas). Como fundo de ponta a ponta elas viram textura: peça solta, ampliada até ~2,4x numa tela de 1920px e cortada no meio — passa porque está esmaecida. **Ainda falta o principal:** foto de gente fardada, larga (1920px ou mais, perto de 2:1) e com o assunto no centro, para o fundo não precisar ampliar. Arte de Instagram não serve para o fundo (ver Arquitetura). Refazer um corte é recortar do original, nunca do `.webp`. Lista vazia deixa o hero sem fundo.
 - **Números da faixa do hero** (`heroStats` em `site.ts`): "10+ anos", "1000+ clientes" e "100% produção própria" vieram do cliente ou da descrição do negócio, e nenhum foi conferido contra o registro da empresa. O dos 100% é o mais delicado: se alguma etapa sai para fora — bordado terceirizado, por exemplo —, ele não se sustenta. Confirmar os três antes do lançamento.
-- **"Quem somos"** (`about` em `site.ts`), pauta da reunião com o cliente. (1) O título afirma "Líderes em fardamento na cidade de Paulista": afirmação de liderança precisa de um critério que a sustente (volume, tempo de mercado, número de clientes), senão o título muda antes do lançamento. (2) A visão e os quatro valores são proposta nossa, tirada do que a página já promete — não são texto da empresa. (3) Falta a história que só a fábrica sabe: ano de fundação, quem começou, como foi o início. Hoje o texto fala do que a Mirante é e do que a cidade foi (a Companhia de Tecidos Paulista é de 1891, de fonte aberta). (4) A imagem é ilustração. O ideal é uma foto das chaminés feita pela fábrica ou por alguém da equipe, sem licença a resolver: na Wikimedia Commons não há foto livre que sirva — as que existem são vistas aéreas, com fios de energia na frente e a chaminé minúscula no canto. Foto de terceiro com licença livre entra com o crédito em `about.photo.credit`.
+- **"Quem somos"** (`about` em `site.ts`), pauta da reunião com o cliente. (1) O título afirma "Líderes em fardamento na cidade de Paulista": afirmação de liderança precisa de um critério que a sustente (volume, tempo de mercado, número de clientes), senão o título muda antes do lançamento. (2) A visão e os quatro valores são proposta nossa, tirada do que a página já promete — não são texto da empresa. (3) Falta a história que só a fábrica sabe: ano de fundação, quem começou, como foi o início. Hoje o texto fala do que a Mirante é e do que a cidade foi (a Companhia de Tecidos Paulista é de 1891, de fonte aberta). (4) A foto do Paulista (a igreja de tijolinhos e a praça) veio junto com o pedido da seção, sem indicação de origem: se for de terceiro, falta autorização, ou o crédito em `about.photo.credit`. Ela tem só 494×389px e aparece ampliada ~1,4x no desktop, então sai um pouco macia: pedir o arquivo original, com 1200px de largura ou mais. A ideia anterior era uma foto das chaminés da antiga fábrica, mas na Wikimedia Commons não há foto livre que sirva — só vistas aéreas, com fios de energia na frente e a chaminé minúscula no canto.
+- **Recados do banner do hero** (`heroSlides[].promo` em `site.ts`): "Entrega rápida" promete rapidez sem número, e o FAQ diz que o prazo é combinado junto com o orçamento — confirmar com a fábrica o que ela sustenta, ou trocar. "Fábrica própria" ("corte, costura e estampa no nosso galpão") se apoia no mesmo pressuposto dos 100% de produção própria da faixa de números, que também não foi conferido.
 - **Lista de tecidos** (`fabrics` em `site.ts`): a grade fecha com o card "E muito mais" (`fabricsMore`), que diz que a variedade não para ali sem citar tecido nenhum — ele não pode prometer malha que a fábrica não tenha. A lista atual é uma proposta baseada no que uma confecção de fardamento costuma trabalhar. **Confirmar com a fábrica** quais tecidos ela de fato usa e como prefere chamá-los antes do lançamento.
 - **Fotos reais** da fábrica e dos produtos. São o ativo mais importante da página, e o resto da página ainda está no placeholder hachurado. Nunca substituir por banco de imagens genérico passado como se fosse da empresa. **"Segmentos" já está pronta**: as oito fotos vieram do cliente e estão em `public/produtos/<slug>.webp`, apontadas por `photo` em `productCategories`. Os arquivos originais ficam em `design/produtos-originais/` — fora de `public/`, para não irem no build. Os `.webp` são recorte 584×448 (o dobro do card, para tela retina) em qualidade 80, ~110 KB somados; o corte foi escolhido peça a peça para o rosto sair do quadro e a peça ocupar o centro. Refazer um corte é recortar do original, não do `.webp`.
 - **Favicon.** Resolvido com a cabeça da águia que a fábrica mandou (`design/favicon-original/icon-mirante.svg`): apesar da extensão, o arquivo é um PNG de 195×68 embutido num SVG, não vetor. Dele saem `public/favicon.ico` (16, 32 e 48px) e `public/apple-touch-icon.png` (180px, quadrado cheio, porque o iOS arredonda sozinho e pinta de preto o que for transparente). A águia vai sobre fundo branco porque, solta, sumia em aba escura. A águia tem só ~80px de largura no original, então o ícone de 180px sai ampliado e um pouco suave; **se chegar o símbolo em vetor de verdade**, regerar os dois a partir dele.
