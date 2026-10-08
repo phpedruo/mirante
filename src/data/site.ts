@@ -118,11 +118,90 @@ export const heroSlides: HeroSlide[] = [
  */
 export type HeroStat = { number?: string; suffix?: string; text: string };
 
+/**
+ * Os dois números que o hero e a seção "Quem somos" repetem. Ficam num lugar
+ * só para a conferência com a fábrica ser uma conta só: mudou aqui, mudou nos
+ * dois.
+ */
+const milestones = { years: 10, clients: 1000 };
+
 export const heroStats: HeroStat[] = [
-  { number: '10', suffix: '+', text: 'anos de história' },
-  { number: '1000', suffix: '+', text: 'clientes atendidos' },
+  { number: String(milestones.years), suffix: '+', text: 'anos de história' },
+  { number: String(milestones.clients), suffix: '+', text: 'clientes atendidos' },
   { number: '100', suffix: '%', text: 'produção própria' },
 ];
+
+/**
+ * A seção "Quem somos", logo abaixo do hero.
+ *
+ * CONFERIR COM A FÁBRICA — é pauta da reunião com o cliente:
+ *  - "Líderes em fardamento na cidade de Paulista", o título (que mora no
+ *    componente), é afirmação de liderança. Pede um critério que a sustente
+ *    (volume, tempo de mercado, número de clientes), senão vira publicidade
+ *    que a empresa não consegue comprovar.
+ *  - A visão e os valores são proposta nossa, escrita a partir do que a página
+ *    já promete (`factoryPoints` e o fluxo consultivo), e não texto da empresa.
+ *  - A história ainda não tem o que só a fábrica sabe: o ano de fundação, quem
+ *    começou e como foi o início. Sem isso o texto fala só do que a Mirante é
+ *    hoje, e do que a cidade foi.
+ *
+ * O que a cidade foi vem de fonte aberta: a Companhia de Tecidos Paulista é de
+ * 1891, e as chaminés da fábrica são o símbolo de Paulista.
+ */
+export type AboutValue = {
+  /** Qual dos ícones de `About.astro` acompanha o valor. */
+  icon: 'quality' | 'clock' | 'chat' | 'eye';
+  title: string;
+  text: string;
+};
+
+export const about = {
+  /** Os parágrafos de abertura, um `.lead` cada. */
+  paragraphs: [
+    `A Mirante é uma fábrica de fardamentos e camisas de Paulista. Há mais de ${milestones.years} anos o corte, a costura e a estampa de cada peça acontecem no nosso galpão, e a entrega sai no nosso próprio veículo. São mais de ${milestones.clients.toLocaleString('pt-BR')} clientes atendidos, de escolas e indústrias a restaurantes e comércios.`,
+    'Paulista cresceu em volta da Companhia de Tecidos, fundada em 1891, e as chaminés da antiga fábrica seguem como símbolo da cidade. A Mirante tem orgulho de vestir uma cidade que tem o tecido na sua história.',
+  ],
+  vision:
+    'Ser a primeira lembrança de quem precisa de fardamento em Paulista, com peça bem-feita, entrega no prazo combinado e atendimento de perto.',
+  values: [
+    {
+      icon: 'quality',
+      title: 'Qualidade em cada peça',
+      text: 'Tecido certo para o uso, com costura e acabamento conferidos peça por peça.',
+    },
+    {
+      icon: 'clock',
+      title: 'Compromisso com a entrega',
+      text: 'O prazo combinado é o prazo que a gente cumpre.',
+    },
+    {
+      icon: 'chat',
+      title: 'Atendimento de perto',
+      text: 'Um consultor acompanha o seu pedido do começo ao fim.',
+    },
+    {
+      icon: 'eye',
+      title: 'Transparência',
+      text: 'Você vê e aprova a prévia da peça antes de a produção começar.',
+    },
+  ] as AboutValue[],
+  /**
+   * A imagem da seção. Hoje é uma ilustração das chaminés (`public/sobre/`),
+   * porque não existe foto delas com licença livre que sirva — as da Wikimedia
+   * Commons são vistas aéreas, com fios de energia no meio e a chaminé
+   * minúscula no canto. Quando chegar uma foto de verdade, própria ou
+   * autorizada, é só trocar o `src` e a legenda. Foto de terceiros com
+   * licença livre exige o crédito em `credit`. Vazio mostra o placeholder.
+   */
+  photo: {
+    src: '/sobre/chamines.svg',
+    alt: 'Ilustração das chaminés da antiga Companhia de Tecidos Paulista ao pôr do sol',
+    width: 1000,
+    height: 1100,
+    caption: 'As chaminés da antiga Companhia de Tecidos, símbolo de Paulista (ilustração).',
+    credit: '',
+  },
+};
 
 export const contact = {
   whatsappDisplay: '(81) 9.8104-0516',

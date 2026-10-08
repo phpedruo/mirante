@@ -1,0 +1,249 @@
+---
+import { about } from '../data/site';
+
+// Ícones dos valores: traço de 2px em 24x24, como os outros ícones da página.
+const icons = {
+  quality:
+    '<circle cx="12" cy="9.5" r="5.5"/><path d="m9.7 9.5 1.7 1.7 3-3.4"/><path d="M8.6 14.2 7 20.5l5-2.6 5 2.6-1.6-6.3"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  chat: '<path d="M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8a1.5 1.5 0 0 1-1.5 1.5h-7.2L7.5 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+};
+
+const { photo } = about;
+---
+
+<section class="about" id="quem-somos">
+  <div class="container about__inner">
+    <figure class="about__figure" data-anim="up">
+      {
+        photo.src ? (
+          <img
+            class="about__photo"
+            src={photo.src}
+            alt={photo.alt}
+            width={photo.width}
+            height={photo.height}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div class="photo-slot about__photo" aria-hidden="true">[Foto de Paulista]</div>
+        )
+      }
+      {
+        (photo.caption || photo.credit) && (
+          <figcaption class="about__caption">
+            {photo.caption}
+            {photo.credit && <span class="about__credit"> {photo.credit}</span>}
+          </figcaption>
+        )
+      }
+    </figure>
+
+    <div class="about__content">
+      <span class="eyebrow" data-anim="up">Quem somos</span>
+      <h2 class="title-md" data-anim="up">Líderes em fardamento na cidade de <span class="highlight">Paulista</span></h2>
+      {about.paragraphs.map((text) => <p class="lead" data-anim="up">{text}</p>)}
+      <p class="about__vision" data-anim="up">
+        <span class="about__vision-label">Nossa visão</span>
+        {about.vision}
+      </p>
+    </div>
+
+    <div class="about__values">
+      <h3 class="about__subtitle" data-anim="up">Nossos valores</h3>
+      <ul class="about__grid">
+        {
+          about.values.map((value) => (
+            <li class="about__value card" data-anim="point">
+              <span class="about__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  set:html={icons[value.icon]}
+                />
+              </span>
+              <h4 class="about__value-title">{value.title}</h4>
+              <p class="about__value-text">{value.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Faixa cinza: ela separa o hero das técnicas, que são brancas, e é por isso
+     que a alternância de fundo continua — branco, cinza, branco. Por ser faixa,
+     o espaço interno é --band-pad e os cards sobem para --card. Faixa não leva
+     frestas. */
+  .about {
+    padding-block: var(--band-pad);
+    background: var(--surface-2);
+  }
+
+  .about__inner {
+    display: grid;
+    gap: 40px;
+  }
+
+  /* ---- A imagem ------------------------------------------------------ */
+  .about__figure {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+  }
+
+  /* `height: auto` é o que deixa o aspect-ratio valer: o atributo height da
+     <img> vira altura fixa, e com ela o aspect-ratio é ignorado. */
+  .about__photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  .about__caption {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted-2);
+  }
+
+  /* ---- O texto ------------------------------------------------------- */
+  .about__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  /* A visão tem o traço laranja à esquerda e o texto na cor de título: é a
+     frase que o visitante deve levar da seção, e não pode se perder entre os
+     parágrafos de apoio. */
+  .about__vision {
+    margin-top: 6px;
+    padding-left: 20px;
+    border-left: 4px solid var(--accent);
+    font-size: clamp(18px, 1rem + 0.5vw, 22px);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--heading);
+    text-wrap: balance;
+  }
+
+  .about__vision-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ---- Os valores ---------------------------------------------------- */
+  .about__values {
+    display: grid;
+    gap: 20px;
+  }
+
+  .about__subtitle {
+    font-size: clamp(22px, 1rem + 1.6vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .about__value {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+  }
+
+  .about__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 6px;
+    background: var(--accent-wash);
+    border-radius: var(--pill);
+    color: var(--accent);
+  }
+
+  .about__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* h4 não entra na regra de cor dos títulos em global.css. */
+  .about__value-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--heading);
+  }
+
+  .about__value-text {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  @media (min-width: 560px) {
+    .about__photo {
+      aspect-ratio: 5 / 4;
+    }
+
+    .about__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .about__inner {
+      gap: 48px;
+    }
+  }
+
+  /* Lado a lado: a imagem estica até a altura do texto, e os valores ocupam a
+     largura inteira por baixo dos dois. */
+  @media (min-width: 1080px) {
+    .about__inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: 80px;
+      row-gap: 72px;
+    }
+
+    .about__photo {
+      flex: 1 1 0;
+      min-height: 460px;
+      aspect-ratio: auto;
+    }
+
+    .about__values {
+      grid-column: 1 / -1;
+    }
+
+    .about__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+</style>
