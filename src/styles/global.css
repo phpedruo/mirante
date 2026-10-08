@@ -34,9 +34,9 @@
   --card: var(--surface);
   --link: var(--blue-700);
   --link-hover: var(--blue-600);
-  /* As listras das frestas (ver .frestas). Sai da laranja da marca, bem
-     diluída: é textura de fundo, não pode disputar com o conteúdo. */
-  --fresta: color-mix(in srgb, var(--orange-500) 16%, transparent);
+  /* A asa do fundo das seções brancas (ver .asa). Sai da laranja da marca,
+     bem diluída: é forma cheia e grande, e não pode disputar com o texto. */
+  --asa: color-mix(in srgb, var(--orange-500) 7%, transparent);
 
   /* Forma */
   --radius-sm: 12px;
@@ -127,8 +127,8 @@
   --link: #8fb0ff;
   --link-hover: #b9ccff;
   /* Sobre o fundo escuro o mesmo laranja acende mais; a dose cai para a
-     listra continuar sendo textura, e não linha desenhada. */
-  --fresta: color-mix(in srgb, var(--orange-500) 9%, transparent);
+     asa continuar sendo fundo, e não mancha. */
+  --asa: color-mix(in srgb, var(--orange-500) 5%, transparent);
 
   /* Sombra colorida não aparece no escuro; só o preto ainda cria profundidade. */
   --shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 10px 28px rgb(0 0 0 / 45%);
@@ -399,38 +399,41 @@ svg {
   );
 }
 
-/* Frestas: listras diagonais finas em laranja que nascem num canto da seção
-   e se dissolvem antes do meio, para o fundo branco não ficar chapado.
-   Ficam num ::before atrás do conteúdo, e a máscara radial é que decide onde
-   elas aparecem; o centro da seção, onde está o texto, fica sempre limpo.
-   Vão só nas seções brancas: as faixas cinza já se distinguem pela cor, e
-   repetir a textura nelas apagaria justamente essa diferença.
+/* Asa: as três penas à esquerda do "M" da logo (public/asa.svg), em tamanho
+   grande, saindo da borda da tela, para o fundo branco não ficar chapado. O
+   desenho é a máscara de um ::before atrás do conteúdo, e a cor é o token
+   --asa. Vai só nas seções brancas: as faixas cinza já se distinguem pela
+   cor, e a asa nelas apagaria essa diferença.
 
-   O canto de onde saem alterna de uma seção para a seguinte (.frestas no
-   canto de cima à direita, .frestas--left no meio da esquerda), para a
-   página não ter a mesma mancha empilhada no mesmo lado. */
-.frestas {
-  --frestas-at: 100% 0%;
-  --frestas-size: 70% 70%;
+   O lado alterna de uma seção para a seguinte (.asa em cima à direita,
+   .asa--left no meio da esquerda). A da esquerda é a mesma, espelhada: o
+   lado preso ao "M" fica na borda e as penas apontam para dentro da página.
+   Espelhar a asa pode — o que não pode é espelhar a águia, por causa do
+   texto da camisa. */
+.asa {
+  --asa-y: top clamp(24px, 4vw, 64px);
 
   position: relative;
   isolation: isolate;
 }
 
-.frestas--left {
-  --frestas-at: 0% 50%;
-  --frestas-size: 60% 80%;
+.asa--left {
+  --asa-y: center;
 }
 
-.frestas::before {
+.asa::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: repeating-linear-gradient(118deg, var(--fresta) 0 2px, transparent 2px 26px);
-  -webkit-mask-image: radial-gradient(var(--frestas-size) at var(--frestas-at), #000, transparent 75%);
-  mask-image: radial-gradient(var(--frestas-size) at var(--frestas-at), #000, transparent 75%);
+  background: var(--asa);
+  -webkit-mask: url('/asa.svg') no-repeat right -4% var(--asa-y) / clamp(300px, 52vw, 860px) auto;
+  mask: url('/asa.svg') no-repeat right -4% var(--asa-y) / clamp(300px, 52vw, 860px) auto;
+}
+
+.asa--left::before {
+  transform: scaleX(-1);
 }
 
 .visually-hidden {

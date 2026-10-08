@@ -157,18 +157,19 @@ Convenções que atravessam os componentes:
   a faixa vermelha do "Açougue 5 Estrelas" no site da Masterboi. O conteúdo continua na prumada
   das outras seções, por um `.container` dentro da faixa, e o formulário é o card branco por
   cima dela. A faixa fica numa seção branca, então sobra o `--section-pad` em volta.
-- **Frestas.** As seções brancas (hero, técnicas, tecidos, localização e a 404) levam a
-  classe `.frestas` (`global.css`): listras diagonais finas em laranja, num `::before` atrás do
-  conteúdo, que nascem num canto e se dissolvem antes do meio por uma máscara radial — o centro,
-  onde está o texto, fica sempre limpo. O canto alterna de uma seção para a seguinte
-  (`.frestas` em cima à direita, `.frestas--left` no meio da esquerda). A cor é o token
-  `--fresta`, mais fraco no modo escuro. **As faixas cinza não levam frestas**: elas já se
-  distinguem pela cor, e a textura nelas apagaria essa diferença. Seção branca nova recebe a
-  classe e continua a alternância.
+- **A asa.** As seções brancas (hero, técnicas, tecidos, localização e a 404) levam a classe
+  `.asa` (`global.css`): as três penas à esquerda do "M" da logo, em tamanho grande, saindo da
+  borda da tela, num `::before` atrás do conteúdo. O desenho é `public/asa.svg`, recortado do
+  vetor da logo, e entra como máscara; a cor é o token `--asa`, laranja bem diluída e mais
+  fraca no modo escuro. Ela substituiu as antigas "frestas" (listras diagonais) a pedido do
+  cliente. O lado alterna de uma seção para a seguinte (`.asa` em cima à direita, `.asa--left`
+  no meio da esquerda); a da esquerda é a mesma asa espelhada, com o lado do "M" na borda —
+  espelhar a asa pode, a águia é que não. **As faixas cinza não levam a asa**: elas já se
+  distinguem pela cor. Seção branca nova recebe a classe e continua a alternância.
 - **O fundo do hero** (`heroSlides` em `site.ts`) é a imagem da seção inteira, de ponta a ponta
   da tela, atrás do texto — como o vídeo no hero da Masterboi (masterboi.com.br), que é a
-  referência de "ocupar todo o espaço". As imagens ficam empilhadas numa camada atrás das
-  frestas: a seção é isolada (`.frestas`), as frestas estão em `z-index: -1` e o fundo em `-2`.
+  referência de "ocupar todo o espaço". As imagens ficam empilhadas numa camada atrás da
+  asa: a seção é isolada (`.asa`), a asa está em `z-index: -1` e o fundo em `-2`.
   A troca puxa a atual para fora enquanto a próxima entra, e as duas metades precisam da mesma
   duração e da mesma ease: é isso que faz as bordas se encontrarem exatamente, sem abrir um vão
   no meio do fundo.

@@ -15,10 +15,10 @@ const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.promo);
 ---
 
-<section class="hero frestas" id="topo">
+<section class="hero asa" id="topo">
   {
     /* O fundo da seção: as imagens passam de ponta a ponta, esmaecidas, atrás
-       das frestas e do texto, como o vídeo no hero do site da Masterboi. Ele
+       da asa e do texto, como o vídeo no hero do site da Masterboi. Ele
        é decoração — o recado de cada imagem mora na legenda, onde dá para
        ler —, e por isso sai inteiro da árvore de acessibilidade. */
     heroSlides.length > 0 && (
@@ -147,8 +147,8 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
   /* ---- Fundo ------------------------------------------------------- *
      As imagens ocupam a seção inteira, de borda a borda da tela, e ficam na
      camada mais baixa: a seção já é um contexto de empilhamento próprio
-     (`.frestas`, com `isolation`), e as frestas estão em -1, então o fundo
-     em -2 passa por trás delas. A ordem é fundo da seção → imagens → frestas
+     (`.asa`, com `isolation`), e a asa está em -1, então o fundo
+     em -2 passa por trás delas. A ordem é fundo da seção → imagens → asa
      → conteúdo. */
   /* O pé do fundo se dissolve na seção seguinte: cortada reto, a imagem
      terminava numa linha dura contra o branco das técnicas. Vale nos dois
