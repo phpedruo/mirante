@@ -347,17 +347,19 @@ function setupOutdoor() {
   const showPromo = (index: number) => {
     const parts = partsOf(index);
     if (parts.length === 0) return;
+    // O recado é um cartão, e entra como pop-up: cresce de um pouco menor,
+    // com um rebote curto no fim.
     gsap.fromTo(
       parts,
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.07 },
+      { opacity: 0, y: 16, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.7)' },
     );
   };
 
   const hidePromo = (index: number) => {
     const parts = partsOf(index);
     if (parts.length === 0) return;
-    gsap.to(parts, { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in' });
+    gsap.to(parts, { opacity: 0, y: -10, scale: 0.95, duration: 0.3, ease: 'power2.in' });
   };
 
   if (timer?.parentElement) gsap.set(timer.parentElement, { autoAlpha: 1 });

@@ -87,9 +87,13 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
           <div class="hero__promos">
             {heroSlides.map((slide) => (
               <div class="promo" data-outdoor-promo>
-                {slide.promo?.badge && <span class="promo__badge">{slide.promo.badge}</span>}
-                {slide.promo && <p class="promo__title">{slide.promo.title}</p>}
-                {slide.promo?.text && <p class="promo__text">{slide.promo.text}</p>}
+                {slide.promo && (
+                  <div class="promo__card">
+                    {slide.promo.badge && <span class="promo__badge">{slide.promo.badge}</span>}
+                    <p class="promo__title">{slide.promo.title}</p>
+                    {slide.promo.text && <p class="promo__text">{slide.promo.text}</p>}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -328,6 +332,43 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
      imagem, e a legenda mostra só o recado dela. */
   .promo + .promo {
     opacity: 0;
+  }
+
+  /* O recado é um pop-up: um cartão branco de cantos arredondados, com uma
+     placa laranja atrás dele, deslocada para cima, que aparece como uma aba.
+     As duas camadas são pseudo-elementos dentro do próprio cartão, isolado:
+     com o branco no fundo do cartão, a placa laranja (em z-index negativo)
+     passaria a ser pintada por cima dele sempre que a animação criasse um
+     contexto de empilhamento no cartão. A margem de cima é a altura da aba. */
+  .promo__card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 18px 24px 20px;
+    text-align: left;
+  }
+
+  .promo__card::before,
+  .promo__card::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border-radius: var(--radius-md);
+  }
+
+  .promo__card::before {
+    inset: -12px 14px 12px;
+    background: var(--orange-500);
+  }
+
+  .promo__card::after {
+    inset: 0;
+    background: var(--card);
+    box-shadow: var(--shadow-card);
   }
 
   /* Texto escuro sobre a laranja da marca: branco sobre esse laranja não

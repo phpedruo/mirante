@@ -177,9 +177,12 @@ Convenções que atravessam os componentes:
   A imagem é cortada para preencher o fundo, que é bem mais largo que alto, então ele pede
   **foto larga e grande, sem texto**: arte de Instagram não serve, o corte come as bordas e o
   texto dela vira ruído atrás do título. O fundo é decoração (`aria-hidden`, `alt` vazio).
-  **O recado de cada imagem (`promo`) mora na legenda** — e não fala da imagem, ver "Tom da
-  copy" —, nítido, no pé da coluna direita no
-  desktop e abaixo dos botões no celular — sobre o fundo esmaecido ele seria ilegível. É um
+  **O recado de cada imagem (`promo`) mora na legenda**, nítido, no pé da coluna direita no
+  desktop e abaixo dos botões no celular — sobre o fundo esmaecido ele seria ilegível. Ele não
+  fala da imagem (ver "Tom da copy") e vem num cartão de pop-up: branco, de cantos arredondados,
+  com uma placa laranja atrás, deslocada para cima como uma aba, e entra crescendo com um rebote
+  curto. As duas camadas são pseudo-elementos do cartão isolado, para a laranja nunca ser
+  pintada por cima do branco durante a animação. É um
   recado por imagem, na mesma ordem, vazio quando a imagem não tem, porque é pela posição que a
   passagem acha o da vez; ele sai quando a imagem começa a sair e sobe **depois** que a próxima
   assenta. A régua laranja embaixo dele **é o próprio relógio da passagem**, não um enfeite
