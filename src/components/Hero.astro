@@ -334,41 +334,35 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     opacity: 0;
   }
 
-  /* O recado é um pop-up: um cartão branco de cantos arredondados, com uma
-     placa laranja atrás dele, deslocada para cima, que aparece como uma aba.
-     As duas camadas são pseudo-elementos dentro do próprio cartão, isolado:
-     com o branco no fundo do cartão, a placa laranja (em z-index negativo)
-     passaria a ser pintada por cima dele sempre que a animação criasse um
-     contexto de empilhamento no cartão. A margem de cima é a altura da aba. */
+  /* O recado é um pop-up de duas caixas empilhadas: a azul, com o título, por
+     cima, e a laranja, com a linha de apoio, por baixo. As duas têm sempre a
+     mesma largura — a da maior —, porque o cartão é um grid de uma coluna e
+     cada caixa estica até ela. A azul invade o topo da laranja (margem
+     negativa), e a sombra dela é o que diz ao olho qual está em cima. */
   .promo__card {
-    position: relative;
-    isolation: isolate;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    margin-top: 12px;
-    padding: 18px 24px 20px;
+    display: grid;
     text-align: left;
   }
 
-  .promo__card::before,
-  .promo__card::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    border-radius: var(--radius-md);
+  .promo__title,
+  .promo__text {
+    padding: 14px 22px;
+    border-radius: var(--radius-sm);
   }
 
-  .promo__card::before {
-    inset: -12px 14px 12px;
+  .promo__title {
+    position: relative;
+    z-index: 1;
+    background: var(--brand-fill);
+    box-shadow: 0 6px 16px rgb(10 44 133 / 28%);
+  }
+
+  /* O topo da laranja fica escondido sob a azul; o padding de cima devolve
+     esse pedaço para o texto não encostar nela. */
+  .promo__text {
+    margin-top: -12px;
+    padding-top: calc(14px + 12px);
     background: var(--orange-500);
-  }
-
-  .promo__card::after {
-    inset: 0;
-    background: var(--card);
-    box-shadow: var(--shadow-card);
   }
 
   /* Texto escuro sobre a laranja da marca: branco sobre esse laranja não
@@ -389,13 +383,16 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.01em;
-    color: var(--heading);
+    color: #fff;
   }
 
+  /* Texto escuro sobre a laranja, como no selo: branco não chega ao
+     contraste mínimo nela. */
   .promo__text {
     font-size: clamp(15px, 0.9rem + 0.25vw, 18px);
-    line-height: 1.5;
-    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--on-accent);
   }
 
   /* ---- Régua do tempo ---- */
