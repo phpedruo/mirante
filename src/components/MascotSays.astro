@@ -60,10 +60,11 @@ import { assets, brand } from '../data/site';
   }
 
   /* ---- O palco da águia ---------------------------------------------- *
-     Um semicírculo branco que sai da borda direita da tela, como o círculo
-     atrás do robô no "Canal de Ética" do site da Masterboi. Ele é mais baixo
-     que a águia e fica no pé dela, então a cabeça escapa por cima — é o que
-     tira a águia de dentro de uma moldura e a põe na frente da página. */
+     Um semicírculo azul da marca que sai da borda direita da tela, como o
+     círculo atrás do robô no "Canal de Ética" do site da Masterboi. Ele é mais
+     baixo que a águia e fica no pé dela, então a cabeça escapa por cima — é o
+     que tira a águia de dentro de uma moldura e a põe na frente da página. Na
+     cor de card ele sumia no tema claro (branco sobre cinza muito claro). */
   .says__stage {
     position: relative;
     display: flex;
@@ -78,7 +79,7 @@ import { assets, brand } from '../data/site';
     right: calc((100cqw - min(100cqw, var(--page-max))) / -2 - var(--gutter));
     bottom: 0;
     height: 74%;
-    background: var(--card);
+    background: var(--brand-fill);
     border-radius: 999px 0 0 999px;
   }
 

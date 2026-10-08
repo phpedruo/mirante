@@ -129,12 +129,14 @@ Convenções que atravessam os componentes:
   rodapé, o que quebra a sequência de brancos do meio da página. Seção que virar faixa precisa que
   seus cards internos subam de camada (`--card`), senão eles somem dentro do próprio fundo — foi
   por isso que as placas de logo dos clientes deixaram de ser `--surface-2`.
-- **A fala do mascote** põe a águia grande (até 400px) à direita, sobre um semicírculo da cor de
-  card que sai da borda direita da tela — como o círculo atrás do robô no "Canal de Ética" da
-  Masterboi. O semicírculo é mais baixo que ela, então a cabeça escapa por cima. Ela fica à
-  direita porque aponta com a asa para a esquerda, para a fala, e não pode ser espelhada; no
-  celular ela vem em cima e o balão embaixo. O semicírculo chega à borda medido em `100cqw`,
-  como o mapa.
+- **A fala do mascote** põe a águia grande (até 400px) à direita, sobre um semicírculo azul da
+  marca (`--brand-fill`) que sai da borda direita da tela — como o círculo atrás do robô no
+  "Canal de Ética" da Masterboi. Na cor de card ele sumia no tema claro, branco sobre cinza muito
+  claro. O semicírculo é mais baixo que ela, então a cabeça escapa por cima. Ela fica à direita
+  porque aponta com a asa para a esquerda, para a fala, e não pode ser espelhada; no celular ela
+  vem em cima e o balão embaixo. O semicírculo chega à borda medido em `100cqw` (a seção é o
+  container), e não em `100vw`, que conta a barra de rolagem e abriria rolagem lateral no
+  Windows.
 - **O contato é uma faixa azul** que vai até a borda direita da tela e termina à esquerda num
   arco grande (`--band-round`, que cresce com a largura da tela e nunca chega no texto) — como
   a faixa vermelha do "Açougue 5 Estrelas" no site da Masterboi. O conteúdo continua na prumada
