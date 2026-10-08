@@ -34,10 +34,6 @@
   --card: var(--surface);
   --link: var(--blue-700);
   --link-hover: var(--blue-600);
-  /* As vigas das frestas (ver .frestas). Sai da laranja da marca, bem
-     diluída: a viga é larga, e por isso a dose é baixa — é textura de fundo,
-     não pode disputar com o conteúdo. */
-  --fresta: color-mix(in srgb, var(--orange-500) 6%, transparent);
 
   /* Forma */
   --radius-sm: 12px;
@@ -127,9 +123,6 @@
   --brand-fill-hover: var(--blue-600);
   --link: #8fb0ff;
   --link-hover: #b9ccff;
-  /* Sobre o fundo escuro o mesmo laranja acende mais; a dose cai para a
-     viga continuar sendo textura, e não faixa desenhada. */
-  --fresta: color-mix(in srgb, var(--orange-500) 4%, transparent);
 
   /* Sombra colorida não aparece no escuro; só o preto ainda cria profundidade. */
   --shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 10px 28px rgb(0 0 0 / 45%);
@@ -398,41 +391,6 @@ svg {
     rgb(255 255 255 / 5%) 0 14px,
     rgb(255 255 255 / 0%) 14px 28px
   );
-}
-
-/* Frestas: vigas diagonais largas e espaçadas, em laranja bem fraca, que
-   nascem num canto da seção
-   e se dissolvem antes do meio, para o fundo branco não ficar chapado.
-   Ficam num ::before atrás do conteúdo, e a máscara radial é que decide onde
-   elas aparecem; o centro da seção, onde está o texto, fica sempre limpo.
-   Vão só nas seções brancas: as faixas cinza já se distinguem pela cor, e
-   repetir a textura nelas apagaria justamente essa diferença.
-
-   O canto de onde saem alterna de uma seção para a seguinte (.frestas no
-   canto de cima à direita, .frestas--left no meio da esquerda), para a
-   página não ter a mesma mancha empilhada no mesmo lado. */
-.frestas {
-  --frestas-at: 100% 0%;
-  --frestas-size: 70% 70%;
-
-  position: relative;
-  isolation: isolate;
-}
-
-.frestas--left {
-  --frestas-at: 0% 50%;
-  --frestas-size: 60% 80%;
-}
-
-.frestas::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: repeating-linear-gradient(118deg, var(--fresta) 0 22px, transparent 22px 92px);
-  -webkit-mask-image: radial-gradient(var(--frestas-size) at var(--frestas-at), #000, transparent 75%);
-  mask-image: radial-gradient(var(--frestas-size) at var(--frestas-at), #000, transparent 75%);
 }
 
 .visually-hidden {

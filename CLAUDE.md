@@ -157,19 +157,13 @@ Convenções que atravessam os componentes:
   a faixa vermelha do "Açougue 5 Estrelas" no site da Masterboi. O conteúdo continua na prumada
   das outras seções, por um `.container` dentro da faixa, e o formulário é o card branco por
   cima dela. A faixa fica numa seção branca, então sobra o `--section-pad` em volta.
-- **Frestas.** As seções brancas (hero, técnicas, tecidos, localização e a 404) levam a
-  classe `.frestas` (`global.css`): vigas diagonais largas e espaçadas (22px a cada 92px), em
-  laranja bem fraca (6% no claro, 4% no escuro), num `::before` atrás do conteúdo, que nascem num canto e se dissolvem antes do meio por uma máscara radial — o centro,
-  onde está o texto, fica sempre limpo. O canto alterna de uma seção para a seguinte
-  (`.frestas` em cima à direita, `.frestas--left` no meio da esquerda). A cor é o token
-  `--fresta`, mais fraco no modo escuro. **As faixas cinza não levam frestas**: elas já se
-  distinguem pela cor, e a textura nelas apagaria essa diferença. Seção branca nova recebe a
-  classe e continua a alternância. Já foram listras finas e mais fortes, e por um tempo a asa da
-  logo; o cliente voltou às linhas, mas pediu menos opacidade, "como vigas".
+- **As seções brancas não levam textura de fundo.** Já tiveram listras diagonais (as "frestas"),
+  a asa da logo e vigas largas e fracas; o cliente não gostou de nenhuma, e o fundo ficou liso. Não
+  reabrir sem pedido dele.
 - **O fundo do hero** (`heroSlides` em `site.ts`) é a imagem da seção inteira, de ponta a ponta
   da tela, atrás do texto — como o vídeo no hero da Masterboi (masterboi.com.br), que é a
-  referência de "ocupar todo o espaço". As imagens ficam empilhadas numa camada atrás das
-  frestas: a seção é isolada (`.frestas`), as frestas estão em `z-index: -1` e o fundo em `-2`.
+  referência de "ocupar todo o espaço". As imagens ficam empilhadas numa camada de `z-index: -2`,
+  e a seção é isolada (`isolation` no `.hero`) para ela ficar atrás do conteúdo sem sair da seção.
   A troca puxa a atual para fora enquanto a próxima entra, e as duas metades precisam da mesma
   duração e da mesma ease: é isso que faz as bordas se encontrarem exatamente, sem abrir um vão
   no meio do fundo.
