@@ -98,11 +98,11 @@ export const heroSlides: HeroSlide[] = [
   },
   {
     src: '/hero/bata.webp',
-    promo: { title: 'Fábrica própria', text: 'Corte, costura e estampa no nosso galpão' },
+    promo: { title: 'Preço de fábrica', text: 'O melhor custo-benefício da região' },
   },
   {
     src: '/hero/camisa-social.webp',
-    promo: { title: 'Qualidade conferida', text: 'Costura e acabamento, peça por peça' },
+    promo: { title: 'Qualidade garantida', text: 'Costura e acabamento com a melhor qualidade' },
   },
 ];
 
@@ -495,16 +495,16 @@ export const faq: FaqItem[] = [
   {
     question: 'Qual o prazo de produção?',
     // PREENCHER: prazo médio por faixa de quantidade.
-    answer: 'O prazo é confirmado junto com o orçamento, de acordo com a quantidade e o tipo de peça.',
+    answer: '----',
   },
   {
     question: 'Dá para misturar tamanhos no mesmo pedido?',
-    answer: 'Dá. A grade de tamanhos é fechada junto com a aprovação da prévia.',
+    answer: 'Dá. ------.',
   },
   {
     question: 'Vocês entregam fora do Paulista?',
     // PREENCHER: até onde a van atende e como funciona fora dessa área.
-    answer: 'A entrega sai no nosso próprio veículo. Confirme a região com a nossa equipe pelo WhatsApp.',
+    answer: 'Sim! Confirme a região com a nossa equipe.',
   },
   {
     question: 'Como funciona o pagamento?',
@@ -552,7 +552,7 @@ export const seo = {
    */
   title: 'Fábrica de Fardamentos no Paulista – PE | Mirante',
   description:
-    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes no Paulista – PE. Produção própria, do corte à entrega.',
+    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes no Paulista – PE. Produção do corte à entrega.',
   /**
    * PREENCHER: caminho de uma imagem 1200×630 (JPG ou PNG) em `public/`, usada
    * quando o link do site é compartilhado no WhatsApp, Instagram etc. Vazio
