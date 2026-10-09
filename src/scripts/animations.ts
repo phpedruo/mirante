@@ -318,105 +318,203 @@ function setupTechniques() {
 }
 
 /* ------------------------------------------------------------------ *
- * Outdoor do hero
- * A arte da vez é puxada para fora enquanto a próxima entra no lugar,
+ * Fundo do hero
+ * A imagem da vez é puxada para fora enquanto a próxima entra no lugar,
  * as duas ao mesmo tempo — é isso que dá a sensação de troca de cartaz.
+ * O pop-up do recado fica parado na legenda; o que troca é o texto dele,
+ * apagado e reescrito como quem digita.
  * ------------------------------------------------------------------ */
+type Promo = { title: string; text: string } | null;
+
+/** Segundos por letra: apagar é mais rápido que escrever, como no teclado. */
+const ERASE_STEP = 0.018;
+const TYPE_STEP = 0.035;
+
+/**
+ * Mostra as primeiras letras de `text` na linha, de `from` até `to`, uma de
+ * cada vez: para trás é apagar, da direita para a esquerda; para a frente é
+ * escrever. O cursor só aparece enquanto a linha muda, e o texto só é
+ * reescrito quando a contagem de letras muda, não a cada quadro.
+ */
+function typeLine(
+  line: HTMLElement,
+  caret: HTMLElement | null,
+  text: string,
+  from: number,
+  to: number,
+  step: number,
+) {
+  const state = { count: from };
+  let shown = from;
+  return gsap.to(state, {
+    count: to,
+    duration: Math.abs(to - from) * step,
+    ease: 'none',
+    onStart: () => {
+      if (caret) gsap.set(caret, { autoAlpha: 1 });
+    },
+    onUpdate: () => {
+      const count = Math.round(state.count);
+      if (count === shown) return;
+      shown = count;
+      line.textContent = text.slice(0, count);
+    },
+    onComplete: () => {
+      if (caret) gsap.set(caret, { autoAlpha: 0 });
+    },
+  });
+}
+
 function setupOutdoor() {
   const outdoor = document.querySelector<HTMLElement>('[data-outdoor]');
   if (!outdoor) return;
 
   const slides = gsap.utils.toArray<HTMLElement>('[data-outdoor-slide]', outdoor);
-  const timer = outdoor.querySelector<HTMLElement>('[data-outdoor-timer]');
 
-  // O recado promocional de cada imagem sobe depois que ela assenta: entrar
-  // junto com a imagem em movimento deixa o texto ilegível justamente no
-  // momento em que ele pede leitura.
-  const promoOf = (slide: HTMLElement) =>
-    gsap.utils.toArray<HTMLElement>(':scope > [data-outdoor-promo] > *', slide);
+  // Com uma imagem só não há troca: o fundo fica parado nela, e o pop-up no
+  // recado dela.
+  if (slides.length < 2) return;
 
-  const showPromo = (slide: HTMLElement) => {
-    const parts = promoOf(slide);
-    if (parts.length === 0) return;
-    gsap.fromTo(
-      parts,
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.07 },
-    );
-  };
-
-  // Com uma imagem só não há troca: o quadro fica parado nela, e a régua do
-  // tempo não tem o que contar.
-  if (slides.length < 2) {
-    slides.forEach(showPromo);
-    return;
-  }
-
-  if (timer) gsap.set(timer.parentElement, { autoAlpha: 1 });
+  // Os recados, um por imagem e na mesma ordem (null quando a imagem não tem).
+  const popup = document.querySelector<HTMLElement>('[data-promo]');
+  const promos: Promo[] = popup ? JSON.parse(popup.dataset.promo ?? '[]') : [];
+  const titleLine = popup?.querySelector<HTMLElement>('[data-promo-line="title"]');
+  const textLine = popup?.querySelector<HTMLElement>('[data-promo-line="text"]');
+  const titleCaret = popup?.querySelector<HTMLElement>('[data-promo-caret="title"]') ?? null;
+  const textCaret = popup?.querySelector<HTMLElement>('[data-promo-caret="text"]') ?? null;
 
   // O CSS esconde as imagens seguintes para o caso de não haver JS. Aqui elas
   // voltam a aparecer e passam a ser posicionadas pelo eixo X.
   gsap.set(slides, { opacity: 1, xPercent: 100 });
   gsap.set(slides[0], { xPercent: 0 });
-  slides.forEach((slide) => gsap.set(promoOf(slide), { opacity: 0 }));
 
-  const DWELL = 4.5;
+  const DWELL = 4;
 
   let current = 0;
-  let hovering = false;
-  let waiting: gsap.core.Tween | gsap.core.Timeline | undefined;
 
   const advance = () => {
     const next = (current + 1) % slides.length;
+    const promo = promos[next] ?? null;
 
-    gsap
-      .timeline({
-        defaults: { duration: 0.9, ease: 'power3.inOut' },
-        onComplete: () => {
-          showPromo(slides[next]);
-          wait();
-        },
-      })
+    const change = gsap.timeline({
+      defaults: { duration: 0.9, ease: 'power3.inOut' },
+      onComplete: wait,
+    });
+
+    change
       .to(slides[current], { xPercent: -100 }, 0)
       .fromTo(slides[next], { xPercent: 100 }, { xPercent: 0 }, 0);
+
+    // O texto é apagado de trás para a frente — a linha de apoio e depois o
+    // título — enquanto a imagem passa, e o próximo é escrito na ordem de
+    // leitura depois que a imagem assenta: escrito com ela em movimento, ele
+    // ficaria ilegível justamente quando pede leitura. A espera pela próxima
+    // troca só começa com o texto inteiro na tela.
+    if (promo && titleLine && textLine) {
+      const title = titleLine.textContent ?? '';
+      const text = textLine.textContent ?? '';
+
+      const erase = gsap
+        .timeline()
+        .add(typeLine(textLine, textCaret, text, text.length, 0, ERASE_STEP))
+        .add(typeLine(titleLine, titleCaret, title, title.length, 0, ERASE_STEP));
+
+      const write = gsap
+        .timeline()
+        .add(typeLine(titleLine, titleCaret, promo.title, 0, promo.title.length, TYPE_STEP))
+        .add(typeLine(textLine, textCaret, promo.text, 0, promo.text.length, TYPE_STEP));
+
+      change.add(erase, 0).add(write);
+    }
 
     current = next;
   };
 
-  // A espera e a régua são a mesma coisa: em vez de um relógio de um lado e
-  // uma barra do outro, que sairiam do ritmo assim que o ponteiro pausasse um
-  // e não o outro, é a própria régua que conta o tempo e chama a troca no fim.
+  // A espera é um relógio invisível: não há barra de tempo na tela, a pedido
+  // do cliente. Não há pausa no hover: o fundo ocupa o hero inteiro, e o
+  // ponteiro passa a maior parte do tempo em cima dele — pausar ali
+  // congelaria a passagem justamente para quem está lendo o hero.
   function wait() {
-    waiting = timer
-      ? gsap.fromTo(
-          timer,
-          { scaleX: 0 },
-          { scaleX: 1, duration: DWELL, ease: 'none', onComplete: advance },
-        )
-      : gsap.delayedCall(DWELL, advance);
-
-    // A espera nasce parada se o ponteiro já estava em cima quando a troca
-    // anterior terminou; senão a imagem escaparia justo de quem parou para ver.
-    if (hovering) waiting.pause();
+    gsap.delayedCall(DWELL, advance);
   }
 
-  showPromo(slides[0]);
   wait();
+}
 
-  // Pausar em cima é coisa de mouse. O dedo também dispara pointerenter ao
-  // tocar ou ao começar a rolar sobre o banner, mas o pointerleave nem sempre
-  // vem depois, principalmente quando o toque vira rolagem, e o banner ficava
-  // preso parado até um novo toque nele. No toque ele simplesmente não pausa.
-  outdoor.addEventListener('pointerenter', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    hovering = true;
-    waiting?.pause();
-  });
+/* ------------------------------------------------------------------ *
+ * Costura do cabeçalho
+ * Uma agulha corre sem parar pela costura reta da base da faixa, com um
+ * trecho aceso de linha atrás dela. A costura em si é CSS e fica parada;
+ * só a agulha e o trecho aceso passam pelo matchMedia.
+ * ------------------------------------------------------------------ */
 
-  outdoor.addEventListener('pointerleave', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    hovering = false;
-    waiting?.resume();
+/** O olho da agulha, em px dentro dela (Header.astro): é ali que a linha sai. */
+const NEEDLE_EYE_X = 6.5;
+
+/** Velocidade da agulha, em px/s, e o tempo mínimo de uma passada. */
+const NEEDLE_SPEED = 140;
+const NEEDLE_MIN_PASS = 7;
+
+function setupNavThread() {
+  const frame = document.querySelector<HTMLElement>('[data-nav-thread]');
+  const trail = frame?.querySelector<HTMLElement>('[data-nav-thread-trail]');
+  const trailInner = frame?.querySelector<HTMLElement>('[data-nav-thread-trail-inner]');
+  const needle = frame?.querySelector<SVGSVGElement>('[data-nav-thread-needle]');
+  if (!frame || !trail || !trailInner || !needle) return;
+
+  // A agulha corre sempre na mesma velocidade, da esquerda para a direita, e
+  // volta a entrar pela esquerda quando o trecho aceso some na direita — a
+  // volta acontece com tudo fora da faixa, então a passagem não tem emenda.
+  // É máquina, como o bordado da seção de técnicas: ease `none`.
+  const mm = gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    let tween: gsap.core.Tween | null = null;
+    const setTrail = gsap.quickSetter(trail, 'x', 'px');
+    const setTrailInner = gsap.quickSetter(trailInner, 'x', 'px');
+    const setNeedle = gsap.quickSetter(needle, 'x', 'px');
+
+    // As medidas dependem da largura da faixa: quando ela muda, a passada é
+    // refeita a partir do ponto em que estava.
+    const start = () => {
+      const progress = tween?.progress() ?? 0;
+      tween?.kill();
+
+      const width = frame.clientWidth;
+      const length = gsap.utils.clamp(160, 420, width * 0.24);
+      const sweep = { x: -length };
+      gsap.set(trail, { width: length });
+      gsap.set(trailInner, { width });
+      gsap.set([trail, needle], { autoAlpha: 1 });
+
+      tween = gsap.to(sweep, {
+        x: width,
+        duration: Math.max(NEEDLE_MIN_PASS, (width + length) / NEEDLE_SPEED),
+        ease: 'none',
+        repeat: -1,
+        onUpdate: () => {
+          setTrail(sweep.x);
+          setTrailInner(-sweep.x);
+          setNeedle(sweep.x + length - NEEDLE_EYE_X);
+        },
+      });
+      tween.progress(progress);
+    };
+
+    start();
+
+    let lastWidth = frame.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (frame.clientWidth === lastWidth) return;
+      lastWidth = frame.clientWidth;
+      start();
+    });
+    observer.observe(frame);
+
+    return () => {
+      observer.disconnect();
+      tween?.kill();
+      gsap.set([trail, needle], { autoAlpha: 0 });
+    };
   });
 }
 
@@ -429,7 +527,7 @@ function setupReveals() {
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     // Hero: entra assim que a página abre.
     const heroItems = gsap.utils.toArray<HTMLElement>('[data-anim="hero"]');
-    const heroMedia = document.querySelector<HTMLElement>('[data-anim="hero-media"]');
+    const backdrop = document.querySelector<HTMLElement>('[data-anim="hero-backdrop"]');
 
     const intro = gsap.timeline({ defaults: { ease: 'power2.out', duration: 0.7 } });
 
@@ -437,13 +535,17 @@ function setupReveals() {
       intro.fromTo(heroItems, { opacity: 0, y: 22 }, { opacity: 1, y: 0, stagger: 0.08 });
     }
 
-    if (heroMedia) {
-      intro.fromTo(
-        heroMedia,
-        { opacity: 0, scale: 0.96 },
-        { opacity: 1, scale: 1, duration: 0.9 },
-        0.15,
-      );
+    // O fundo acende devagar e assenta de um leve zoom. Ele ocupa a seção
+    // inteira, então diminuir a partir de um pouco maior nunca descobre a
+    // borda — crescer a partir de um pouco menor mostraria a moldura da seção
+    // em volta dele durante a entrada.
+    if (backdrop) {
+      intro.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power1.out' }, 0);
+
+      const layer = backdrop.querySelector<HTMLElement>('[data-outdoor]');
+      if (layer) {
+        intro.fromTo(layer, { scale: 1.06 }, { scale: 1, duration: 1.8, ease: 'power2.out' }, 0);
+      }
     }
 
     // Os rolos dos números da faixa. Cada um parte do zero e sobe uma volta
@@ -510,6 +612,7 @@ function setupReveals() {
 
 function init() {
   setupFaq();
+  setupNavThread();
   setupReveals();
 }
 

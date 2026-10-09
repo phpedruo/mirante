@@ -5,7 +5,7 @@ const mapsEmbed = `https://www.google.com/maps?q=${address.mapsQuery}&output=emb
 const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.mapsQuery}`;
 ---
 
-<section class="location frestas frestas--left" id="localizacao">
+<section class="location" id="localizacao">
   <div class="container location__inner">
     <div class="location__content">
       <div class="location__head">
@@ -39,7 +39,8 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
             <span class="location__label">Endereço</span>
             <address class="location__value">
               {address.street}<br />
-              {address.district}, {address.city} – {address.state}, {address.zip}
+              {address.district}, {address.city} – {address.state},{' '}
+              <span class="location__zip">{address.zip}</span>
             </address>
           </div>
         </div>
@@ -168,6 +169,12 @@ const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${address.m
     font-style: normal;
     line-height: 1.55;
     color: var(--ink);
+  }
+
+  /* O CEP desce inteiro para a linha de baixo: no celular ele quebrava no
+     hífen, com "53409-" numa linha e "420" na outra. */
+  .location__zip {
+    white-space: nowrap;
   }
 
   .location__phone {

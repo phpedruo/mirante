@@ -2,16 +2,36 @@
 import Logo from './Logo.astro';
 
 // Os links levam `/` na frente para funcionar também fora da página inicial,
-// como na 404 — ali, `#produtos` sozinho apontaria para a própria página de erro.
+// como na 404 — ali, `#tecidos` sozinho apontaria para a própria página de erro.
+// "Segmentos" leva ao meio da seção de tecidos, onde começa a esteira das
+// categorias.
 const links = [
-  { href: '/#produtos', label: 'Produtos' },
-  { href: '/#clientes', label: 'Quem veste Mirante' },
+  { href: '/#tecidos', label: 'Tecidos' },
+  { href: '/#segmentos', label: 'Segmentos' },
+  { href: '/#clientes', label: 'Confiança de grandes' },
   { href: '/#duvidas', label: 'Dúvidas' },
   { href: '/#localizacao', label: 'Localização' },
 ];
 ---
 
 <header class="site-header" data-header>
+  {/* A costura: uma linha reta de pontos na base da faixa, como o pesponto
+      da barra de uma camisa, e uma agulha que corre por ela sem parar, com um
+      trecho aceso de linha atrás. A linha é só CSS e aparece mesmo sem
+      JavaScript; a agulha e o trecho aceso são do animations.ts. */}
+  <div class="nav-thread" aria-hidden="true" data-nav-thread>
+    <span class="nav-thread__stitch"></span>
+    <div class="nav-thread__trail" data-nav-thread-trail>
+      <div class="nav-thread__trail-inner" data-nav-thread-trail-inner>
+        <span class="nav-thread__stitch nav-thread__stitch--lit"></span>
+      </div>
+    </div>
+    <svg class="nav-thread__needle" viewBox="0 0 24 8" data-nav-thread-needle>
+      <path class="nav-thread__pin" d="M4.6 2.5H17L23.5 4 17 5.5H4.6a1.5 1.5 0 0 1 0-3z" />
+      <ellipse class="nav-thread__eye" cx="5.2" cy="4" rx="1.6" ry="0.55" />
+    </svg>
+  </div>
+
   <div class="container site-header__inner">
     <a href="/#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
       <Logo aguia />
@@ -48,6 +68,7 @@ const links = [
         aria-expanded="false"
         aria-controls="nav-principal"
         data-nav-toggle
+       
       >
         <span class="visually-hidden">Abrir menu</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
@@ -75,6 +96,100 @@ const links = [
     padding-top: env(safe-area-inset-top, 0px);
     background: var(--blue-900);
     transition: box-shadow 0.2s ease;
+  }
+
+  /* ---- Costura ---------------------------------------------------- *
+     Fica atrás das opções, na camada logo acima do azul da faixa (o
+     cabeçalho já é um contexto de empilhamento, pelo sticky com z-index).
+     Começa abaixo da área segura, onde a faixa de fato começa. */
+  .nav-thread {
+    --stitch-h: 4px;
+    --stitch-bottom: 4px;
+
+    position: absolute;
+    z-index: -1;
+    top: env(safe-area-inset-top, 0px);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Os pontos da costura, como a linha do bordado na seção de técnicas, só
+     que mais grossos. A linha inteira fica sempre à vista, apagada; o trecho
+     que acabou de passar pela agulha é a mesma linha, acesa. As duas começam
+     no mesmo x, então os pontos de uma caem exatamente sobre os da outra. */
+  .nav-thread__stitch {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--stitch-bottom);
+    height: var(--stitch-h);
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--orange-500) 0 12px,
+      transparent 12px 20px
+    );
+    border-radius: 2px;
+    opacity: 0.4;
+  }
+
+  .nav-thread__stitch--lit {
+    opacity: 1;
+  }
+
+  /* O trecho aceso é uma janela que corre pela faixa enquanto a linha dentro
+     dela corre para o lado contrário, na mesma medida: a linha fica parada e
+     só a janela anda — o mesmo par das técnicas, e só com transform. A cauda
+     se apaga aos poucos; a ponta, onde está a agulha, é nítida. Os dois e a
+     agulha só aparecem quando a animação começa. */
+  .nav-thread__trail,
+  .nav-thread__needle {
+    position: absolute;
+    left: 0;
+    visibility: hidden;
+  }
+
+  .nav-thread__trail {
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 75%);
+    mask-image: linear-gradient(90deg, transparent, #000 75%);
+  }
+
+  .nav-thread__trail-inner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  /* A agulha deitada sobre a costura, com o olho no meio da linha: é do olho
+     que a linha sai, e é ele que fica na ponta do trecho aceso. */
+  .nav-thread__needle {
+    bottom: calc(var(--stitch-bottom) + var(--stitch-h) / 2 - 5px);
+    width: 30px;
+    height: 10px;
+    overflow: visible;
+  }
+
+  .nav-thread__pin {
+    fill: #fff;
+  }
+
+  .nav-thread__eye {
+    fill: var(--blue-900);
+  }
+
+  /* No celular a faixa é mais baixa e os botões quase encostam na base: a
+     costura afina e desce um pouco para não colar neles. */
+  @media (max-width: 1079px) {
+    .nav-thread {
+      --stitch-h: 3px;
+      --stitch-bottom: 3px;
+    }
   }
 
   .site-header[data-scrolled] {
@@ -118,19 +233,37 @@ const links = [
      no celular também é um <a> dentro da navegação, e com o seletor amplo ele
      herdaria a cor e o sublinhado dos links. */
   .site-header__nav li a {
+    position: relative;
     font-family: var(--font-display);
     font-size: 15px;
     color: #fff;
-    text-decoration-line: underline;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 8px;
-    transition: text-decoration-color 0.18s ease;
   }
 
-  .site-header__nav li a:hover {
+  /* O sublinhado é uma linha própria, e não um text-decoration, porque ele
+     precisa ter direção: no hover ela nasce encolhida na esquerda e cresce
+     até o fim do link, e ao sair volta para a esquerda. Só `transform`. */
+  .site-header__nav li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    background: var(--orange-500);
+    border-radius: 1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.28s ease;
+  }
+
+  .site-header__nav li a:hover,
+  .site-header__nav li a:focus-visible {
     color: #fff;
-    text-decoration-color: var(--orange-500);
+  }
+
+  .site-header__nav li a:hover::after,
+  .site-header__nav li a:focus-visible::after {
+    transform: scaleX(1);
   }
 
   .site-header__actions {
@@ -212,7 +345,11 @@ const links = [
     height: 22px;
   }
 
-  @media (max-width: 1079px) {
+  /* Com cinco links na fonte do slogan, que é larga, a barra deitada só cabe
+     a partir de 1200px: em 1080, "Confiança de grandes" e o botão de
+     orçamento quebravam em duas linhas. Abaixo disso, o menu vira o painel do
+     botão — o resto do layout de desktop continua começando em 1080. */
+  @media (max-width: 1199px) {
     /* O painel do menu continua a faixa azul, separado dela só por um fio. */
     .site-header__nav {
       position: absolute;
@@ -249,6 +386,12 @@ const links = [
       display: block;
       padding: 15px 0;
       font-size: 17px;
+    }
+
+    /* No painel o link tem folga em cima e embaixo: a linha sobe para dentro
+       dela, em vez de cair sobre o fio que separa os itens. */
+    .site-header__nav li a::after {
+      bottom: 9px;
     }
 
     .site-header__cta-mobile {
@@ -321,8 +464,8 @@ const links = [
       }
     });
 
-    // Se a janela crescer até o layout de desktop, o painel não pode ficar preso aberto.
-    window.matchMedia('(min-width: 1080px)').addEventListener('change', (event) => {
+    // Se a janela crescer até a barra deitada, o painel não pode ficar preso aberto.
+    window.matchMedia('(min-width: 1200px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
     });
   }

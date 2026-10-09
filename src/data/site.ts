@@ -27,11 +27,11 @@ export const assets = {
   /**
    * A águia da marca, usada na fala e no card de contato.
    *
-   * É um render com fundo transparente, servido em 420px de largura — o dobro
-   * dos 210px em que ela aparece maior na página, para não serrilhar em tela
-   * retina. O arquivo original, maior, fica em `design/mascote-original/`,
-   * fora de `public/`, para o dia em que ela precisar aparecer em outro
-   * tamanho. Caminho vazio faz os dois lugares caírem na moldura tracejada.
+   * É um render com fundo transparente, servido em 546px de largura, que é o
+   * original inteiro (`design/mascote-original/`, fora de `public/`): na fala
+   * do mascote ela aparece com até 400px. Se chegar uma arte maior, regerar o
+   * `.webp` a partir dela. Caminho vazio faz os lugares que a usam caírem na
+   * moldura tracejada.
    */
   mascot: '/mascote-mirante.webp',
   /**
@@ -44,65 +44,65 @@ export const assets = {
 };
 
 /**
- * O outdoor do hero: o que passa no quadro ao lado do texto.
+ * O fundo do hero: as imagens que passam de ponta a ponta da seção, atrás do
+ * texto e esmaecidas, como o vídeo no hero do site da Masterboi.
  *
- * Lista vazia mostra o placeholder hachurado; com uma só imagem o quadro fica
- * parado; a passagem começa a partir de duas.
+ * Lista vazia deixa o hero sem fundo; com uma só imagem ele fica parado nela;
+ * a passagem começa a partir de duas.
  *
- * São dois tipos de conteúdo, e a diferença não é enfeite: uma **foto**
- * preenche o quadro e aceita perder as bordas no corte, que é o que foto de
- * gente fardada pede — o assunto está no meio e sobra margem. Uma **arte** de
- * divulgação, não: ali o texto encosta na borda, e qualquer corte come
- * palavra. Por isso a arte aparece inteira, centrada sobre o azul da marca,
- * com as sobras laterais viradas parte do desenho em vez de acidente.
+ * O fundo é bem mais largo que alto no computador (perto de 2:1) e em pé no
+ * celular, e a imagem é cortada para preenchê-lo: o que sobra é a faixa do
+ * meio dela. Por isso ele pede foto — de preferência larga e grande, 1920px ou
+ * mais, com o assunto no centro: gente fardada, a equipe, o galpão. Arte de
+ * divulgação com texto não serve: o corte come as bordas, e na opacidade do
+ * fundo o texto dela vira ruído atrás do título.
  *
- * O `promo` é o espaço da fábrica para anunciar o que quiser sobre a imagem —
- * uma campanha, uma linha nova, um recado de temporada. Vale nos dois tipos,
- * mas numa arte de Instagram costuma sobrar, porque a peça já traz o recado
- * dentro dela. Sem `promo`, a imagem aparece limpa.
+ * A imagem é decoração e fica fora do leitor de tela, então não leva texto
+ * alternativo. Quem fala é o `promo`: o espaço da fábrica para anunciar o que
+ * quiser junto com a imagem — uma campanha, uma linha nova, um recado de
+ * temporada. Ele aparece nítido na legenda do hero, num pop-up de duas caixas
+ * — o título na azul, a linha de apoio na laranja —, que fica parado: quando a
+ * imagem troca, só o texto troca, apagado e reescrito. Sem `promo`, a imagem
+ * passa e o recado anterior continua.
  *
- * Os três de hoje não repetem o mesmo elogio: cada um pega um ponto diferente
- * — a técnica, a matéria-prima e o atendimento —, os dois primeiros vindos dos
- * mesmos `factoryPoints` que a seção de tecidos lista e o terceiro, do fluxo
- * consultivo da casa, em que um consultor acompanha o pedido do começo ao fim. Passando as três, o visitante recebe três argumentos em vez de três
- * fotos. Valem as regras de copy da página: uma linha por recado, nada de
- * preço e nada de comparação com concorrente.
+ * O recado NÃO comenta a imagem que está passando: foto e recado trocam
+ * juntos, mas cada um fala a sua coisa. A foto é só o fundo; o recado é sempre
+ * informação positiva sobre a empresa — a entrega, a fábrica, a qualidade —, e
+ * a linha de apoio pode ser a chamada para o contato. É por isso que não há
+ * selo: ele era o que amarrava o texto à peça da foto. Valem as regras de copy
+ * da página: uma linha por recado, nada de preço e nada de comparação com
+ * concorrente.
  */
 export type HeroSlide = {
   src: string;
-  alt: string;
-  /** Ausente vale 'foto'. */
-  kind?: 'foto' | 'arte';
-  promo?: { badge?: string; title: string; text?: string };
+  promo?: { title: string; text: string };
 };
 
 /**
- * As três de hoje são as peças que sobraram da seleção de "Atendemos todos os
- * públicos": recorte 1,25:1 do original em `design/produtos-originais/`, na
- * proporção do quadro, com a peça no centro. Refazer um corte é recortar do
- * original, nunca do `.webp`.
+ * As três de hoje são as peças que sobraram da seleção de "Segmentos",
+ * recortadas em 1,25:1 do original em `design/produtos-originais/`
+ * para o quadro que o hero tinha ao lado do texto. Como fundo elas viram
+ * textura: peça solta, ampliada e cortada no meio. Refazer um corte é recortar
+ * do original, nunca do `.webp`.
  *
- * AINDA FALTA o que o hero pede de verdade: foto de gente fardada — equipe na
- * recepção, turma de escola, operação em campo. As três de hoje são peças
- * soltas, sem contexto de uso, e seguram o lugar até as reais chegarem. A arte
- * do avental Pitú, que seria o primeiro `kind: 'arte'` da lista, ficou de fora
- * porque o arquivo tem 399px de largura e o quadro pede uns 650.
+ * AINDA FALTA o que o fundo pede de verdade: foto de gente fardada — equipe na
+ * recepção, turma de escola, operação em campo —, larga e grande o bastante
+ * para cobrir a tela sem ser ampliada.
  */
 export const heroSlides: HeroSlide[] = [
   {
     src: '/hero/polo-bordada.webp',
-    alt: 'Camisa polo com logo bordado no peito',
-    promo: { badge: 'Bordado próprio', title: 'A sua logo na peça' },
+    // "Entrega rápida" veio do pedido de ajuste do banner; confirmar o que ela
+    // promete, porque o FAQ diz que o prazo é combinado junto com o orçamento.
+    promo: { title: 'Entrega rápida', text: 'Fale agora com um consultor' },
   },
   {
     src: '/hero/bata.webp',
-    alt: 'Bata azul-marinho de manga curta',
-    promo: { badge: 'Tecido escolhido', title: 'A malha que o uso pede' },
+    promo: { title: 'Fábrica própria', text: 'Corte, costura e estampa no nosso galpão' },
   },
   {
     src: '/hero/camisa-social.webp',
-    alt: 'Camisa social escura de manga longa',
-    promo: { badge: 'Contato próximo', title: 'Um consultor do pedido à entrega' },
+    promo: { title: 'Qualidade conferida', text: 'Costura e acabamento, peça por peça' },
   },
 ];
 
@@ -122,11 +122,94 @@ export const heroSlides: HeroSlide[] = [
  */
 export type HeroStat = { number?: string; suffix?: string; text: string };
 
+/**
+ * Os dois números que o hero e a seção "Quem somos" repetem. Ficam num lugar
+ * só para a conferência com a fábrica ser uma conta só: mudou aqui, mudou nos
+ * dois.
+ */
+const milestones = { years: 10, clients: 1000 };
+
 export const heroStats: HeroStat[] = [
-  { number: '10', suffix: '+', text: 'anos de história' },
-  { number: '1000', suffix: '+', text: 'clientes atendidos' },
+  { number: String(milestones.years), suffix: '+', text: 'anos de história' },
+  { number: String(milestones.clients), suffix: '+', text: 'clientes atendidos' },
   { number: '100', suffix: '%', text: 'produção própria' },
 ];
+
+/**
+ * A seção "Quem somos", logo abaixo do hero.
+ *
+ * CONFERIR COM A FÁBRICA — é pauta da reunião com o cliente:
+ *  - "Líderes em fardamento na cidade do Paulista", o título (que mora no
+ *    componente), é afirmação de liderança. Pede um critério que a sustente
+ *    (volume, tempo de mercado, número de clientes), senão vira publicidade
+ *    que a empresa não consegue comprovar.
+ *  - A visão e os valores são proposta nossa, escrita a partir do que a página
+ *    já promete (`factoryPoints` e o fluxo consultivo), e não texto da empresa.
+ *  - A história ainda não tem o que só a fábrica sabe: o ano de fundação, quem
+ *    começou e como foi o início. Sem isso o texto fala só do que a Mirante é
+ *    hoje, e do que a cidade foi.
+ *
+ * O que a cidade foi vem de fonte aberta: a Companhia de Tecidos Paulista é de
+ * 1891.
+ *
+ * A cidade leva artigo na prosa — "no Paulista", "do Paulista" —, e o endereço
+ * e os dados estruturados mantêm o nome formal, "Paulista – PE".
+ */
+export type AboutValue = {
+  /** Qual dos ícones de `About.astro` acompanha o valor. */
+  icon: 'quality' | 'clock' | 'chat' | 'eye';
+  title: string;
+  text: string;
+};
+
+export const about = {
+  /** Os parágrafos de abertura, um `.lead` cada. */
+  paragraphs: [
+    `A Mirante é uma fábrica de fardamentos e camisas do Paulista. Há mais de ${milestones.years} anos o corte, a costura e a estampa de cada peça acontecem no nosso galpão, e a entrega sai no nosso próprio veículo. São mais de ${milestones.clients.toLocaleString('pt-BR')} clientes atendidos, de escolas e indústrias a restaurantes e comércios.`,
+    'O Paulista cresceu em volta da Companhia de Tecidos, fundada em 1891, e até hoje tem o tecido na sua história. A Mirante tem orgulho de vestir a cidade.',
+  ],
+  vision:
+    'Ser a primeira lembrança de quem precisa de fardamento no Paulista, com peça bem-feita, entrega no prazo combinado e atendimento de perto.',
+  values: [
+    {
+      icon: 'quality',
+      title: 'Qualidade em cada peça',
+      text: 'Tecido certo para o uso, com costura e acabamento conferidos peça por peça.',
+    },
+    {
+      icon: 'clock',
+      title: 'Compromisso com a entrega',
+      text: 'O prazo combinado é o prazo que a gente cumpre.',
+    },
+    {
+      icon: 'chat',
+      title: 'Atendimento de perto',
+      text: 'Um consultor acompanha o seu pedido do começo ao fim.',
+    },
+    {
+      icon: 'eye',
+      title: 'Transparência',
+      text: 'Você vê e aprova a prévia da peça antes de a produção começar.',
+    },
+  ] as AboutValue[],
+  /**
+   * A foto da seção: a igreja de tijolinhos e a praça do Paulista, enviada
+   * junto com o pedido da seção. O original (`design/sobre-original/`) tem só
+   * 494×389px, então no desktop ela aparece ampliada em ~1,4x e sai um pouco
+   * macia; uma versão com 1200px de largura ou mais resolve. A origem e a
+   * autorização de uso ainda não foram confirmadas (ver Pendências no
+   * CLAUDE.md). Foto de terceiro com licença livre exige o crédito em
+   * `credit`. Vazio em `src` mostra o placeholder.
+   */
+  photo: {
+    src: '/sobre/paulista.webp',
+    alt: 'A igreja de tijolinhos com torre alta e a praça ao redor, no Paulista',
+    width: 494,
+    height: 389,
+    caption: 'A cidade do Paulista, em Pernambuco.',
+    credit: '',
+  },
+};
 
 export const contact = {
   whatsappDisplay: '(81) 9.8104-0516',
@@ -419,7 +502,7 @@ export const faq: FaqItem[] = [
     answer: 'Dá. A grade de tamanhos é fechada junto com a aprovação da prévia.',
   },
   {
-    question: 'Vocês entregam fora de Paulista?',
+    question: 'Vocês entregam fora do Paulista?',
     // PREENCHER: até onde a van atende e como funciona fora dessa área.
     answer: 'A entrega sai no nosso próprio veículo. Confirme a região com a nossa equipe pelo WhatsApp.',
   },
@@ -467,9 +550,9 @@ export const seo = {
    * volta dos 60 caracteres. "Uniforme" fica na descrição: em Pernambuco se
    * busca mais "fardamento", e os dois termos continuam cobertos.
    */
-  title: 'Fábrica de Fardamentos em Paulista – PE | Mirante',
+  title: 'Fábrica de Fardamentos no Paulista – PE | Mirante',
   description:
-    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes em Paulista – PE. Produção própria, do corte à entrega.',
+    'Fábrica de fardamento escolar e industrial, camisas polo, promocionais, batas, aventais e brindes no Paulista – PE. Produção própria, do corte à entrega.',
   /**
    * PREENCHER: caminho de uma imagem 1200×630 (JPG ou PNG) em `public/`, usada
    * quando o link do site é compartilhado no WhatsApp, Instagram etc. Vazio
