@@ -138,7 +138,9 @@ Convenções que atravessam os componentes:
   virar faixa precisa que seus cards internos subam de camada (`--card`), senão eles somem dentro
   do próprio fundo — foi por isso que as placas de logo dos clientes deixaram de ser `--surface-2`.
 - **O "Quem somos"** (`About.astro`) fica entre o hero e as técnicas, numa faixa cinza: imagem à
-  esquerda, texto à direita e os quatro valores em cards por baixo dos dois. O conteúdo mora em
+  esquerda, texto à direita e os quatro valores por baixo dos dois. **Os valores não são cards**:
+  o cliente achou que a página já tinha card demais, então cada um fica sob um fio fino
+  (`--border-strong`), com o ícone laranja ao lado do título. O conteúdo mora em
   `about` (`site.ts`), e os números do texto ("mais de 10 anos", "mais de 1.000 clientes") saem
   do mesmo `milestones` da faixa do hero — conferir um é conferir os dois. A imagem é uma foto
   do Paulista (`public/sobre/paulista.webp`, original em `design/sobre-original/`), na prumada
@@ -187,9 +189,9 @@ Convenções que atravessam os componentes:
   crescendo com um rebote curto. É um
   recado por imagem, na mesma ordem, vazio quando a imagem não tem, porque é pela posição que a
   passagem acha o da vez; ele sai quando a imagem começa a sair e sobe **depois** que a próxima
-  assenta. A régua laranja embaixo dele **é o próprio relógio da passagem**, não um enfeite
-  sincronizado por fora: é o fim do tween dela que chama a troca. Ela nasce escondida e só
-  aparece quando a passagem começa de fato. **Não há pausa no hover**: o fundo cobre o hero
+  assenta. **Não há barra de tempo** marcando a espera — o cliente pediu para tirar a régua de
+  carregamento que ficava embaixo do recado —, e quem chama a troca é um `gsap.delayedCall`.
+  **Não há pausa no hover**: o fundo cobre o hero
   inteiro, e pausar sob o ponteiro congelaria a passagem justamente para quem está lendo.
   No desktop o hero ocupa a primeira tela (`100svh` menos os 76px do cabeçalho), com os números
   no pé dela. Lista vazia deixa o hero sem fundo, uma imagem só deixa o fundo parado, e sem
@@ -224,6 +226,18 @@ Convenções que atravessam os componentes:
   grandes, Dúvidas e Localização; com cinco deles na fonte do slogan, a barra deitada só cabe a
   partir de **1200px** — abaixo disso o menu é o painel do botão, embora o resto do layout de
   desktop comece em 1080.
+- **A linha de bordado do cabeçalho.** Uma linha de pontos laranja atravessa a faixa de ponta a
+  ponta passando **por baixo de uma opção e por cima da seguinte**, como linha entrando e saindo
+  do tecido, e uma agulha corre por ela sem parar, com um trecho aceso de linha atrás. Foi
+  pedido do cliente, a partir de um rabisco no print da barra. O caminho não é fixo: o
+  `animations.ts` mede as opções marcadas com `data-nav-thread-item` (águia, links e botões) e o
+  refaz quando a faixa muda de tamanho ou a fonte chega — opção nova na faixa leva o atributo,
+  senão a linha passa por cima dela. A travessia de um lado para o outro acontece sempre no vão
+  entre duas opções, nunca sobre o texto, e o tema e o botão de orçamento, colados, contam como
+  uma opção só. A linha inteira é desenho e aparece mesmo com "reduzir movimento"; a agulha e o
+  trecho aceso passam pelo `matchMedia`. O trecho aceso é o mesmo par de transform das técnicas
+  — uma janela que anda para a direita com a linha dentro dela andando para a esquerda —, então
+  a animação, que nunca para, mexe só em `transform`.
 - **Notch.** A página usa `viewport-fit=cover` (`Base.astro`): no iPhone com notch ela ocupa a
   tela inteira, em volta do recorte. O que tira o conteúdo de baixo dele é a área segura
   (`env(safe-area-inset-*)`): o cabeçalho a leva no `padding-top`, com o azul preenchendo em
@@ -319,7 +333,7 @@ contas que a publicam. Senha, sessão, SQL e CORS não têm onde se aplicar aqui
 - **Logos de clientes** (`clients` em `site.ts`): a esteira já mostra dez marcas, e **nenhuma autorização foi confirmada**. Confirmar cada uma com a fábrica antes do lançamento; a que não for autorizada sai da lista. Vale o mesmo para a marca Agrotorta, que aparece no peito da polo da primeira imagem do fundo do hero (`public/hero/polo-bordada.webp`).
 - **LGPD, antes do lançamento.** (1) A política promete guardar os registros de acesso por seis meses, como exige o Marco Civil: conferir se a hospedagem escolhida guarda os logs por esse prazo — plano gratuito costuma guardar menos. (2) O canal de dados pessoais hoje é só o WhatsApp; o e-mail comercial, quando preenchido, entra sozinho na política. (3) O texto foi escrito sem revisão jurídica — se o cliente tiver advogado, vale a leitura dele.
 - **Imagem de Open Graph** (`seo.ogImage` em `site.ts`): 1200×630, usada quando o link é compartilhado. Vazia hoje, então a tag nem é gerada.
-- **Performance das animações** — revisão adiada a pedido do cliente, mas os gargalos já estão mapeados: o FAQ chama `ScrollTrigger.refresh()` no `onComplete` de *cada* painel (até 6 recálculos globais por clique, mais 6 no carregamento); o fechamento inicial usa `gsap.to` com duração 0 onde bastaria `gsap.set`; o `ScrollTrigger` que acelera as esteiras não tem `trigger`/`start`/`end`, então `getVelocity()` e o `setTimeout` rodam a cada tick de scroll mesmo com as esteiras fora da tela; os dois trilhos carregam `will-change: transform` permanente e nunca param; e o accordion anima `height`, contra a regra de animar só `transform` e `opacity`. Opção maior: as entradas são todas `once: true` e caberiam num `IntersectionObserver`, o que tiraria o ScrollTrigger (~12KB gz) do bundle.
+- **Performance das animações** — revisão adiada a pedido do cliente, mas os gargalos já estão mapeados: o FAQ chama `ScrollTrigger.refresh()` no `onComplete` de *cada* painel (até 6 recálculos globais por clique, mais 6 no carregamento); o fechamento inicial usa `gsap.to` com duração 0 onde bastaria `gsap.set`; o `ScrollTrigger` que acelera as esteiras não tem `trigger`/`start`/`end`, então `getVelocity()` e o `setTimeout` rodam a cada tick de scroll mesmo com as esteiras fora da tela; os dois trilhos carregam `will-change: transform` permanente e nunca param — e a agulha da linha de bordado do cabeçalho também não para, embora só mexa em `transform` e faça uma conta curta por quadro; e o accordion anima `height`, contra a regra de animar só `transform` e `opacity`. Opção maior: as entradas são todas `once: true` e caberiam num `IntersectionObserver`, o que tiraria o ScrollTrigger (~12KB gz) do bundle.
 
 ## Checklist de lançamento (SEO)
 

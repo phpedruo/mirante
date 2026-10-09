@@ -10,9 +10,8 @@ const whatsappUrl = contact.whatsappUrl(
 // que é o que dá a sensação de caça-níquel. O repouso é o segundo ciclo.
 const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 
-// A legenda só existe se tiver o que mostrar: o recado de alguma imagem, ou a
-// régua do tempo, que só conta quando há passagem (duas imagens ou mais).
-const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.promo);
+// A legenda só existe se alguma imagem tiver recado para mostrar.
+const hasLegend = heroSlides.some((slide) => slide.promo);
 ---
 
 <section class="hero" id="topo">
@@ -77,8 +76,8 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     </div>
 
     {
-      /* A legenda do fundo: o recado da imagem da vez e a régua do tempo. Os
-         recados ficam empilhados na mesma célula, então a altura é a do maior
+      /* A legenda do fundo: o recado da imagem da vez. Os recados ficam
+         empilhados na mesma célula, então a altura é a do maior
          e a página não pula a cada troca. Um recado por imagem, na mesma
          ordem — vazio quando a imagem não tem —, porque é pela posição que a
          passagem acha o recado da imagem que entrou. */
@@ -96,12 +95,6 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
                 )}
               </div>
             ))}
-          </div>
-
-          {/* Enche enquanto a imagem da vez espera a sua hora. Só aparece com
-              JavaScript: sem ele não há troca, e uma régua parada mentiria. */}
-          <div class="outdoor__timer">
-            <span class="outdoor__timer-fill" data-outdoor-timer></span>
           </div>
         </div>
       )
@@ -313,7 +306,6 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
   }
 
   .hero__promos {
@@ -393,30 +385,6 @@ const hasLegend = heroSlides.length > 1 || heroSlides.some((slide) => slide.prom
     font-weight: 600;
     line-height: 1.4;
     color: var(--on-accent);
-  }
-
-  /* ---- Régua do tempo ---- */
-  /* Nasce escondida e só aparece quando a passagem começa de fato: sem
-     JavaScript, com "reduzir movimento" ou com uma imagem só, não há tempo
-     a contar, e uma régua parada no zero prometeria um movimento que não
-     vem. Quem a revela é o animations.ts. */
-  .outdoor__timer {
-    width: min(100%, 240px);
-    height: 3px;
-    overflow: hidden;
-    background: var(--border);
-    border-radius: 2px;
-    visibility: hidden;
-  }
-
-  .outdoor__timer-fill {
-    display: block;
-    height: 100%;
-    background: var(--orange-500);
-    /* Nasce vazia e cresce por transform, nunca por largura: largura refaz o
-       layout a cada quadro. */
-    transform: scaleX(0);
-    transform-origin: left center;
   }
 
   /* ---- Rodapé do hero ---------------------------------------------- */

@@ -56,19 +56,21 @@ const { photo } = about;
       <ul class="about__grid">
         {
           about.values.map((value) => (
-            <li class="about__value card" data-anim="point">
-              <span class="about__icon" aria-hidden="true">
+            <li class="about__value" data-anim="point">
+              <h4 class="about__value-title">
                 <svg
+                  class="about__icon"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  aria-hidden="true"
                   set:html={icons[value.icon]}
                 />
-              </span>
-              <h4 class="about__value-title">{value.title}</h4>
+                {value.title}
+              </h4>
               <p class="about__value-text">{value.text}</p>
             </li>
           ))
@@ -81,7 +83,7 @@ const { photo } = about;
 <style>
   /* Faixa cinza: ela separa o hero das técnicas, que são brancas, e é por isso
      que a alternância de fundo continua — branco, cinza, branco. Por ser faixa,
-     o espaço interno é --band-pad e os cards sobem para --card. */
+     o espaço interno é --band-pad. */
   .about {
     padding-block: var(--band-pad);
     background: var(--surface-2);
@@ -160,38 +162,36 @@ const { photo } = about;
     letter-spacing: -0.01em;
   }
 
+  /* Os valores são uma lista, não cards: a página já tem card de sobra, e
+     quatro caixas a mais aqui pesavam a seção. Cada valor fica sob um fio
+     fino, e é o fio que separa um do outro — em coluna no celular, em linha
+     no desktop, onde os quatro fios formam uma régua só. */
   .about__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    column-gap: 32px;
   }
 
   .about__value {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 24px;
+    gap: 8px;
+    padding-block: 20px;
+    border-top: 1px solid var(--border-strong);
   }
 
   .about__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 6px;
-    background: var(--accent-wash);
-    border-radius: var(--pill);
-    color: var(--accent);
-  }
-
-  .about__icon svg {
+    flex: none;
     width: 24px;
     height: 24px;
+    color: var(--accent);
   }
 
   /* h4 não entra na regra de cor dos títulos em global.css. */
   .about__value-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 19px;
     font-weight: 700;
     line-height: 1.2;
@@ -242,7 +242,6 @@ const { photo } = about;
 
     .about__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px;
     }
   }
 </style>

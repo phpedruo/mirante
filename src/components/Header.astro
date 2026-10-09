@@ -15,15 +15,33 @@ const links = [
 ---
 
 <header class="site-header" data-header>
+  {/* A linha de bordado: atravessa a faixa passando por baixo de uma opção e
+      por cima da seguinte, e uma agulha corre por ela sem parar, com um
+      trecho aceso de linha atrás. O caminho depende de onde as opções caem,
+      então quem o traça é o animations.ts — aqui ficam só as peças, vazias,
+      e as opções que ela contorna levam `data-nav-thread-item`. */}
+  <div class="nav-thread" aria-hidden="true" data-nav-thread>
+    <svg class="nav-thread__line nav-thread__line--base"><path data-nav-thread-path /></svg>
+    <div class="nav-thread__trail" data-nav-thread-trail>
+      <div class="nav-thread__trail-inner" data-nav-thread-trail-inner>
+        <svg class="nav-thread__line"><path data-nav-thread-path /></svg>
+      </div>
+    </div>
+    <svg class="nav-thread__needle" viewBox="0 0 24 8" data-nav-thread-needle>
+      <path class="nav-thread__pin" d="M4.6 2.5H17L23.5 4 17 5.5H4.6a1.5 1.5 0 0 1 0-3z" />
+      <ellipse class="nav-thread__eye" cx="5.2" cy="4" rx="1.6" ry="0.55" />
+    </svg>
+  </div>
+
   <div class="container site-header__inner">
-    <a href="/#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos">
+    <a href="/#topo" class="site-header__brand" aria-label="Mirante Camisas e Fardamentos" data-nav-thread-item>
       <Logo aguia />
     </a>
 
     <nav class="site-header__nav" id="nav-principal" aria-label="Navegação principal">
       <ul>
         {links.map((link) => (
-          <li><a href={link.href}>{link.label}</a></li>
+          <li data-nav-thread-item><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
       <a href="/#contato" class="btn btn--accent site-header__cta-mobile">Faça seu orçamento</a>
@@ -31,7 +49,7 @@ const links = [
 
     <div class="site-header__actions">
       <!-- Só aparece com JavaScript: sem ele o botão não teria o que fazer. -->
-      <button type="button" class="theme-toggle" aria-label="Alternar modo escuro" aria-pressed="false" data-theme-toggle>
+      <button type="button" class="theme-toggle" aria-label="Alternar modo escuro" aria-pressed="false" data-theme-toggle data-nav-thread-item>
         <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"></path>
         </svg>
@@ -44,13 +62,14 @@ const links = [
         </svg>
       </button>
 
-      <a href="/#contato" class="btn btn--accent site-header__cta">Faça seu orçamento</a>
+      <a href="/#contato" class="btn btn--accent site-header__cta" data-nav-thread-item>Faça seu orçamento</a>
       <button
         type="button"
         class="site-header__toggle"
         aria-expanded="false"
         aria-controls="nav-principal"
         data-nav-toggle
+        data-nav-thread-item
       >
         <span class="visually-hidden">Abrir menu</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
@@ -78,6 +97,89 @@ const links = [
     padding-top: env(safe-area-inset-top, 0px);
     background: var(--blue-900);
     transition: box-shadow 0.2s ease;
+  }
+
+  /* ---- Linha de bordado ------------------------------------------- *
+     Fica atrás das opções, na camada logo acima do azul da faixa (o
+     cabeçalho já é um contexto de empilhamento, pelo sticky com z-index).
+     Começa abaixo da área segura, onde a faixa de fato começa. */
+  .nav-thread {
+    position: absolute;
+    z-index: -1;
+    top: env(safe-area-inset-top, 0px);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .nav-thread__line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Os tracinhos são os pontos do bordado, como a linha da técnica de
+     bordado mais abaixo na página. */
+  .nav-thread__line path {
+    fill: none;
+    stroke: var(--orange-500);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 7 7;
+  }
+
+  /* A linha inteira fica sempre à vista, apagada; o trecho que acabou de
+     passar pela agulha é a mesma linha, acesa. */
+  .nav-thread__line--base {
+    opacity: 0.38;
+  }
+
+  /* O trecho aceso é uma janela que corre pela faixa enquanto a linha dentro
+     dela corre para o lado contrário, na mesma medida: a linha fica parada e
+     só a janela anda — o mesmo par das técnicas, e só com transform. A cauda
+     se apaga aos poucos; a ponta, onde está a agulha, é nítida. Os dois e a
+     agulha só aparecem quando a animação começa. */
+  .nav-thread__trail,
+  .nav-thread__needle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+  }
+
+  .nav-thread__trail {
+    bottom: 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 75%);
+    mask-image: linear-gradient(90deg, transparent, #000 75%);
+  }
+
+  .nav-thread__trail-inner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  /* A agulha aponta para onde vai, e a linha sai do olho dela: é no olho que
+     ela gira, e é ele que fica em cima da ponta do trecho aceso. */
+  .nav-thread__needle {
+    width: 24px;
+    height: 8px;
+    overflow: visible;
+    transform-origin: 5.2px 4px;
+  }
+
+  .nav-thread__pin {
+    fill: #fff;
+  }
+
+  .nav-thread__eye {
+    fill: var(--blue-900);
   }
 
   .site-header[data-scrolled] {
