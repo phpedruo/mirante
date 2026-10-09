@@ -321,76 +321,111 @@ function setupTechniques() {
  * Fundo do hero
  * A imagem da vez é puxada para fora enquanto a próxima entra no lugar,
  * as duas ao mesmo tempo — é isso que dá a sensação de troca de cartaz.
- * O recado de cada imagem mora na legenda, fora do fundo esmaecido, e
- * troca junto com ela.
+ * O pop-up do recado fica parado na legenda; o que troca é o texto dele,
+ * apagado e reescrito como quem digita.
  * ------------------------------------------------------------------ */
+type Promo = { title: string; text: string } | null;
+
+/** Segundos por letra: apagar é mais rápido que escrever, como no teclado. */
+const ERASE_STEP = 0.018;
+const TYPE_STEP = 0.035;
+
+/**
+ * Mostra as primeiras letras de `text` na linha, de `from` até `to`, uma de
+ * cada vez: para trás é apagar, da direita para a esquerda; para a frente é
+ * escrever. O cursor só aparece enquanto a linha muda, e o texto só é
+ * reescrito quando a contagem de letras muda, não a cada quadro.
+ */
+function typeLine(
+  line: HTMLElement,
+  caret: HTMLElement | null,
+  text: string,
+  from: number,
+  to: number,
+  step: number,
+) {
+  const state = { count: from };
+  let shown = from;
+  return gsap.to(state, {
+    count: to,
+    duration: Math.abs(to - from) * step,
+    ease: 'none',
+    onStart: () => {
+      if (caret) gsap.set(caret, { autoAlpha: 1 });
+    },
+    onUpdate: () => {
+      const count = Math.round(state.count);
+      if (count === shown) return;
+      shown = count;
+      line.textContent = text.slice(0, count);
+    },
+    onComplete: () => {
+      if (caret) gsap.set(caret, { autoAlpha: 0 });
+    },
+  });
+}
+
 function setupOutdoor() {
   const outdoor = document.querySelector<HTMLElement>('[data-outdoor]');
   if (!outdoor) return;
 
   const slides = gsap.utils.toArray<HTMLElement>('[data-outdoor-slide]', outdoor);
 
-  // Com uma imagem só não há troca: o fundo fica parado nela, e a legenda já
-  // mostra o recado dela pelo CSS.
+  // Com uma imagem só não há troca: o fundo fica parado nela, e o pop-up no
+  // recado dela.
   if (slides.length < 2) return;
 
-  // Um recado por imagem, na mesma ordem — vazio quando a imagem não tem —,
-  // então o recado da imagem da vez é o da mesma posição.
-  const promos = gsap.utils.toArray<HTMLElement>('[data-outdoor-promo]');
-  const partsOf = (index: number) => Array.from(promos[index]?.children ?? []);
-
-  // O recado sobe depois que a imagem assenta: entrar junto com ela em
-  // movimento deixa o texto ilegível justamente no momento em que ele pede
-  // leitura. E sai assim que a imagem dele começa a sair.
-  const showPromo = (index: number) => {
-    const parts = partsOf(index);
-    if (parts.length === 0) return;
-    // O recado é um cartão, e entra como pop-up: cresce de um pouco menor,
-    // com um rebote curto no fim.
-    gsap.fromTo(
-      parts,
-      { opacity: 0, y: 16, scale: 0.9 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.7)' },
-    );
-  };
-
-  const hidePromo = (index: number) => {
-    const parts = partsOf(index);
-    if (parts.length === 0) return;
-    gsap.to(parts, { opacity: 0, y: -10, scale: 0.95, duration: 0.3, ease: 'power2.in' });
-  };
+  // Os recados, um por imagem e na mesma ordem (null quando a imagem não tem).
+  const popup = document.querySelector<HTMLElement>('[data-promo]');
+  const promos: Promo[] = popup ? JSON.parse(popup.dataset.promo ?? '[]') : [];
+  const titleLine = popup?.querySelector<HTMLElement>('[data-promo-line="title"]');
+  const textLine = popup?.querySelector<HTMLElement>('[data-promo-line="text"]');
+  const titleCaret = popup?.querySelector<HTMLElement>('[data-promo-caret="title"]') ?? null;
+  const textCaret = popup?.querySelector<HTMLElement>('[data-promo-caret="text"]') ?? null;
 
   // O CSS esconde as imagens seguintes para o caso de não haver JS. Aqui elas
   // voltam a aparecer e passam a ser posicionadas pelo eixo X.
   gsap.set(slides, { opacity: 1, xPercent: 100 });
   gsap.set(slides[0], { xPercent: 0 });
 
-  // Na legenda o CSS também só mostra o primeiro recado. Daqui em diante quem
-  // decide é a passagem: o primeiro fica à vista, e os outros esperam a vez.
-  if (promos.length > 0) gsap.set(promos, { opacity: 1 });
-  promos.forEach((_, index) => {
-    const parts = partsOf(index);
-    if (index > 0 && parts.length > 0) gsap.set(parts, { opacity: 0 });
-  });
-
-  const DWELL = 4.5;
+  const DWELL = 4;
 
   let current = 0;
 
   const advance = () => {
     const next = (current + 1) % slides.length;
-    hidePromo(current);
+    const promo = promos[next] ?? null;
 
-    gsap
-      .timeline({
-        defaults: { duration: 0.9, ease: 'power3.inOut' },
-        onComplete: () => {
-          showPromo(next);
-          wait();
-        },
-      })
+    const change = gsap.timeline({
+      defaults: { duration: 0.9, ease: 'power3.inOut' },
+      onComplete: wait,
+    });
+
+    change
       .to(slides[current], { xPercent: -100 }, 0)
       .fromTo(slides[next], { xPercent: 100 }, { xPercent: 0 }, 0);
+
+    // O texto é apagado de trás para a frente — a linha de apoio e depois o
+    // título — enquanto a imagem passa, e o próximo é escrito na ordem de
+    // leitura depois que a imagem assenta: escrito com ela em movimento, ele
+    // ficaria ilegível justamente quando pede leitura. A espera pela próxima
+    // troca só começa com o texto inteiro na tela.
+    if (promo && titleLine && textLine) {
+      const title = titleLine.textContent ?? '';
+      const text = textLine.textContent ?? '';
+
+      const erase = gsap
+        .timeline()
+        .add(typeLine(textLine, textCaret, text, text.length, 0, ERASE_STEP))
+        .add(typeLine(titleLine, titleCaret, title, title.length, 0, ERASE_STEP));
+
+      const write = gsap
+        .timeline()
+        .add(typeLine(titleLine, titleCaret, promo.title, 0, promo.title.length, TYPE_STEP))
+        .add(typeLine(textLine, textCaret, promo.text, 0, promo.text.length, TYPE_STEP));
+
+      change.add(erase, 0).add(write);
+    }
 
     current = next;
   };
@@ -407,247 +442,25 @@ function setupOutdoor() {
 }
 
 /* ------------------------------------------------------------------ *
- * Linha de bordado do cabeçalho
- * Uma linha de pontos atravessa a faixa azul passando por baixo de uma
- * opção e por cima da seguinte, como a linha de um bordado entrando e
- * saindo do tecido. O caminho depende de onde as opções caem, então ele é
- * medido aqui e refeito quando a faixa muda de tamanho ou a fonte chega.
- * A linha é desenho e aparece mesmo com "reduzir movimento"; só a agulha e
- * o trecho aceso que corre atrás dela passam pelo matchMedia.
+ * Costura do cabeçalho
+ * Uma agulha corre sem parar pela costura reta da base da faixa, com um
+ * trecho aceso de linha atrás dela. A costura em si é CSS e fica parada;
+ * só a agulha e o trecho aceso passam pelo matchMedia.
  * ------------------------------------------------------------------ */
-interface ThreadBox {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-}
 
-/** Uma parada da linha: uma opção (com a caixa dela) ou um ponto num vão. */
-interface ThreadStop {
-  x1: number;
-  x2: number;
-  y: number;
-  box?: ThreadBox;
-}
+/** O olho da agulha, em px dentro dela (Header.astro): é ali que a linha sai. */
+const NEEDLE_EYE_X = 6.5;
 
-/** Um trecho: reto quando y0 e y1 são iguais, uma curva em S quando não. */
-interface ThreadSegment {
-  x0: number;
-  x1: number;
-  y0: number;
-  y1: number;
-}
-
-const THREAD = {
-  /** Opções mais próximas que isso contam como uma só (o tema e o orçamento). */
-  mergeGap: 20,
-  /** Folga entre a linha e a opção quando a linha troca de lado. */
-  clear: 8,
-  /** Quanto a curva pode começar antes do fim da opção, por baixo ou por cima. */
-  maxOverlap: 40,
-  /** A cada tanto de vão vazio, uma onda a mais, para a linha não esticar. */
-  waveEvery: 200,
-  /** Margem mínima para a borda da faixa ganhar uma subida própria. */
-  edge: 40,
-  /** Velocidade da agulha, em px/s, e o tempo mínimo de uma passada. */
-  speed: 140,
-  minPass: 7,
-};
-
-/** O olho da agulha no desenho dela (Header.astro): é ali que a linha sai. */
-const NEEDLE_EYE = { x: 5.2, y: 4 };
-
-// Com os pontos de controle da curva em 1/3 e 2/3 da largura, o x anda
-// reto com t e o y segue esta suavização — então dá para achar o y de
-// qualquer x sem resolver a curva.
-const smoothstep = (t: number) => t * t * (3 - 2 * t);
-
-/**
- * Quanto a curva entre duas paradas pode avançar sobre cada uma delas sem
- * encostar no texto ou no botão: a travessia de um lado para o outro tem
- * que acontecer no vão, mas o começo e o fim dela podem passar por baixo
- * ou por cima da opção, que é o que deixa a onda larga em vez de um zigue.
- */
-function threadReach(a: ThreadStop, b: ThreadStop, from: number): [number, number] {
-  const gap = b.x1 - a.x2;
-  const rise = Math.abs(b.y - a.y);
-
-  // A distância do trilho da linha até a borda da opção, menos a folga.
-  const room = (stop: ThreadStop) => {
-    const box = stop.box;
-    if (!box) return Infinity;
-    return stop.y > box.bottom
-      ? stop.y - box.bottom - THREAD.clear
-      : box.top - THREAD.clear - stop.y;
-  };
-
-  const capA = a.box ? Math.max(0, Math.min(THREAD.maxOverlap, a.x2 - from)) : 0;
-  const capB = b.box ? Math.min(THREAD.maxOverlap, (b.x2 - b.x1) / 2) : 0;
-  const roomA = room(a);
-  const roomB = room(b);
-
-  const fits = (reach: number) => {
-    const inA = Math.min(reach, capA);
-    const inB = Math.min(reach, capB);
-    const span = gap + inA + inB;
-    if (span <= 0) return true;
-    const clearsA = inA === 0 || smoothstep(inA / span) * rise <= roomA;
-    const clearsB = inB === 0 || (1 - smoothstep((inA + gap) / span)) * rise <= roomB;
-    return clearsA && clearsB;
-  };
-
-  let low = 0;
-  let high = Math.max(capA, capB);
-  for (let step = 0; step < 16; step += 1) {
-    const mid = (low + high) / 2;
-    if (fits(mid)) low = mid;
-    else high = mid;
-  }
-
-  return [Math.min(low, capA), Math.min(low, capB)];
-}
-
-function traceThread(frame: HTMLElement, items: HTMLElement[]) {
-  const bounds = frame.getBoundingClientRect();
-  const { width, height } = bounds;
-  if (width === 0 || height === 0) return null;
-
-  // As opções que estão na faixa agora. No celular os links moram no painel
-  // do menu, abaixo da faixa, e ficam de fora.
-  const boxes: ThreadBox[] = [];
-  items
-    .map((item) => item.getBoundingClientRect())
-    .filter(
-      (rect) => rect.width > 0 && rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1,
-    )
-    .sort((a, b) => a.left - b.left)
-    .forEach((rect) => {
-      const box = {
-        left: rect.left - bounds.left,
-        right: rect.right - bounds.left,
-        top: rect.top - bounds.top,
-        bottom: rect.bottom - bounds.top,
-      };
-      const last = boxes[boxes.length - 1];
-      if (last && box.left - last.right < THREAD.mergeGap) {
-        last.right = Math.max(last.right, box.right);
-        last.top = Math.min(last.top, box.top);
-        last.bottom = Math.max(last.bottom, box.bottom);
-      } else {
-        boxes.push(box);
-      }
-    });
-
-  if (boxes.length === 0) return null;
-
-  // Os dois trilhos: no meio da folga entre a borda da faixa e a opção mais
-  // alta, em cima e embaixo.
-  const over = Math.min(...boxes.map((box) => box.top)) / 2;
-  const under = (Math.max(...boxes.map((box) => box.bottom)) + height) / 2;
-  const opposite = (y: number) => (y === under ? over : under);
-
-  // As paradas, da esquerda para a direita: cada opção, e um ponto no meio
-  // de cada vão largo, onde a linha faz a onda dela.
-  const spots: Array<Omit<ThreadStop, 'y'>> = [];
-  const fill = (from: number, to: number) => {
-    const count = Math.max(0, Math.round((to - from - 60) / THREAD.waveEvery));
-    for (let index = 1; index <= count; index += 1) {
-      const x = from + ((to - from) * index) / (count + 1);
-      spots.push({ x1: x, x2: x });
-    }
-  };
-
-  let cursor = 0;
-  boxes.forEach((box) => {
-    fill(cursor, box.left);
-    spots.push({ x1: box.left, x2: box.right, box });
-    cursor = box.right;
-  });
-  fill(cursor, width);
-
-  // Os lados alternam de uma parada para a outra; a primeira opção — a águia —
-  // fica por baixo.
-  const first = spots.findIndex((spot) => spot.box);
-  const stops: ThreadStop[] = spots.map((spot, index) => ({
-    ...spot,
-    y: (index - first) % 2 === 0 ? under : over,
-  }));
-
-  // Nas bordas da faixa, a linha só sobe ou desce se houver margem para isso.
-  const head = stops[0];
-  const tail = stops[stops.length - 1];
-  const path: ThreadStop[] = [
-    { x1: 0, x2: 0, y: head.x1 >= THREAD.edge ? opposite(head.y) : head.y },
-    ...stops,
-    { x1: width, x2: width, y: width - tail.x2 >= THREAD.edge ? opposite(tail.y) : tail.y },
-  ];
-
-  const segments: ThreadSegment[] = [];
-  let x = 0;
-  for (let index = 0; index < path.length - 1; index += 1) {
-    const a = path[index];
-    const b = path[index + 1];
-    if (a.y === b.y) continue;
-
-    const [inA, inB] = threadReach(a, b, x);
-    const start = a.x2 - inA;
-    const end = b.x1 + inB;
-    if (start > x) segments.push({ x0: x, x1: start, y0: a.y, y1: a.y });
-    segments.push({ x0: start, x1: end, y0: a.y, y1: b.y });
-    x = end;
-  }
-  const last = path[path.length - 1];
-  if (x < width) segments.push({ x0: x, x1: width, y0: last.y, y1: last.y });
-
-  const round = (value: number) => Math.round(value * 10) / 10;
-  let d = `M0 ${round(path[0].y)}`;
-  segments.forEach(({ x0, x1, y0, y1 }) => {
-    if (y0 === y1) {
-      d += ` L${round(x1)} ${round(y1)}`;
-    } else {
-      const third = (x1 - x0) / 3;
-      d += ` C${round(x0 + third)} ${round(y0)} ${round(x1 - third)} ${round(y1)} ${round(x1)} ${round(y1)}`;
-    }
-  });
-
-  // A altura e a inclinação da linha num x qualquer, para a agulha.
-  const at = (position: number) => {
-    const clamped = Math.min(Math.max(position, 0), width);
-    const segment = segments.find((item) => clamped <= item.x1) ?? segments[segments.length - 1];
-    const span = segment.x1 - segment.x0 || 1;
-    const t = (clamped - segment.x0) / span;
-    const rise = segment.y1 - segment.y0;
-    return {
-      y: segment.y0 + rise * smoothstep(t),
-      slope: (rise * 6 * t * (1 - t)) / span,
-    };
-  };
-
-  return { width, d, at };
-}
+/** Velocidade da agulha, em px/s, e o tempo mínimo de uma passada. */
+const NEEDLE_SPEED = 140;
+const NEEDLE_MIN_PASS = 7;
 
 function setupNavThread() {
   const frame = document.querySelector<HTMLElement>('[data-nav-thread]');
-  const header = frame?.closest<HTMLElement>('[data-header]');
   const trail = frame?.querySelector<HTMLElement>('[data-nav-thread-trail]');
   const trailInner = frame?.querySelector<HTMLElement>('[data-nav-thread-trail-inner]');
   const needle = frame?.querySelector<SVGSVGElement>('[data-nav-thread-needle]');
-  if (!frame || !header || !trail || !trailInner || !needle) return;
-
-  const paths = Array.from(frame.querySelectorAll<SVGPathElement>('[data-nav-thread-path]'));
-  const items = Array.from(header.querySelectorAll<HTMLElement>('[data-nav-thread-item]'));
-
-  let thread: ReturnType<typeof traceThread> = null;
-  let restart: (() => void) | null = null;
-
-  const draw = () => {
-    thread = traceThread(frame, items);
-    paths.forEach((path) => path.setAttribute('d', thread?.d ?? ''));
-    if (thread) gsap.set(trailInner, { width: thread.width });
-    restart?.();
-  };
-
-  draw();
+  if (!frame || !trail || !trailInner || !needle) return;
 
   // A agulha corre sempre na mesma velocidade, da esquerda para a direita, e
   // volta a entrar pela esquerda quando o trecho aceso some na direita — a
@@ -658,70 +471,51 @@ function setupNavThread() {
     let tween: gsap.core.Tween | null = null;
     const setTrail = gsap.quickSetter(trail, 'x', 'px');
     const setTrailInner = gsap.quickSetter(trailInner, 'x', 'px');
-    const setNeedleX = gsap.quickSetter(needle, 'x', 'px');
-    const setNeedleY = gsap.quickSetter(needle, 'y', 'px');
-    const setNeedleAngle = gsap.quickSetter(needle, 'rotation', 'deg');
+    const setNeedle = gsap.quickSetter(needle, 'x', 'px');
 
-    restart = () => {
+    // As medidas dependem da largura da faixa: quando ela muda, a passada é
+    // refeita a partir do ponto em que estava.
+    const start = () => {
       const progress = tween?.progress() ?? 0;
       tween?.kill();
-      tween = null;
 
-      const current = thread;
-      if (!current) {
-        gsap.set([trail, needle], { autoAlpha: 0 });
-        return;
-      }
-
-      const length = gsap.utils.clamp(160, 420, current.width * 0.24);
+      const width = frame.clientWidth;
+      const length = gsap.utils.clamp(160, 420, width * 0.24);
       const sweep = { x: -length };
       gsap.set(trail, { width: length });
+      gsap.set(trailInner, { width });
       gsap.set([trail, needle], { autoAlpha: 1 });
 
       tween = gsap.to(sweep, {
-        x: current.width,
-        duration: Math.max(THREAD.minPass, (current.width + length) / THREAD.speed),
+        x: width,
+        duration: Math.max(NEEDLE_MIN_PASS, (width + length) / NEEDLE_SPEED),
         ease: 'none',
         repeat: -1,
         onUpdate: () => {
           setTrail(sweep.x);
           setTrailInner(-sweep.x);
-          const tip = sweep.x + length;
-          const { y, slope } = current.at(tip);
-          setNeedleX(tip - NEEDLE_EYE.x);
-          setNeedleY(y - NEEDLE_EYE.y);
-          setNeedleAngle((Math.atan(slope) * 180) / Math.PI);
+          setNeedle(sweep.x + length - NEEDLE_EYE_X);
         },
       });
       tween.progress(progress);
     };
 
-    restart();
+    start();
+
+    let lastWidth = frame.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (frame.clientWidth === lastWidth) return;
+      lastWidth = frame.clientWidth;
+      start();
+    });
+    observer.observe(frame);
 
     return () => {
+      observer.disconnect();
       tween?.kill();
-      restart = null;
       gsap.set([trail, needle], { autoAlpha: 0 });
     };
   });
-
-  // Refaz o caminho quando a faixa muda de largura, quando uma opção muda de
-  // tamanho (a fonte do slogan chega depois e alarga os links) ou quando o
-  // menu passa de barra para painel. Uma vez por quadro, no máximo.
-  let queued = false;
-  const schedule = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      queued = false;
-      draw();
-    });
-  };
-
-  const observer = new ResizeObserver(schedule);
-  observer.observe(header);
-  items.forEach((item) => observer.observe(item));
-  document.fonts?.ready.then(schedule);
 }
 
 /* ------------------------------------------------------------------ *

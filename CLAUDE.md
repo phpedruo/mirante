@@ -15,6 +15,8 @@ O Astro 7 exige Node 22.12 ou mais recente; o `.nvmrc` fixa o 22 para os serviç
 
 Não há suíte de testes. A verificação é `npm run build` (que falha em erro de template ou de tipo) mais conferência visual no navegador.
 
+O `npm run dev` às vezes deixa de recarregar o `<style>` de um componente editado: o HTML vem novo e o CSS continua o antigo. Se a página não bater com o código, reiniciar o servidor antes de procurar defeito.
+
 A CSP (ver Segurança) não vale no `npm run dev`: o que ela bloqueia só aparece no `npm run preview`, como erro "Refused to…" no console. O `preview` também não aplica o `public/_headers`; para ver os cabeçalhos como a Cloudflare serve, `npx wrangler dev` depois do build.
 
 ## O negócio
@@ -185,11 +187,17 @@ Convenções que atravessam os componentes:
   da mesma largura: a azul (`--brand-fill`, texto branco) com o título, por cima, e a laranja
   (texto `--on-accent`) com a linha de apoio, por baixo — a azul invade o topo da laranja, e a
   sombra dela marca qual está em cima. A referência do cliente foi a logo da Twitch: uma caixa
-  sobre a outra, cada uma com o seu texto, e não uma placa que lê como sombra. O pop-up entra
-  crescendo com um rebote curto. É um
-  recado por imagem, na mesma ordem, vazio quando a imagem não tem, porque é pela posição que a
-  passagem acha o da vez; ele sai quando a imagem começa a sair e sobe **depois** que a próxima
-  assenta. **Não há barra de tempo** marcando a espera — o cliente pediu para tirar a régua de
+  sobre a outra, cada uma com o seu texto, e não uma placa que lê como sombra. **O pop-up fica
+  parado; o que troca é só o texto**, como quem digita: enquanto a imagem passa, a linha de
+  apoio e depois o título são apagados letra a letra, da direita para a esquerda, e depois que
+  a imagem assenta o título e a linha de apoio novos são escritos, com um cursor na linha que
+  está mudando. Cada caixa reserva o tamanho do maior texto de todos os recados (os textos
+  ficam empilhados e invisíveis na mesma célula do grid), então ela não encolhe enquanto o
+  texto some. A digitação troca o texto do DOM, e não `transform` ou `opacity` — é o único
+  lugar da página com essa exceção, porque o efeito pedido é a própria troca de letras; ela só
+  reescreve quando a contagem muda, e mexe numa caixa de tamanho fixo. É um recado por imagem,
+  na mesma ordem, que o `animations.ts` lê de `data-promo`; imagem sem recado deixa o anterior
+  na tela. A espera pela próxima troca só começa com o texto inteiro escrito. **Não há barra de tempo** marcando a espera — o cliente pediu para tirar a régua de
   carregamento que ficava embaixo do recado —, e quem chama a troca é um `gsap.delayedCall`.
   **Não há pausa no hover**: o fundo cobre o hero
   inteiro, e pausar sob o ponteiro congelaria a passagem justamente para quem está lendo.
@@ -226,18 +234,17 @@ Convenções que atravessam os componentes:
   grandes, Dúvidas e Localização; com cinco deles na fonte do slogan, a barra deitada só cabe a
   partir de **1200px** — abaixo disso o menu é o painel do botão, embora o resto do layout de
   desktop comece em 1080.
-- **A linha de bordado do cabeçalho.** Uma linha de pontos laranja atravessa a faixa de ponta a
-  ponta passando **por baixo de uma opção e por cima da seguinte**, como linha entrando e saindo
-  do tecido, e uma agulha corre por ela sem parar, com um trecho aceso de linha atrás. Foi
-  pedido do cliente, a partir de um rabisco no print da barra. O caminho não é fixo: o
-  `animations.ts` mede as opções marcadas com `data-nav-thread-item` (águia, links e botões) e o
-  refaz quando a faixa muda de tamanho ou a fonte chega — opção nova na faixa leva o atributo,
-  senão a linha passa por cima dela. A travessia de um lado para o outro acontece sempre no vão
-  entre duas opções, nunca sobre o texto, e o tema e o botão de orçamento, colados, contam como
-  uma opção só. A linha inteira é desenho e aparece mesmo com "reduzir movimento"; a agulha e o
-  trecho aceso passam pelo `matchMedia`. O trecho aceso é o mesmo par de transform das técnicas
-  — uma janela que anda para a direita com a linha dentro dela andando para a esquerda —, então
-  a animação, que nunca para, mexe só em `transform`.
+- **A costura do cabeçalho.** Uma linha reta de pontos laranja na base da faixa, de ponta a
+  ponta, como o pesponto da barra de uma camisa, e uma agulha que corre por ela sem parar, com
+  um trecho aceso de linha atrás. Começou como uma linha em onda que passava por baixo de uma
+  opção e por cima da seguinte, a partir de um rabisco do cliente; ele pediu depois que fosse
+  "mais alinhada e mais grossa" — o rabisco era só um rascunho. A costura é CSS (um
+  `repeating-linear-gradient`) e aparece mesmo sem JavaScript ou com "reduzir movimento"; a
+  agulha e o trecho aceso passam pelo `matchMedia`. O trecho aceso é o mesmo par de transform
+  das técnicas — uma janela que anda para a direita com a costura dentro dela andando para a
+  esquerda, então os pontos acesos caem exatamente sobre os apagados —, e a animação, que nunca
+  para, mexe só em `transform`. No celular a faixa é mais baixa e a costura afina, para não
+  colar nos botões.
 - **Notch.** A página usa `viewport-fit=cover` (`Base.astro`): no iPhone com notch ela ocupa a
   tela inteira, em volta do recorte. O que tira o conteúdo de baixo dele é a área segura
   (`env(safe-area-inset-*)`): o cabeçalho a leva no `padding-top`, com o azul preenchendo em
@@ -333,7 +340,7 @@ contas que a publicam. Senha, sessão, SQL e CORS não têm onde se aplicar aqui
 - **Logos de clientes** (`clients` em `site.ts`): a esteira já mostra dez marcas, e **nenhuma autorização foi confirmada**. Confirmar cada uma com a fábrica antes do lançamento; a que não for autorizada sai da lista. Vale o mesmo para a marca Agrotorta, que aparece no peito da polo da primeira imagem do fundo do hero (`public/hero/polo-bordada.webp`).
 - **LGPD, antes do lançamento.** (1) A política promete guardar os registros de acesso por seis meses, como exige o Marco Civil: conferir se a hospedagem escolhida guarda os logs por esse prazo — plano gratuito costuma guardar menos. (2) O canal de dados pessoais hoje é só o WhatsApp; o e-mail comercial, quando preenchido, entra sozinho na política. (3) O texto foi escrito sem revisão jurídica — se o cliente tiver advogado, vale a leitura dele.
 - **Imagem de Open Graph** (`seo.ogImage` em `site.ts`): 1200×630, usada quando o link é compartilhado. Vazia hoje, então a tag nem é gerada.
-- **Performance das animações** — revisão adiada a pedido do cliente, mas os gargalos já estão mapeados: o FAQ chama `ScrollTrigger.refresh()` no `onComplete` de *cada* painel (até 6 recálculos globais por clique, mais 6 no carregamento); o fechamento inicial usa `gsap.to` com duração 0 onde bastaria `gsap.set`; o `ScrollTrigger` que acelera as esteiras não tem `trigger`/`start`/`end`, então `getVelocity()` e o `setTimeout` rodam a cada tick de scroll mesmo com as esteiras fora da tela; os dois trilhos carregam `will-change: transform` permanente e nunca param — e a agulha da linha de bordado do cabeçalho também não para, embora só mexa em `transform` e faça uma conta curta por quadro; e o accordion anima `height`, contra a regra de animar só `transform` e `opacity`. Opção maior: as entradas são todas `once: true` e caberiam num `IntersectionObserver`, o que tiraria o ScrollTrigger (~12KB gz) do bundle.
+- **Performance das animações** — revisão adiada a pedido do cliente, mas os gargalos já estão mapeados: o FAQ chama `ScrollTrigger.refresh()` no `onComplete` de *cada* painel (até 6 recálculos globais por clique, mais 6 no carregamento); o fechamento inicial usa `gsap.to` com duração 0 onde bastaria `gsap.set`; o `ScrollTrigger` que acelera as esteiras não tem `trigger`/`start`/`end`, então `getVelocity()` e o `setTimeout` rodam a cada tick de scroll mesmo com as esteiras fora da tela; os dois trilhos carregam `will-change: transform` permanente e nunca param — e a agulha da costura do cabeçalho também não para, embora só mexa em `transform`; e o accordion anima `height`, contra a regra de animar só `transform` e `opacity`. Opção maior: as entradas são todas `once: true` e caberiam num `IntersectionObserver`, o que tiraria o ScrollTrigger (~12KB gz) do bundle.
 
 ## Checklist de lançamento (SEO)
 

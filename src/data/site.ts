@@ -60,8 +60,10 @@ export const assets = {
  * A imagem é decoração e fica fora do leitor de tela, então não leva texto
  * alternativo. Quem fala é o `promo`: o espaço da fábrica para anunciar o que
  * quiser junto com a imagem — uma campanha, uma linha nova, um recado de
- * temporada. Ele aparece nítido na legenda do hero e troca junto com a imagem.
- * Sem `promo`, a imagem passa calada.
+ * temporada. Ele aparece nítido na legenda do hero, num pop-up de duas caixas
+ * — o título na azul, a linha de apoio na laranja —, que fica parado: quando a
+ * imagem troca, só o texto troca, apagado e reescrito. Sem `promo`, a imagem
+ * passa e o recado anterior continua.
  *
  * O recado NÃO comenta a imagem que está passando: foto e recado trocam
  * juntos, mas cada um fala a sua coisa. A foto é só o fundo; o recado é sempre
@@ -73,7 +75,7 @@ export const assets = {
  */
 export type HeroSlide = {
   src: string;
-  promo?: { badge?: string; title: string; text?: string };
+  promo?: { title: string; text: string };
 };
 
 /**

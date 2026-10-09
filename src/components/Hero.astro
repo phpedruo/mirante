@@ -10,8 +10,13 @@ const whatsappUrl = contact.whatsappUrl(
 // que é o que dá a sensação de caça-níquel. O repouso é o segundo ciclo.
 const REEL = Array.from({ length: 20 }, (_, index) => index % 10);
 
-// A legenda só existe se alguma imagem tiver recado para mostrar.
-const hasLegend = heroSlides.some((slide) => slide.promo);
+// Os recados, um por imagem e na mesma ordem — null quando a imagem não tem —,
+// porque é pela posição que a passagem acha o recado da imagem que entrou.
+const promos = heroSlides.map((slide) => slide.promo ?? null);
+const written = promos.filter((promo) => promo !== null);
+
+// O pop-up abre com o primeiro recado, e só existe se houver algum.
+const firstPromo = written[0];
 ---
 
 <section class="hero" id="topo">
@@ -76,25 +81,26 @@ const hasLegend = heroSlides.some((slide) => slide.promo);
     </div>
 
     {
-      /* A legenda do fundo: o recado da imagem da vez. Os recados ficam
-         empilhados na mesma célula, então a altura é a do maior
-         e a página não pula a cada troca. Um recado por imagem, na mesma
-         ordem — vazio quando a imagem não tem —, porque é pela posição que a
-         passagem acha o recado da imagem que entrou. */
-      hasLegend && (
+      /* A legenda do fundo: um pop-up só, que fica parado enquanto as imagens
+         passam — o que troca é o texto, apagado e reescrito pelo
+         animations.ts, que lê os recados de `data-promo`. Cada caixa empilha
+         na mesma célula, invisíveis, os textos de todos os recados: ela fica
+         do tamanho do maior e não encolhe enquanto o texto é apagado. */
+      firstPromo && (
         <div class="hero__legend" data-anim="hero" aria-hidden="true">
-          <div class="hero__promos">
-            {heroSlides.map((slide) => (
-              <div class="promo" data-outdoor-promo>
-                {slide.promo && (
-                  <div class="promo__card">
-                    {slide.promo.badge && <span class="promo__badge">{slide.promo.badge}</span>}
-                    <p class="promo__title">{slide.promo.title}</p>
-                    {slide.promo.text && <p class="promo__text">{slide.promo.text}</p>}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div class="promo" data-promo={JSON.stringify(promos)}>
+            <p class="promo__box promo__title">
+              {written.map((promo) => <span class="promo__sizer">{promo.title}</span>)}
+              <span class="promo__live">
+                <span data-promo-line="title">{firstPromo.title}</span><span class="promo__caret" data-promo-caret="title" />
+              </span>
+            </p>
+            <p class="promo__box promo__text">
+              {written.map((promo) => <span class="promo__sizer">{promo.text}</span>)}
+              <span class="promo__live">
+                <span data-promo-line="text">{firstPromo.text}</span><span class="promo__caret" data-promo-caret="text" />
+              </span>
+            </p>
           </div>
         </div>
       )
@@ -308,38 +314,30 @@ const hasLegend = heroSlides.some((slide) => slide.promo);
     align-items: flex-start;
   }
 
-  .hero__promos {
-    display: grid;
-  }
-
-  .promo {
-    grid-area: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  /* Sem JavaScript, ou com "reduzir movimento", o fundo fica na primeira
-     imagem, e a legenda mostra só o recado dela. */
-  .promo + .promo {
-    opacity: 0;
-  }
-
   /* O recado é um pop-up de duas caixas empilhadas: a azul, com o título, por
      cima, e a laranja, com a linha de apoio, por baixo. As duas têm sempre a
-     mesma largura — a da maior —, porque o cartão é um grid de uma coluna e
+     mesma largura — a da maior —, porque o pop-up é um grid de uma coluna e
      cada caixa estica até ela. A azul invade o topo da laranja (margem
      negativa), e a sombra dela é o que diz ao olho qual está em cima. */
-  .promo__card {
+  .promo {
     display: grid;
     text-align: left;
   }
 
-  .promo__title,
-  .promo__text {
+  .promo__box {
+    display: grid;
     padding: 14px 22px;
     border-radius: var(--radius-sm);
+  }
+
+  /* Os textos de todos os recados, invisíveis, e o texto da vez dividem a
+     mesma célula: é o maior deles que dá o tamanho da caixa. */
+  .promo__box > * {
+    grid-area: 1 / 1;
+  }
+
+  .promo__sizer {
+    visibility: hidden;
   }
 
   .promo__title {
@@ -347,30 +345,6 @@ const hasLegend = heroSlides.some((slide) => slide.promo);
     z-index: 1;
     background: var(--brand-fill);
     box-shadow: 0 6px 16px rgb(10 44 133 / 28%);
-  }
-
-  /* O topo da laranja fica escondido sob a azul; o padding de cima devolve
-     esse pedaço para o texto não encostar nela. */
-  .promo__text {
-    margin-top: -12px;
-    padding-top: calc(14px + 12px);
-    background: var(--orange-500);
-  }
-
-  /* Texto escuro sobre a laranja da marca: branco sobre esse laranja não
-     chega ao contraste mínimo. */
-  .promo__badge {
-    padding: 5px 12px;
-    background: var(--orange-500);
-    border-radius: var(--pill);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--on-accent);
-  }
-
-  .promo__title {
     font-size: clamp(20px, 1rem + 1vw, 30px);
     font-weight: 700;
     line-height: 1.2;
@@ -378,13 +352,30 @@ const hasLegend = heroSlides.some((slide) => slide.promo);
     color: #fff;
   }
 
-  /* Texto escuro sobre a laranja, como no selo: branco não chega ao
-     contraste mínimo nela. */
+  /* O topo da laranja fica escondido sob a azul; o padding de cima devolve
+     esse pedaço para o texto não encostar nela. Texto escuro sobre a laranja:
+     branco não chega ao contraste mínimo nela. */
   .promo__text {
+    margin-top: -12px;
+    padding-top: calc(14px + 12px);
+    background: var(--orange-500);
     font-size: clamp(15px, 0.9rem + 0.25vw, 18px);
     font-weight: 600;
     line-height: 1.4;
     color: var(--on-accent);
+  }
+
+  /* O cursor de quem digita: aparece só na linha que está sendo apagada ou
+     escrita. A margem negativa anula a largura dele, para o texto inteiro com
+     o cursor no fim não ficar maior que a caixa. */
+  .promo__caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    margin-inline: 2px -4px;
+    vertical-align: -0.15em;
+    background: currentColor;
+    visibility: hidden;
   }
 
   /* ---- Rodapé do hero ---------------------------------------------- */
@@ -532,10 +523,6 @@ const hasLegend = heroSlides.some((slide) => slide.promo);
       justify-self: end;
       align-items: flex-end;
       text-align: right;
-    }
-
-    .promo {
-      align-items: flex-end;
     }
 
     /* A faixa é o rodapé do hero inteiro, não da coluna de texto: a régua
